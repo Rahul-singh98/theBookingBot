@@ -27,10 +27,17 @@ class Question(models.Model):
 class ChatBot(models.Model):
     name = models.CharField(max_length=255, null=False)
     thumbnail = models.CharField(max_length=300)
-    questions = models.ForeignKey()
+    questions = models.ForeignKey(
+        to=Question, 
+        on_delete=models.CASCADE, 
+        # on_update=models.CASCADE
+    )
 
     created_by = models.ForeignKey(
-        Question, on_delete=models.CASCADE, on_upate=models.CASCADE)
+        to=settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        # on_update=models.CASCADE
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Chatbot Template</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f0f4f8;
+        }
+        body {
+            background-color: #f0f0f0;
+        }
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        .chatbot-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+        .chatbot-body {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chatbot-footer {
+            padding: 10px;
+            background-color: var(--secondary-color);
+        }
+        .chatbot-message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .user-message {
+            background-color: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        .bot-message {
+            background-color: var(--secondary-color);
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        .chatbot-input {
+            display: flex;
+            align-items: center;
+        }
+        .chatbot-input input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        .chatbot-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .chatbot-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .chatbot-bubble:hover {
+            transform: scale(1.1);
+        }
+        .chatbot-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .chatbot-option {
+            background-color: var(--secondary-color);
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .chatbot-option:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .chatbot-typing {
+            align-self: flex-start;
+            background-color: var(--secondary-color);
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #333;
+            animation: wave 1.3s linear infinite;
+        }
+        .dot:nth-child(2) {
+            animation-delay: -1.1s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: -0.9s;
+        }
+        @keyframes wave {
+            0%, 60%, 100% {
+                transform: initial;
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-bubble" id="chatbot-bubble">
+        <i class="fas fa-comments fa-lg"></i>
+    </div>
+    <div class="chatbot-container d-none" id="chatbot">
+        <div class="chatbot-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-robot me-2"></i>
+                <span>The Booking Bot</span>
+            </div>
+            <button class="btn btn-sm text-white" id="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-body" id="chatbot-body">
+            <div class="chatbot-message bot-message">
+                Hello! How can I assist you today?
+            </div>
+            <div class="chatbot-options">
+                <div class="chatbot-option">Get Started</div>
+                <div class="chatbot-option">Product Info</div>
+                <div class="chatbot-option">Pricing</div>
+                <div class="chatbot-option">Support</div>
+            </div>
+            <div class="chatbot-typing">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="chatbot-footer">
+            <div class="chatbot-input">
+                <input type="text" id="user-input" placeholder="Type your message..." class="form-control">
+                <button id="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const chatbot = document.getElementById('chatbot');
+        const chatbotBubble = document.getElementById('chatbot-bubble');
+        const closeBtn = document.getElementById('close-btn');
+        const chatbotBody = document.getElementById('chatbot-body');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const typingIndicator = document.querySelector('.chatbot-typing');
+
+        chatbotBubble.addEventListener('click', () => {
+            chatbot.classList.remove('d-none');
+            chatbotBubble.classList.add('d-none');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chatbot.classList.add('d-none');
+            chatbotBubble.classList.remove('d-none');
+        });
+
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                addMessage(message, 'user-message');
+                userInput.value = '';
+                showTypingIndicator();
+                
+                // Simulating a delay for the bot's response
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const botReply = getBotReply(message);
+                    addMessage(botReply, 'bot-message');
+                }, 1500);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        document.querySelectorAll('.chatbot-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const message = option.textContent;
+                addMessage(message, 'user-message');
+                showTypingIndicator();
+                
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const botReply = getBotReply(message);
+                    addMessage(botReply, 'bot-message');
+                }, 1500);
+            });
+        });
+
+        function addMessage(message, className) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chatbot-message', className);
+            messageElement.textContent = message;
+            chatbotBody.insertBefore(messageElement, typingIndicator);
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'block';
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function getBotReply(message) {
+            // This is where you would integrate with a real chatbot API
+            // For now, we'll just use some simple replies
+            const lowerMessage = message.toLowerCase();
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+                return "Hello! How can I help you today?";
+            } else if (lowerMessage.includes('product')) {
+                return "Our product is an AI-powered chatbot solution that can be easily integrated into your website or app. Would you like more specific information?";
+            } else if (lowerMessage.includes('pricing')) {
+                return "We offer flexible pricing plans starting at $29/month. Would you like me to provide more details about our pricing tiers?";
+            } else if (lowerMessage.includes('support')) {
+                return "Our support team is available 24/7. You can reach them via email at support@example.com or through live chat on our website. Is there a specific issue you need help with?";
+            } else if (lowerMessage.includes('get started')) {
+                return "Great! To get started, you can sign up for a free trial on our website. Would you like me to guide you through the process?";
+            } else {
+                return "I'm not sure I understand. Could you please rephrase your question or choose one of the options above?";
+            }
+        }
+    </script>
+</body>
+</html>

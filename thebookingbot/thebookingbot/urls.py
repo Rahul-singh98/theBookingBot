@@ -18,8 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import userinterface
+import chatbotMicroservice
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("userinterface.urls"))
+    path("", include("userinterface.urls")),
+    path("chatbot", include("chatbotMicroservice.urls")),
 ]
