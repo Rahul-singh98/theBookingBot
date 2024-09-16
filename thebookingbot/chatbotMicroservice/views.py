@@ -46,6 +46,21 @@ class ChatBot(TemplateView):
 
         return context
 
+    def get(self, request, *args, **kwargs):
+        # Call the parent class to generate the response
+        response = super().get(request, *args, **kwargs)
+
+        # Add CSP header to the response
+        response['Content-Security-Policy'] = (
+            "default-src 'self'; "
+            "script-src 'self' https://127.0.0.1:8000; "
+            "style-src 'self' https://127.0.0.1:8000; "
+            "img-src 'self' data: https://127.0.0.1:8000; "
+            "frame-src 'self' https://127.0.0.1:8000;"
+        )
+
+        return response
+
 
 # Create and Manage Bots (Staff Users)
 

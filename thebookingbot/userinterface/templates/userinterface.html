@@ -1,720 +1,595 @@
-{% block content %}
-<!doctype html>
-<html lang="en">
+{% extends 'base.html' %} {% load static %} {% block metadata %}
+<link rel="stylesheet" href="{% static 'css/userinterface/enduser.css' %}" />
+{% endblock %} {% block main %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container">
+    <a class="navbar-brand" href="#" title="The Chat Bot">
+      <!-- Replace the <img> with the Bootstrap icon -->
+      <i class="fa-brands fa-bots" style="font-size: 50px"></i>
+      <h1 class="mx-2">The Chat Bot</h1>
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="" title="Home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/#" title="Samples">Samples</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/#" title="Features">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/#" title="Testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" title="/price.html">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-light ms-2" href="/#" title="Contact Us"
+            >Contact Us</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-light ms-2" href="/#" title="Buy Now"
+            >Buy Now</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
+<div class="container">
+  <div class="bottom-line"></div>
+</div>
 
-    <style>
-        .homeHeadWrap {
-            margin-top: 100px;
-            margin-bottom: 100px;
-        }
+<div class="homeHeadWrap">
+  <div class="homeHead">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-6 homeLeftPart">
+          <h1>The Chat Bot</h1>
+          <p>
+            Take control of your company's quoting process and make the most out
+            of your quotes.
+          </p>
+          <p>
+            Do you know how much money you're leaving on the table? Are you
+            converting at least 50% of your total quote value? Is your staff
+            following up and properly handling the quotes?
+          </p>
+          <p>Answer these questions and much more with THE Chat Bot.</p>
+          <p class="button-container">
+            <a
+              href="#formSection"
+              class="btn btn-outline-primary"
+              title="Get Started Now"
+              >Get Started Now</a
+            >
+            <a
+              href="https://www.youtube.com/watch?v=G3nxzk7VUZ8"
+              class="btn btn-outline-danger"
+              title="Play Video"
+              >&#9654; Play Video</a
+            >
+            <span
+              class="float-xl-end"
+              title="Give It a Try"
+              style="font-weight: bold; font-size: 1.5em"
+            >
+              Give It a Try <span class="rightArr">&rarr;</span>
+            </span>
+          </p>
+        </div>
+        <div class="col-xl-5">
+          <div id="ssiframecontainerbot"></div>
+          <!-- <script
+            type="text/javascript"
+            src="https://demo.thequotebot.com/chat-script/12/inline"
+            async
+          ></script> -->
 
-        #clientsBox {
-            background-color: #f8f9fa;
-            /* Light grey background */
-            padding: 40px 0;
-            /* Vertical padding */
-        }
+          <iframe
+            src="{% url 'chatbot-view' '95996ae5-408c-4ce2-8f0d-9e3bff6dd80c' %}"
+            frameborder="0"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        #clientsBox .title span {
-            color: #007bff;
-            /* Primary color */
-        }
+<div class="container">
+  <div class="bottom-line"></div>
+</div>
+<a name="linksamples"></a>
+<div class="container py-5" id="clientsBox">
+  <h2 class="text-center mb-4">
+    See It Live On Some Of Our <span class="text-primary">Clients' Sites</span>
+  </h2>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="col">
+      <div class="card border-0 shadow-sm">
+        <a
+          target="_blank"
+          href="https://leroslimo.com/"
+          title="Leros Transportation Group"
+        >
+          <img
+            src="{% static 'img/download.jpeg' %}"
+            class="card-img-top"
+            alt="Leros Transportation Group"
+          />
+        </a>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card border-0 shadow-sm">
+        <a
+          target="_blank"
+          href="https://www.srtclimo.com/"
+          title="SRTC Limo Worldwide"
+        >
+          <img
+            src="https://via.placeholder.com/324x300"
+            class="card-img-top"
+            alt="SRTC Limo Worldwide"
+          />
+        </a>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card border-0 shadow-sm">
+        <a
+          target="_blank"
+          href="https://www.srtclimo.com/"
+          title="SRTC Limo Worldwide"
+        >
+          <img
+            src="https://via.placeholder.com/324x300"
+            class="card-img-top"
+            alt="SRTC Limo Worldwide"
+          />
+        </a>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card border-0 shadow-sm">
+        <a
+          target="_blank"
+          href="https://www.srtclimo.com/"
+          title="SRTC Limo Worldwide"
+        >
+          <img
+            src="https://via.placeholder.com/324x300"
+            class="card-img-top"
+            alt="SRTC Limo Worldwide"
+          />
+        </a>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card border-0 shadow-sm">
+        <a
+          target="_blank"
+          href="https://www.srtclimo.com/"
+          title="SRTC Limo Worldwide"
+        >
+          <img
+            src="https://via.placeholder.com/324x300"
+            class="card-img-top"
+            alt="SRTC Limo Worldwide"
+          />
+        </a>
+      </div>
+    </div>
+    <!-- Repeat similar blocks for other clients -->
+  </div>
+</div>
 
-        .card {
-            border-radius: 8px;
-            /* Rounded corners for cards */
-            overflow: hidden;
-            /* Ensures the image fits nicely */
-        }
+<div class="container">
+  <div class="bottom-line"></div>
+</div>
 
-        .card-img-top {
-            object-fit: cover;
-            /* Ensure the image covers the card area */
-            height: 200px;
-            /* Fixed height for images */
-        }
+<div class="container my-5" id="featuresBox">
+  <h2 class="title text-center mb-4">
+    Key <span class="text-primary">Features &amp; Benefits</span>
+  </h2>
+  <p class="text-center mb-5">
+    We have a long list of features and benefits and, while the list below is
+    long, we've had to work really hard to keep it down to just 18 listed items.
+    There's so much more to the system just waiting to be discovered and taken
+    advantage of!
+  </p>
+  <div class="row">
+    <!-- Feature 1 -->
+    <div class="col-12 col-md-6 col-xl-4 mb-4">
+      <div class="featureBox p-3">
+        <div class="d-flex align-items-start">
+          <div class="me-3">
+            <img
+              src="https://via.placeholder.com/60"
+              alt="Interactive and intuitive"
+              class="img-fluid"
+            />
+          </div>
+          <div>
+            <h3>Interactive and intuitive</h3>
+            <p>
+              Make the whole quote request process engaging and intuitive with a
+              <strong>logic-based conversational approach</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        .card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            /* Slight shadow on hover */
-        }
+    <!-- Feature 2 -->
+    <div class="col-12 col-md-6 col-xl-4 mb-4">
+      <div class="featureBox p-3">
+        <div class="d-flex align-items-start">
+          <div class="me-3">
+            <img
+              src="https://via.placeholder.com/60"
+              alt="Send Quotes as easy as 1-2-3"
+              class="img-fluid"
+            />
+          </div>
+          <div>
+            <h3>Send Quotes as easy as 1-2-3</h3>
+            <p>
+              With built-in templates and rules, sending out a
+              <strong>professional-looking quote</strong> can be done with
+              <strong>just a few clicks</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Add more feature boxes here -->
+  </div>
+</div>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script> -->
 
-        .title span {
-            color: #007bff;
+<div class="container">
+  <div class="bottom-line"></div>
+</div>
 
-        }
+<div class="container my-5" id="testimonialsBox">
+  <h2 class="title text-center mb-4">What Our <span>Clients Say</span></h2>
+  <p class="text-center mb-4">
+    They Love it! &#x2764; Read what our customers have to say!
+  </p>
+  <div class="row">
+    <!-- Testimonial 1 -->
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div class="reviewBox">
+        <img
+          src="https://via.placeholder.com/75"
+          alt="Client 1"
+          class="img-fluid mainImage"
+        />
+        <p>
+          Signature Transportation fully adopted The Chat Bot on 01/01/2021. Our
+          staff was fully trained on the technology and very quickly adopted it
+          into their daily routines. Now 100% of our quotes and subsequent
+          client communication go through The Chat Bot so that we are able to
+          track and manage every aspect of the sales process and subsequent
+          customer service. Our quote volume is
+          <strong>up over 200% since going live with The Chat Bot</strong>!
+        </p>
+        <div class="separatorLine"></div>
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>Mike Dozier</strong>
+          <div class="goldStars">&starf;&starf;&starf;&starf;&starf;</div>
+        </div>
+      </div>
+    </div>
+    <!-- Testimonial 2 -->
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div class="reviewBox">
+        <img
+          src="https://via.placeholder.com/75"
+          alt="Client 2"
+          class="img-fluid mainImage"
+        />
+        <p>
+          The Chat Bot has become an integral part of our sales team. We utilize
+          the functionality almost exclusively to receive online quotes and
+          follow them through to booking automatically in our Santa Cruz
+          software. We are new to The Chat Bot, but in a short time, our online
+          requests and bookings have more than tripled. Additionally, their
+          support team are eager to assist with any questions, changes and
+          training issues which is so refreshing. I can’t say enough good
+          comments about The Chat Bot.
+        </p>
+        <div class="separatorLine"></div>
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>Mike Sobol</strong>
+          <div class="goldStars">&starf;&starf;&starf;&starf;&starf;</div>
+        </div>
+      </div>
+    </div>
+    <!-- Testimonial 3 -->
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div class="reviewBox">
+        <img
+          src="https://via.placeholder.com/75"
+          alt="Client 3"
+          class="img-fluid mainImage"
+        />
+        <p>
+          We named our Chat Bot Allie, and
+          <strong
+            >she is the highest-performing Customer Service Rep in our
+            office</strong
+          >. She is so lifelike that people actually call the office looking to
+          talk with her.
+        </p>
+        <div class="separatorLine"></div>
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>Rick Versace</strong>
+          <div class="goldStars">&starf;&starf;&starf;&starf;&starf;</div>
+        </div>
+      </div>
+    </div>
+    <!-- Testimonial 4 -->
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div class="reviewBox">
+        <img
+          src="https://via.placeholder.com/75"
+          alt="Client 4"
+          class="img-fluid mainImage"
+        />
+        <p>
+          <strong>Without any staff required</strong>, The Chat Bot has been a
+          big help in capturing the organic leads to our site and converting
+          them into reservations!
+        </p>
+        <div class="separatorLine"></div>
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>Matt Strack</strong>
+          <div class="goldStars">&starf;&starf;&starf;&starf;&starf;</div>
+        </div>
+      </div>
+    </div>
+    <!-- Testimonial 5 -->
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div class="reviewBox">
+        <img
+          src="https://via.placeholder.com/75"
+          alt="Client 5"
+          class="img-fluid mainImage"
+        />
+        <p>
+          The Driver Provider has been live on The Chat Bot for about 2 months.
+          In this short time, “Alison” has helped to close many quotes and is
+          inching her way to becoming one of our top Customer Service Agents.
+          The feedback we are getting from Existing / New Customers regarding
+          Alison has been amazing. The automation has made us more efficient and
+          allows our Reservation Agents the ability to focus on other tasks.
+        </p>
+        <div class="separatorLine"></div>
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>Jason Kaplan</strong>
+          <div class="goldStars">&starf;&starf;&starf;&starf;&starf;</div>
+        </div>
+      </div>
+    </div>
+    <!-- Testimonial 6 -->
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div class="reviewBox">
+        <img
+          src="https://via.placeholder.com/75"
+          alt="Client 6"
+          class="img-fluid mainImage"
+        />
+        <p>
+          Hermes has been using The Chat Bot for about 6 months, and
+          <strong>our team loves it!</strong> TQB removes the need for manual
+          follow-up, can provide real-time accurate quotes (no additional source
+          to update rate changes), self-service booking, and analytics to track
+          your ROI. As a business owner,
+          <strong
+            >TQB helps me to provide a higher level of service to my clients for
+            the equivalent of 1/2 FTE</strong
+          >
+          thus further increasing my ROI. TQB also allows for customization
+          based on service types and vehicle types which provides you the
+          opportunity to customize the experience for your clients. The response
+          times for support are second to none.
+          <strong>Couldn’t more highly recommend implementing TQB!</strong>
+        </p>
+        <div class="separatorLine"></div>
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>Jorge Sanchez</strong>
+          <div class="goldStars">&starf;&starf;&starf;&starf;&starf;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        /* feature box  */
-        .featureBox {
-            border: 1px solid #ddd;
+<div class="container">
+  <div class="bottom-line"></div>
+</div>
 
-            border-radius: 8px;
-            overflow: hidden;
-            padding: 15px;
-            margin-bottom: 30px;
-            transition: box-shadow 0.3s ease;
-        }
+<a name="linkpricing"></a>
+<div class="container" id="pricingBox">
+  <h2 class="title text-center">
+    Choose The <span>Monthly Plan</span> That Works For You
+  </h2>
+  <div class="clearSpacer"></div>
+  <div class="clearSpacer"></div>
 
-        .featureBox:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+  <p class="text-center">
+    <a
+      class="btn btn-primary text-center"
+      href="#"
+      target="_blank"
+      title="Compare Plans"
+      >Compare Plans</a
+    >
+  </p>
+</div>
 
-        .mainImage {
-            display: block;
-            margin: 0 auto;
-            transition: opacity 0.3s ease;
-        }
-
-        .hoverImage {
-            display: none;
-        }
-
-        .featureBox:hover .hoverImage {
-            display: block;
-        }
-
-        .featureBox:hover .mainImage {
-            display: none;
-
-        }
-
-        h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        p {
-            font-size: 1rem;
-        }
-
-        /* clients review  */
-        .reviewBox {
-            border: 1px solid #ddd;
-            border-radius: .375rem;
-            padding: 1.5rem;
-            background-color: #f9f9f9;
-            margin-bottom: 1rem;
-        }
-
-        .mainImage {
-            border-radius: 50%;
-            margin-bottom: 1rem;
-        }
-
-        .separatorLine {
-            border-top: 1px solid #ddd;
-            margin: 1rem 0;
-        }
-
-        .goldStars {
-            color: #f0c14b;
-            /* Gold color for stars */
-        }
-
-        /* form style */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            /* Light background color for the page */
-        }
-
-        .formWrap {
-            /* background-image: url('https://via.placeholder.com/1116x712'); Replace with your actual image URL */
-            background-size: cover;
-            background-position: center;
-            color: #fff;
-            border-radius: 0.375rem;
-            padding: 60px;
-            margin: 0 0 80px;
-            background-color: #333;
-        }
-
-        .formWrap .header {
-            font-weight: bold;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .formWrap .description {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .formWrap .btn-get-started {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            border-radius: 0.375rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .formWrap .btn-get-started:hover {
-            background-color: #0056b3;
-        }
-
-        /* navbar   */
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            max-width: 300px;
-            /* Combined width constraint */
-            height: 60px;
-            /* Height constraint */
-            overflow: hidden;
-            /* Ensure content does not overflow */
-        }
-
-        .navbar-brand img {
-            width: 60px;
-            /* Square logo width */
-            height: 60px;
-            /* Square logo height */
-            object-fit: contain;
-            /* Ensure logo aspect ratio is maintained */
-            margin-right: 10px;
-            /* Space between logo and text */
-        }
-
-        .navbar-custom {
-            background-color: #0D6EFD;
-        }
-
-        .navbar-brand h1 {
-            font-size: 1.5rem;
-            /* Adjust font size */
-            margin: 0;
-            /* Remove default margin */
-            line-height: 1.5;
-            /* Adjust line-height for better vertical alignment */
-            font-weight: bold;
-            /* Make text bold */
-            color: #f8f9fa;
-            /* Text color */
-        }
-
-        .navbar-dark .navbar-nav .nav-link {
-            color: #f8f9fa;
-            /* Text color for nav links */
-        }
-
-        .navbar-dark .navbar-nav .nav-link:hover {
-            color: #adb5bd;
-            /* Hover color for nav links */
-        }
-
-        .navbar-custom {
-            padding-bottom: 15px;
-            padding-top: 15px;
-        }
-
-        .btn-outline-success {
-            border-color: hwb(192 13% 15%);
-            /* Custom border color for buttons */
-            color: #28a745;
-            /* Custom text color for buttons */
-        }
-
-        .btn-outline-success:hover {
-            background-color: #28a745;
-            /* Background color on hover */
-            color: #fff;
-            /* Text color on hover */
-        }
-
-        .btn-outline-primary {
-            border-color: #007bff;
-            /* Custom border color for buttons */
-            color: #007bff;
-            /* Custom text color for buttons */
-        }
-
-        .btn-outline-primary:hover {
-            background-color: #007bff;
-            /* Background color on hover */
-            color: #fff;
-            /* Text color on hover */
-        }
-
-        /* footer style is here  */
-        .footer {
-            background-color: #0D6EFD;
-            /* Matches the navbar background color */
-            color: #f8f9fa;
-            /* Light text color */
-            padding: 20px 0;
-        }
-
-        .footer a {
-            color: #f8f9fa;
-        }
-
-        .footer a:hover {
-            color: #adb5bd;
-            /* Slightly lighter color on hover */
-        }
-
-        .footer .social-icons a {
-            color: #f8f9fa;
-            margin-right: 15px;
-        }
-
-        .footer .social-icons a:hover {
-            color: #adb5bd;
-        }
-
-        /* Custom styles for the homeHeadWrap section */
-        .button-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            /* Adjust this as needed */
-        }
-
-        .btn {
-            margin-right: 10px;
-            /* Add margin between buttons if desired */
-        }
-
-        .float-xl-end {
-            margin-left: auto;
-            /* Pushes this element to the end of the container */
-        }
-    </style>
-
-</head>
-
-<body style="background-color: #f7f7f7;">
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-        <div class="container">
-            <a class="navbar-brand" href="#" title="The Chat Bot">
-                <!-- Replace the <img> with the Bootstrap icon -->
-                <i class="bi bi-robot" style="font-size: 60px;"></i>
-                <h1>The Chat Bot</h1>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+<div class="container">
+  <div class="bottom-line"></div>
+</div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="formWrap">
+        <div class="text-center">
+          <div class="header">Start making the most of your quotes</div>
+          <div class="description">
+            Schedule a call for a demo session. It’s free and takes less than 30
+            minutes. We'll do our best to accommodate your requested day for the
+            demo. A member of our team will be in touch to schedule the exact
+            time for the meeting once we receive your request.
+          </div>
+        </div>
+        <form>
+          <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              placeholder="John"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              placeholder="Doe"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="example@example.com"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              placeholder="+1 234 567 890"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="companyName" class="form-label">Company Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="companyName"
+              placeholder="Your Company"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="requestedDay" class="form-label">Requested Day</label>
+            <input type="date" class="form-control" id="requestedDay" />
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">Your Message</label>
+            <textarea
+              class="form-control"
+              id="message"
+              rows="4"
+              placeholder="Type your message here..."
+            ></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-get-started">
+              Get Started
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="" title="Home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/#" title="Samples">Samples</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/#" title="Features">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/#" title="Testimonials">Testimonials</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" title="/price.html">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light ms-2" href="/#" title="Contact Us">Contact Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light ms-2" href="/#" title="Buy Now">Buy Now</a>
-                    </li>
-                </ul>
-            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer mt-auto">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <h5>About Us</h5>
+        <p>
+          The Chat Bot is your go-to source for inspiring and motivational
+          quotes. We strive to bring positivity into your life through carefully
+          curated quotes from various sources.
+        </p>
+      </div>
+      <div class="col-md-4">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="#" title="Home">Home</a></li>
+          <li><a href="/sample.html" title="Samples">Samples</a></li>
+          <li><a href="/feature.html" title="Features">Features</a></li>
+          <li>
+            <a href="/testimonials.html" title="Testimonials">Testimonials</a>
+          </li>
+          <li><a href="#" title="/price.html">Pricing</a></li>
+          <li><a href="/contact.html" title="Contact Us">Contact Us</a></li>
+          <li><a href="/buy.html" title="Buy Now">Buy Now</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h5>Follow Us</h5>
+        <div class="social-icons">
+          <a href="https://facebook.com" target="_blank" title="Facebook"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a href="https://twitter.com" target="_blank" title="Twitter"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="https://instagram.com" target="_blank" title="Instagram"
+            ><i class="fab fa-instagram"></i
+          ></a>
         </div>
-    </nav>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-    <div class="container">
-        <div class="bottom-line"></div>
+      </div>
     </div>
+  </div>
+</footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 
-    <div class="homeHeadWrap">
-        <div class="homeHead">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-6 homeLeftPart">
-                        <h1>The Chat Bot</h1>
-                        <p>Take control of your company's quoting process and make the most out of your quotes.</p>
-                        <p>Do you know how much money you're leaving on the table? Are you converting at least 50% of
-                            your total quote value? Is your staff following up and properly handling the quotes?</p>
-                        <p>Answer these questions and much more with THE Chat Bot.</p>
-                        <p class="button-container">
-                            <a href="#formSection" class="btn btn-outline-primary" title="Get Started Now">Get Started Now</a>
-                            <a href="https://www.youtube.com/watch?v=G3nxzk7VUZ8" class="btn btn-outline-danger"
-                                title="Play Video">&#9654; Play Video</a>
-                                <span class="float-xl-end" title="Give It a Try" style="font-weight: bold; font-size: 1.5em;">
-                                    Give It a Try <span class="rightArr">&rarr;</span>
-                                </span>
-                        </p>
-                    </div>
-                    <div class="col-xl-5">
-                        <div id="ssiframecontainerbot"></div>
-                        <script type="text/javascript" src="https://demo.thequotebot.com/chat-script/12/inline"
-                            async></script>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-    <div class="container">
-        <div class="bottom-line"></div>
-    </div>
-    <a name="linksamples"></a>
-    <div class="container py-5" id="clientsBox">
-        <h2 class="text-center mb-4">See It Live On Some Of Our <span class="text-primary">Clients' Sites</span></h2>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <div class="col">
-                <div class="card border-0 shadow-sm">
-                    <a target="_blank" href="https://leroslimo.com/" title="Leros Transportation Group">
-                        <img src="./Images/img1.png.crdownload" class="card-img-top"
-                            alt="Leros Transportation Group">
-                    </a>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card border-0 shadow-sm">
-                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
-                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
-                    </a>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card border-0 shadow-sm">
-                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
-                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
-                    </a>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card border-0 shadow-sm">
-                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
-                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
-                    </a>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card border-0 shadow-sm">
-                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
-                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
-                    </a>
-                </div>
-            </div>
-            <!-- Repeat similar blocks for other clients -->
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="bottom-line"></div>
-    </div>
-
-    <div class="container my-5" id="featuresBox">
-        <h2 class="title text-center mb-4">Key <span class="text-primary">Features &amp; Benefits</span></h2>
-        <p class="text-center mb-5">We have a long list of features and benefits and, while the list below is long,
-            we've had
-            to work really hard to keep it down to just 18 listed items. There's so much more to the system just waiting
-            to be discovered and taken advantage of!</p>
-        <div class="row">
-            <!-- Feature 1 -->
-            <div class="col-12 col-md-6 col-xl-4 mb-4">
-                <div class="featureBox p-3">
-                    <div class="d-flex align-items-start">
-                        <div class="me-3">
-                            <img src="https://via.placeholder.com/60" alt="Interactive and intuitive"
-                                class="img-fluid" />
-                        </div>
-                        <div>
-                            <h3>Interactive and intuitive</h3>
-                            <p>Make the whole quote request process engaging and intuitive with a <strong>logic-based
-                                    conversational approach</strong></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Feature 2 -->
-            <div class="col-12 col-md-6 col-xl-4 mb-4">
-                <div class="featureBox p-3">
-                    <div class="d-flex align-items-start">
-                        <div class="me-3">
-                            <img src="https://via.placeholder.com/60" alt="Send Quotes as easy as 1-2-3"
-                                class="img-fluid" />
-                        </div>
-                        <div>
-                            <h3>Send Quotes as easy as 1-2-3</h3>
-                            <p>With built-in templates and rules, sending out a <strong>professional-looking
-                                    quote</strong> can be done with <strong>just a few clicks</strong>.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add more feature boxes here -->
-        </div>
-    </div>
-    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script> -->
-
-    <div class="container">
-        <div class="bottom-line"></div>
-    </div>
-
-    <div class="container my-5" id="testimonialsBox">
-        <h2 class="title text-center mb-4">What Our <span>Clients Say</span></h2>
-        <p class="text-center mb-4">They Love it! &#x2764; Read what our customers have to say!</p>
-        <div class="row">
-            <!-- Testimonial 1 -->
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="reviewBox">
-                    <img src="https://via.placeholder.com/75" alt="Client 1" class="img-fluid mainImage" />
-                    <p>Signature Transportation fully adopted The Chat Bot on 01/01/2021. Our staff was fully
-                        trained on the technology and very quickly adopted it into their daily routines. Now
-                        100% of our quotes and subsequent client communication go through The Chat Bot so that
-                        we are able to track and manage every aspect of the sales process and subsequent
-                        customer service. Our quote volume is <strong>up over 200% since going live with The
-                            Chat Bot</strong>!</p>
-                    <div class="separatorLine"></div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <strong>Mike Dozier</strong>
-                        <div class="goldStars">
-                            &starf;&starf;&starf;&starf;&starf;
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Testimonial 2 -->
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="reviewBox">
-                    <img src="https://via.placeholder.com/75" alt="Client 2" class="img-fluid mainImage" />
-                    <p>The Chat Bot has become an integral part of our sales team. We utilize the functionality
-                        almost exclusively to receive online quotes and follow them through to booking
-                        automatically in our Santa Cruz software. We are new to The Chat Bot, but in a short
-                        time, our online requests and bookings have more than tripled. Additionally, their
-                        support team are eager to assist with any questions, changes and training issues which
-                        is so refreshing. I can’t say enough good comments about The Chat Bot.</p>
-                    <div class="separatorLine"></div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <strong>Mike Sobol</strong>
-                        <div class="goldStars">
-                            &starf;&starf;&starf;&starf;&starf;
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Testimonial 3 -->
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="reviewBox">
-                    <img src="https://via.placeholder.com/75" alt="Client 3" class="img-fluid mainImage" />
-                    <p>We named our Chat Bot Allie, and <strong>she is the highest-performing Customer Service
-                            Rep in our office</strong>. She is so lifelike that people actually call the office
-                        looking to talk with her.</p>
-                    <div class="separatorLine"></div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <strong>Rick Versace</strong>
-                        <div class="goldStars">
-                            &starf;&starf;&starf;&starf;&starf;
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Testimonial 4 -->
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="reviewBox">
-                    <img src="https://via.placeholder.com/75" alt="Client 4" class="img-fluid mainImage" />
-                    <p><strong>Without any staff required</strong>, The Chat Bot has been a big help in
-                        capturing the organic leads to our site and converting them into reservations!</p>
-                    <div class="separatorLine"></div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <strong>Matt Strack</strong>
-                        <div class="goldStars">
-                            &starf;&starf;&starf;&starf;&starf;
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Testimonial 5 -->
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="reviewBox">
-                    <img src="https://via.placeholder.com/75" alt="Client 5" class="img-fluid mainImage" />
-                    <p>The Driver Provider has been live on The Chat Bot for about 2 months. In this short
-                        time, “Alison” has helped to close many quotes and is inching her way to becoming one of
-                        our top Customer Service Agents. The feedback we are getting from Existing / New
-                        Customers regarding Alison has been amazing. The automation has made us more efficient
-                        and allows our Reservation Agents the ability to focus on other tasks.</p>
-                    <div class="separatorLine"></div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <strong>Jason Kaplan</strong>
-                        <div class="goldStars">
-                            &starf;&starf;&starf;&starf;&starf;
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Testimonial 6 -->
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="reviewBox">
-                    <img src="https://via.placeholder.com/75" alt="Client 6" class="img-fluid mainImage" />
-                    <p>Hermes has been using The Chat Bot for about 6 months, and <strong>our team loves
-                            it!</strong> TQB removes the need for manual follow-up, can provide real-time
-                        accurate quotes (no additional source to update rate changes), self-service booking, and
-                        analytics to track your ROI. As a business owner, <strong>TQB helps me to provide a
-                            higher level of service to my clients for the equivalent of 1/2 FTE</strong> thus
-                        further increasing my ROI. TQB also allows for customization based on service types and
-                        vehicle types which provides you the opportunity to customize the experience for your
-                        clients. The response times for support are second to none. <strong>Couldn’t more
-                            highly recommend implementing TQB!</strong></p>
-                    <div class="separatorLine"></div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <strong>Jorge Sanchez</strong>
-                        <div class="goldStars">
-                            &starf;&starf;&starf;&starf;&starf;
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="container">
-        <div class="bottom-line"></div>
-    </div>
-
-    <a name="linkpricing"></a>
-    <div class="container" id="pricingBox">
-        <h2 class="title text-center">Choose The <span>Monthly Plan</span> That Works For You</h2>
-        <div class="clearSpacer"></div>
-        <div class="clearSpacer"></div>
-
-        <p class="text-center"><a class="btn btn-primary text-center" href="#" target="_blank"
-                title="Compare Plans">Compare Plans</a></p>
-
-    </div>
-
-    <div class="container">
-        <div class="bottom-line"></div>
-    </div>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <div class="formWrap">
-                    <div class="text-center">
-                        <div class="header">Start making the most of your quotes</div>
-                        <div class="description">
-                            Schedule a call for a demo session. It’s free and takes less than 30 minutes.
-                            We'll do our best to accommodate your requested day for the demo.
-                            A member of our team will be in touch to schedule the exact time for the meeting once we
-                            receive your request.
-                        </div>
-                    </div>
-                    <form>
-                        <div class="mb-3">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="John">
-                        </div>
-                        <div class="mb-3">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="Doe">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" placeholder="example@example.com">
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="+1 234 567 890">
-                        </div>
-                        <div class="mb-3">
-                            <label for="companyName" class="form-label">Company Name</label>
-                            <input type="text" class="form-control" id="companyName" placeholder="Your Company">
-                        </div>
-                        <div class="mb-3">
-                            <label for="requestedDay" class="form-label">Requested Day</label>
-                            <input type="date" class="form-control" id="requestedDay">
-                        </div>
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Your Message</label>
-                            <textarea class="form-control" id="message" rows="4"
-                                placeholder="Type your message here..."></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-get-started">Get Started</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <footer class="footer mt-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>About Us</h5>
-                    <p>
-                        The Chat Bot is your go-to source for inspiring and motivational quotes. We strive to bring
-                        positivity into your life through carefully curated quotes from various sources.
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" title="Home">Home</a></li>
-                        <li><a href="/sample.html" title="Samples">Samples</a></li>
-                        <li><a href="/feature.html" title="Features">Features</a></li>
-                        <li><a href="/testimonials.html" title="Testimonials">Testimonials</a></li>
-                        <li><a href="#" title="/price.html">Pricing</a></li>
-                        <li><a href="/contact.html" title="Contact Us">Contact Us</a></li>
-                        <li><a href="/buy.html" title="Buy Now">Buy Now</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Follow Us</h5>
-                    <div class="social-icons">
-                        <a href="https://facebook.com" target="_blank" title="Facebook"><i
-                                class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="https://instagram.com" target="_blank" title="Instagram"><i
-                                class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-</body>
-
-</html>
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-    crossorigin="anonymous"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+  integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+  integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+  crossorigin="anonymous"
+></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
 
 {% endblock %}

@@ -1,8 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import DetailView
+from django.views.generic import TemplateView
+
 
 # Create your views here.
-class ApplicationView(DetailView):
-
-    def get(self, request, *args, **kwargs):
-        return render(request, "userinterface.html")
+class ApplicationView(TemplateView):
+    template_name = "userinterface.html"
