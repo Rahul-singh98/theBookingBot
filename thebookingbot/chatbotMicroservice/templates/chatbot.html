@@ -3,10 +3,11 @@
   rel="stylesheet"
   href="{% static 'css/chatbotMicroservice/chatbot.css' %}"
 />
-<meta name="csrf-token" content="{{ csrf_token }}">
-<meta name="chatbot-id" content="{{ chatbot_id }}">
+<meta name="csrf-token" content="{{ csrf_token }}" />
+<meta name="chatbot-id" content="{{ chatbot_id }}" />
+<title>{{ bot_name }}</title>
 {% endblock %} {% block main %}
-<div class="chatbot-bubble" id="chatbot-bubble">
+<!-- <div class="chatbot-bubble" id="chatbot-bubble">
   <i class="fas fa-comments fa-lg"></i>
 </div>
 <div class="chatbot-container d-none" id="chatbot">
@@ -19,15 +20,9 @@
       <i class="fas fa-times"></i>
     </button>
   </div>
-  <div class="chatbot-body" id="chatbot-body">
+  <div class="chatbot-body" id="chatbot-body pt-1">
     {% csrf_token %}
     <div class="chatbot-message bot-message">{{ welcome_message }}</div>
-    <!-- <div class="chatbot-options">
-      <div class="chatbot-option">Get Started</div>
-      <div class="chatbot-option">Product Info</div>
-      <div class="chatbot-option">Pricing</div>
-      <div class="chatbot-option">Support</div>
-    </div> -->
     <div class="chatbot-typing">
       <span class="dot"></span>
       <span class="dot"></span>
@@ -36,6 +31,7 @@
   </div>
   <div class="chatbot-footer">
     <div class="chatbot-input">
+      <input type="text" id="question-id" class="form-control" hidden />
       <input
         type="text"
         id="user-input"
@@ -47,7 +43,16 @@
       </button>
     </div>
   </div>
-</div>
+</div> -->
 
-<script src="{% static 'js/chatbotMicroservice/chatbot.js' %}"></script>
+<script src="{% static 'js/chatbotMicroservice/embed.js' %}"></script>
+<script>
+  // Initialize the chatbot with config
+  document.addEventListener("DOMContentLoaded", () => {
+    const chatbotConfig = {
+      token: "95996ae5-408c-4ce2-8f0d-9e3bff6dd80c", // Replace with your actual token
+    };
+    new Chatbot(chatbotConfig);
+  });
+</script>
 {% endblock %}

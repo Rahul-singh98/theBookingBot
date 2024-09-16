@@ -16,6 +16,7 @@ from typing import Any
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import TemplateView
 import uuid
+import json
 
 
 class ChatBot(TemplateView):
@@ -46,20 +47,20 @@ class ChatBot(TemplateView):
 
         return context
 
-    def get(self, request, *args, **kwargs):
-        # Call the parent class to generate the response
-        response = super().get(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     # Call the parent class to generate the response
+    #     response = super().get(request, *args, **kwargs)
 
-        # Add CSP header to the response
-        response['Content-Security-Policy'] = (
-            "default-src 'self'; "
-            "script-src 'self' https://127.0.0.1:8000; "
-            "style-src 'self' https://127.0.0.1:8000; "
-            "img-src 'self' data: https://127.0.0.1:8000; "
-            "frame-src 'self' https://127.0.0.1:8000;"
-        )
+    #     # Add CSP header to the response
+    #     response['Content-Security-Policy'] = (
+    #         "default-src 'self'; "
+    #         "script-src 'self' https://127.0.0.1:8000; "
+    #         "style-src 'self' https://127.0.0.1:8000; "
+    #         "img-src 'self' data: https://127.0.0.1:8000; "
+    #         "frame-src 'self' https://127.0.0.1:8000;"
+    #     )
 
-        return response
+    #     return response
 
 
 # Create and Manage Bots (Staff Users)
@@ -138,7 +139,7 @@ def get_question_details(question):
     response_type = question.response_type if question else None
     variable = question.variable if question else None
     options = []
-    if response_type in (QuestionTypes.CLICKLIST, QuestionTypes.DROPDOWN):
+    if response_type in (QuestionTypes.CLICKLIST.value, QuestionTypes.DROPDOWN.value):
         question_options = QuestionOption.objects.filter(
             question=question).order_by("option_order").all()
         if question_options:
@@ -175,8 +176,14 @@ class ChatSessionStartView(View):
 class QuestionAnswerView(View):
     def post(self, request, session_id):
         session = get_object_or_404(ChatSession, session_id=session_id)
-        question_id = request.POST.get('question_id')
-        answer = request.POST.get('answer')
+        # First, check if the content type is JSON
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)  # Parse the JSON body
+            question_id = data.get('question_id')
+            answer = data.get('answer')
+        else:
+            question_id = request.POST.get('question_id')
+            answer = request.POST.get('answer')
 
         # Save the answer
         question = get_object_or_404(Question, pk=question_id)

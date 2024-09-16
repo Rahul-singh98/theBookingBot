@@ -1,5 +1,12 @@
 {% extends 'base.html' %} {% load static %} {% block metadata %}
 <link rel="stylesheet" href="{% static 'css/userinterface/enduser.css' %}" />
+
+<link
+  rel="stylesheet"
+  href="{% static 'css/chatbotMicroservice/chatbot.css' %}"
+/>
+<meta name="csrf-token" content="{{ csrf_token }}" />
+
 {% endblock %} {% block main %}
 
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
@@ -102,10 +109,16 @@
             async
           ></script> -->
 
-          <iframe
-            src="{% url 'chatbot-view' '95996ae5-408c-4ce2-8f0d-9e3bff6dd80c' %}"
-            frameborder="0"
-          ></iframe>
+          <script src="{% static 'js/chatbotMicroservice/embed.js' %}"></script>
+          <script>
+            // Initialize the chatbot with config
+            document.addEventListener("DOMContentLoaded", () => {
+              const chatbotConfig = {
+                token: "95996ae5-408c-4ce2-8f0d-9e3bff6dd80c",
+              };
+              new Chatbot(chatbotConfig);
+            });
+          </script>
         </div>
       </div>
     </div>

@@ -80,10 +80,16 @@ function fetchNextQuestion() {
 // Render the question based on the type returned from API
 function renderQuestion(data) {
   const question = data.question;
+  const question_id = data.question_id;
   const inputType = data.response_type;
   const options = data.options || [];
+  const filler = data.filler;
 
   addMessage(question, "bot-message");
+
+  if (question_id !== null) {
+    replaceQuestionId(question_id);
+  }
 
   // Create input based on the input_type
   let inputElement;
@@ -92,7 +98,7 @@ function renderQuestion(data) {
       inputElement = replaceInputWithDropdown(options);
       break;
     case "clicklist":
-      inputElement = createClickList(options);
+      inputElement = createClickList(options, question_id);
       break;
     case "datetime":
       inputElement = replaceInputFieldWith("datetime-local");
@@ -119,20 +125,30 @@ function renderQuestion(data) {
   chatbotBody.scrollTop = chatbotBody.scrollHeight;
 }
 
-// Create input field for different types
+function replaceQuestionId(question_id) {
+  const questionIdEle = document.getElementById("question-id");
+  questionIdEle.value = question_id;
+}
+
+// Update the input field without replacing the submit button
 function replaceInputFieldWith(type) {
-  // Get the container element
   const inputContainer = document.querySelector(".chatbot-input");
-  const children = inputContainer.children
+  const oldInput = document.getElementById("user-input");
 
-  inputContainer.removeChild(child)
-
-  const userInput = document.getElementById("user-input");
-  userInput.type = type;
+  // Create a new input element
+  const userInput = document.createElement("input");
+  userInput.id = "user-input"; // Keep the same ID for consistency
   userInput.classList.add("form-control");
-  userInput.placeholder = `Type your answer...`;
 
-  return userInput;
+  // userInput.name = filler
+  userInput.type = type;
+  userInput.value = ""; // Reset the value
+  userInput.placeholder = `Type your ${
+    type === "datetime-local" ? "date" : type
+  }...`;
+
+  // Replace the input field but retain the existing submit button
+  inputContainer.replaceChild(userInput, oldInput);
 }
 
 /**
@@ -140,12 +156,12 @@ function replaceInputFieldWith(type) {
  * @param {Array<string>} options - An array of option values for the dropdown.
  */
 function replaceInputWithDropdown(options) {
-  // Get the container element
   const inputContainer = document.querySelector(".chatbot-input");
+  const oldInput = document.getElementById("user-input");
 
   // Create a new select element
   const select = document.createElement("select");
-  select.id = "user-input"; // Use the same ID if needed
+  select.id = "user-input";
   select.classList.add("form-control");
 
   // Create option elements and append them to the select element
@@ -156,27 +172,12 @@ function replaceInputWithDropdown(options) {
     select.appendChild(optionElement);
   });
 
-  // Create a new button element
-  const sendBtn = document.createElement("button");
-  sendBtn.id = "send-btn";
-  sendBtn.classList.add("btn");
-  sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
-
-  // Remove the old input field
-  const oldInput = document.getElementById("user-input");
-  if (oldInput) {
-    inputContainer.removeChild(oldInput);
-  }
-
-  // Append the new select element and button to the container
-  inputContainer.appendChild(select);
-  inputContainer.appendChild(sendBtn);
-
-  // return inputContainer;
+  // Replace the input field but retain the existing submit button
+  inputContainer.replaceChild(select, oldInput);
 }
 
 // Create click list for 'clicklist' input type
-function createClickList(options) {
+function createClickList(options, question_id) {
   const clickListWrapper = document.createElement("div");
   clickListWrapper.classList.add("chatbot-clicklist");
 
@@ -184,26 +185,41 @@ function createClickList(options) {
     const button = document.createElement("button");
     button.classList.add("btn", "btn-outline-primary", "m-1");
     button.textContent = option;
-    button.addEventListener("click", () => submitAnswer(option));
+    button.addEventListener("click", () => submitAnswer(option, question_id));
     clickListWrapper.appendChild(button);
   });
 
-  return clickListWrapper;
+  // chatbotBody.appendChild(clickListWrapper);
+
+  chatbotBody.insertBefore(clickListWrapper, typingIndicator);
+  chatbotBody.scrollTop = chatbotBody.scrollHeight;
 }
 
 // Submit the answer and fetch the next question
-function submitAnswer(answer) {
+sendBtn.addEventListener("click", () => {
+  const inputElement = document.getElementById("user-input");
+  const answer = inputElement.value;
+
+  const questionIdElement = document.getElementById("question-id");
+  const question_id = questionIdElement.value;
+
+  if (answer) {
+    submitAnswer(answer, question_id);
+  }
+});
+
+// Submit the answer and fetch the next question
+function submitAnswer(answer, question_id) {
   if (answer) {
     addMessage(answer, "user-message");
     showTypingIndicator();
 
-    fetch(`/chat/submit/${sessionId}/`, {
+    fetch(`/chat/next-question/${sessionId}/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}", // Django CSRF token
       },
-      body: JSON.stringify({ answer }),
+      body: JSON.stringify({ answer, question_id }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -211,7 +227,9 @@ function submitAnswer(answer) {
         if (data.is_complete) {
           addMessage("Thank you! The session is complete.", "bot-message");
         } else {
-          fetchNextQuestion(); // Fetch the next question
+          // fetchNextQuestion(); // Fetch the next question
+          hideTypingIndicator();
+          renderQuestion(data); // Render question based on type
         }
       })
       .catch((error) => {
