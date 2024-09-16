@@ -1,928 +1,720 @@
 {% block content %}
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<!doctype html>
+<html lang="en">
+
 <head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-<title>Homepage - The Quote Bot</title>
-<base href="https://thequotebot.com/" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_webp/thequotebot.com/wp-content/themes/sitesalt/apple-touch-icon.png" data-spai-egr="1">
-<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_webp/thequotebot.com/wp-content/themes/sitesalt/favicon-32x32.png" data-spai-egr="1">
-<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_webp/thequotebot.com/wp-content/themes/sitesalt/favicon-16x16.png" data-spai-egr="1">
-<link rel="manifest" href="https://thequotebot.com/wp-content/themes/sitesalt/site.webmanifest">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Passion+One&family=Roboto:wght@400;700&display=swap" crossorigin="anonymous" /> 
-<link href="https://fonts.googleapis.com/css2?family=Passion+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet" crossorigin="anonymous">
-<meta name="theme-color" content="#d22d16">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.shortpixel.ai/spai/q_lossy+ret_auto+to_webp+v_5/thequotebot.com/wp-content/themes/sitesalt/style.css?ver=1.2325" data-spai-egr="1" type="text/css" media="screen,projection" />
-<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
-
-	<!-- This site is optimized with the Yoast SEO plugin v23.4 - https://yoast.com/wordpress/plugins/seo/ -->
-	<link rel="canonical" href="https://thequotebot.com/" />
-	<meta property="og:locale" content="en_US" />
-	<meta property="og:type" content="website" />
-	<meta property="og:title" content="Homepage - The Quote Bot" />
-	<meta property="og:url" content="https://thequotebot.com/" />
-	<meta property="og:site_name" content="The Quote Bot" />
-	<meta name="twitter:card" content="summary_large_image" />
-	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https:\/\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\/\/thequotebot.com\/","url":"https:\/\/thequotebot.com\/","name":"Homepage - The Quote Bot","isPartOf":{"@id":"https:\/\/thequotebot.com\/#website"},"about":{"@id":"https:\/\/thequotebot.com\/#organization"},"datePublished":"2021-05-31T14:07:04+00:00","dateModified":"2021-05-31T14:07:04+00:00","breadcrumb":{"@id":"https:\/\/thequotebot.com\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\/\/thequotebot.com\/"]}]},{"@type":"BreadcrumbList","@id":"https:\/\/thequotebot.com\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https:\/\/thequotebot.com\/#website","url":"https:\/\/thequotebot.com\/","name":"The Quote Bot","description":"Take control of your quoting process","publisher":{"@id":"https:\/\/thequotebot.com\/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\/\/thequotebot.com\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https:\/\/thequotebot.com\/#organization","name":"The Quote Bot","url":"https:\/\/thequotebot.com\/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/thequotebot.com\/#\/schema\/logo\/image\/","url":"https:\/\/cdn.shortpixel.ai\/spai\/q_lossy+ret_img+to_webp\/thequotebot.com\/wp-content\/uploads\/2020\/11\/qb-square.png","contentUrl":"https:\/\/cdn.shortpixel.ai\/spai\/q_lossy+ret_img+to_webp\/thequotebot.com\/wp-content\/uploads\/2020\/11\/qb-square.png","width":400,"height":400,"caption":"The Quote Bot"},"image":{"@id":"https:\/\/thequotebot.com\/#\/schema\/logo\/image\/"}}]}</script>
-	<!-- / Yoast SEO plugin. -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-<style id='spai-fadein-inline-css' type='text/css'>
-img[data-spai]{opacity: 0;} div.woocommerce-product-gallery img[data-spai]{opacity: 1;} img[data-spai-egr],img[data-spai-lazy-loaded],img[data-spai-upd] {transition: opacity .5s linear .2s;-webkit-transition: opacity .5s linear .2s;-moz-transition: opacity .5s linear .2s;-o-transition: opacity .5s linear .2s; opacity: 1;}
-</style>
-<script type="text/javascript" src="https://thequotebot.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
-<script type="text/javascript" src="https://thequotebot.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
-<link rel="https://api.w.org/" href="https://thequotebot.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://thequotebot.com/wp-json/wp/v2/pages/1259" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://thequotebot.com/xmlrpc.php?rsd" />
+    <style>
+        .homeHeadWrap {
+            margin-top: 100px;
+            margin-bottom: 100px;
+        }
 
-<link rel='shortlink' href='https://thequotebot.com/' />
-<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://thequotebot.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fthequotebot.com%2F" />
-<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://thequotebot.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fthequotebot.com%2F&#038;format=xml" />
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NT7TCVQDNG"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
-gtag('js',new Date());gtag('config','G-NT7TCVQDNG')</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script type="text/javascript">/* <![CDATA[*/function external_links_in_new_windows_loop(){if(!document.links){document.links=document.getElementsByTagName('a')}
-var change_link=!1;var force='';var ignore='';for(var t=0;t<document.links.length;t++){var all_links=document.links[t];change_link=!1;if(document.links[t].hasAttribute('onClick')==!1){if(all_links.href.search(/^http/)!=-1&&all_links.href.search('thequotebot.com')==-1&&all_links.href.search(/^#/)==-1){change_link=!0}
-if(force!=''&&all_links.href.search(force)!=-1){change_link=!0}
-if(ignore!=''&&all_links.href.search(ignore)!=-1){change_link=!1}
-if(change_link==!0){document.links[t].setAttribute('onClick','javascript:window.open(\''+all_links.href.replace(/'/g,'')+'\', \'_blank\', \'noopener\'); return false;');document.links[t].removeAttribute('target')}}}}
-function external_links_in_new_windows_load(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func}else{window.onload=function(){oldonload();func()}}}
-external_links_in_new_windows_load(external_links_in_new_windows_loop);/*]]> */</script>
+        #clientsBox {
+            background-color: #f8f9fa;
+            /* Light grey background */
+            padding: 40px 0;
+            /* Vertical padding */
+        }
 
-<link rel="icon" href="https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_webp/thequotebot.com/wp-content/uploads/2020/11/cropped-full-logo-transparent-32x32.png" data-spai-egr="1" sizes="32x32" />
-<link rel="icon" href="https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_webp/thequotebot.com/wp-content/uploads/2020/11/cropped-full-logo-transparent-192x192.png" data-spai-egr="1" sizes="192x192" />
-<link rel="apple-touch-icon" href="https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_webp/thequotebot.com/wp-content/uploads/2020/11/cropped-full-logo-transparent-180x180.png" data-spai-egr="1" />
-<meta name="msapplication-TileImage" content="https://thequotebot.com/wp-content/uploads/2020/11/cropped-full-logo-transparent-270x270.png" />
-<style id="wpforms-css-vars-root">
-				:root {
-					--wpforms-field-border-radius: 3px;
---wpforms-field-border-style: solid;
---wpforms-field-border-size: 1px;
---wpforms-field-background-color: #ffffff;
---wpforms-field-border-color: rgba( 0, 0, 0, 0.25 );
---wpforms-field-border-color-spare: rgba( 0, 0, 0, 0.25 );
---wpforms-field-text-color: rgba( 0, 0, 0, 0.7 );
---wpforms-field-menu-color: #ffffff;
---wpforms-label-color: rgba( 0, 0, 0, 0.85 );
---wpforms-label-sublabel-color: rgba( 0, 0, 0, 0.55 );
---wpforms-label-error-color: #d63637;
---wpforms-button-border-radius: 3px;
---wpforms-button-border-style: none;
---wpforms-button-border-size: 1px;
---wpforms-button-background-color: #066aab;
---wpforms-button-border-color: #066aab;
---wpforms-button-text-color: #ffffff;
---wpforms-page-break-color: #066aab;
---wpforms-background-image: none;
---wpforms-background-position: center center;
---wpforms-background-repeat: no-repeat;
---wpforms-background-size: cover;
---wpforms-background-width: 100px;
---wpforms-background-height: 100px;
---wpforms-background-color: rgba( 0, 0, 0, 0 );
---wpforms-background-url: none;
---wpforms-container-padding: 0px;
---wpforms-container-border-style: none;
---wpforms-container-border-width: 1px;
---wpforms-container-border-color: #000000;
---wpforms-container-border-radius: 3px;
---wpforms-field-size-input-height: 43px;
---wpforms-field-size-input-spacing: 15px;
---wpforms-field-size-font-size: 16px;
---wpforms-field-size-line-height: 19px;
---wpforms-field-size-padding-h: 14px;
---wpforms-field-size-checkbox-size: 16px;
---wpforms-field-size-sublabel-spacing: 5px;
---wpforms-field-size-icon-size: 1;
---wpforms-label-size-font-size: 16px;
---wpforms-label-size-line-height: 19px;
---wpforms-label-size-sublabel-font-size: 14px;
---wpforms-label-size-sublabel-line-height: 17px;
---wpforms-button-size-font-size: 17px;
---wpforms-button-size-height: 41px;
---wpforms-button-size-padding-h: 15px;
---wpforms-button-size-margin-top: 10px;
---wpforms-container-shadow-size-box-shadow: none;
+        #clientsBox .title span {
+            color: #007bff;
+            /* Primary color */
+        }
 
-				}
-			</style>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NT7TCVQDNG"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
-gtag('js',new Date());gtag('config','G-NT7TCVQDNG')</script>
+        .card {
+            border-radius: 8px;
+            /* Rounded corners for cards */
+            overflow: hidden;
+            /* Ensures the image fits nicely */
+        }
 
-<link href="https://cdn.shortpixel.ai" rel="preconnect" crossorigin></head>
+        .card-img-top {
+            object-fit: cover;
+            /* Ensure the image covers the card area */
+            height: 200px;
+            /* Fixed height for images */
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Slight shadow on hover */
+        }
 
 
-<body data-rsssl=1>
-<nav>
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-lg-3">
-				<a href="https://thequotebot.com" title="The Quote Bot"><img width="257" height="64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgNTgiIHdpZHRoPSIyNTAiIGhlaWdodD0iNTgiIGRhdGEtdT0iaHR0cHMlM0ElMkYlMkZ0aGVxdW90ZWJvdC5jb20lMkZ3cC1jb250ZW50JTJGdGhlbWVzJTJGc2l0ZXNhbHQlMkZhc3NldHMlMkZ0aGUtcXVvdGUtYm90LWxvZ28ud2VicCIgZGF0YS13PSIyNTAiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" alt="The Quote Bot" class="img-fluid logoImg"></a>
-								<div class="menuBtn" onclick="showmenu();"><img height="30" width="21" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAyMSIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIxIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnRoZW1lcyUyRnNpdGVzYWx0JTJGYXNzZXRzJTJGaWNvbi1tZW51LndlYnAiIGRhdGEtdz0iMzAiIGRhdGEtaD0iMjEiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" alt="Open Menu" class="img-fluid"></div>
-							</div>
-						<div class="col-xs-12 col-lg-9 d-lg-flex align-items-center justify-content-end align-middle" id="menu">
-				<div class="closeBtn" onclick="hidemenu();"><img height="40" width="40" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnRoZW1lcyUyRnNpdGVzYWx0JTJGYXNzZXRzJTJGaWNvbi1jbG9zZS53ZWJwIiBkYXRhLXc9IjQwIiBkYXRhLWg9IjQwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" alt="Close Menu" class="img-fluid"></div>
+        .title span {
+            color: #007bff;
 
-								<div class="submenu">
-					<a class="linkhome" href="https://thequotebot.com/#linkhome" onclick="hidemenu();" title="Home">Home</a>
-									</div>
-								<div class="submenu">
-					<a class="linksamples" href="https://thequotebot.com/#linksamples" onclick="hidemenu();" title="Samples">Samples</a>
-									</div>
-								<div class="submenu">
-					<a class="linkfeatures" href="https://thequotebot.com/#linkfeatures" onclick="hidemenu();" title="Features">Features</a>
-									</div>
-								<div class="submenu">
-					<a class="linktestimonials" href="https://thequotebot.com/#linktestimonials" onclick="hidemenu();" title="Testimonials">Testimonials</a>
-									</div>
-								<div class="submenu">
-					<a class="linkpricing" href="https://thequotebot.com/#linkpricing" onclick="hidemenu();" title="Pricing">Pricing</a>
-									</div>
-								<div class="submenu">
-					<a class="fullBtn" href="https://thequotebot.com/#linkform" onclick="hidemenu();" title="Contact Us">Contact Us</a>
-									</div>
-								<div class="submenu">
-					<a class="buyNowBtn" href="https://thequotebot.com/#linkpricing" onclick="hidemenu();" title="Buy Now">Buy Now</a>
-									</div>
-							</div>
-											</div>
-	</div>
-</nav>
-<style type="text/css">
-.homeHeadWrap{width:100%;height:100%;min-height:300px}body{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjcwIDQ5NjQiIHdpZHRoPSIyNjcwIiBoZWlnaHQ9IjQ5NjQiIGRhdGEtdT0iaHR0cHMlM0ElMkYlMkZ0aGVxdW90ZWJvdC5jb20lMkZ3cC1jb250ZW50JTJGdGhlbWVzJTJGc2l0ZXNhbHQlMkZhc3NldHMlMkZyb2JvdC1pY29ucy53ZWJwIiBkYXRhLXc9IjI2NzAiIGRhdGEtaD0iNDk2NCIgZGF0YS1iaXA9IiI+PC9zdmc+");background-repeat:no-repeat !important;background-position:center top !important;background-size:cover !important}.homeHead{position:relative;z-index:10;min-height:450px;margin:0 auto;text-align:left;color:#fff;padding-top:200px;padding-bottom:200px}@media(max-width: 767.98px){.homeHead{padding-top:100px;padding-bottom:100px}}.homeHead h1,.homeHead h2{font-family:"Passion One",cursive;font-size:60px;line-height:1.5;font-weight:400;text-shadow:0px 0px 10px rgba(0,0,0,.7)}@media(max-width: 991.98px){.homeHead h1,.homeHead h2{font-size:60px}}@media(max-width: 767.98px){.homeHead h1,.homeHead h2{font-size:45px;margin-top:100px}}@media(max-width: 575.98px){.homeHead h1,.homeHead h2{font-size:38px}}.homeHead h2{font-size:32px}.homeHead p{font-size:18px;margin-bottom:20px;text-shadow:0px 0px 10px rgba(0,0,0,.7)}.homeHead .float-xl-end{font-family:"Passion One",cursive;font-size:28px}.homeHead .rightArr{display:inline}@media(max-width: 1199.98px){.homeHead .rightArr{display:none}}.homeHead .downArr{display:none}@media(max-width: 1199.98px){.homeHead .downArr{display:inline}}.homeLeftPart{display:flex;justify-content:left;flex-direction:column;align-items:left;text-align:left}@media(max-width: 767.98px){.homeLeftPart .btn{margin-right:10px;margin-bottom:10px}}.title{font-family:"Passion One",cursive;font-size:45px;line-height:1.5;font-weight:400;color:#333}.title span{color:#d22d16}.title.smaller{font-size:25px}.bottom-line{border-bottom:1px solid #e3e6e7;height:0;padding:0;line-height:0;font-size:0;margin:0;padding-top:60px;margin-bottom:60px}.featureBox{border-radius:14px;border:1px solid #f4f4f4;padding:35px;background:#fff;font-size:15px;color:#575a5c;margin-bottom:10px}.featureBox h3{font-size:26px;font-family:"Passion One",cursive}.featureBox .hoverImage{display:none}.featureBox:hover{box-shadow:0px 0px 10px 0px #666}.featureBox:hover .hoverImage{display:inline-block}.featureBox:hover .mainImage{display:none}.reviewBox{border-radius:14px;border:1px solid #f4f4f4;padding:35px;padding-top:60px;margin-top:35px;background:#fff;font-size:16px;color:#575a5c;margin-bottom:10px;position:relative}.reviewBox:hover{box-shadow:0px 0px 10px 0px #666}.reviewBox img{max-width:70px;border-radius:35px;box-shadow:0px 0px 10px 0px #666;position:absolute;left:35px;top:-35px}.reviewBox .separatorLine{border-bottom:1px solid #e3e6e7;height:0;padding:0;line-height:0;font-size:0;margin:0;padding-top:20px;margin-bottom:20px}.reviewBox .goldStars{color:#fce786;font-weight:bold;font-size:20px}.priceColumn{background:#fff;border-radius:14px;text-align:center}.priceColumn .topPart{border-top-left-radius:14px;border-top-right-radius:14px;background:#f9e685;border:1px solid #fcf1ea}.priceColumn .topPart.popular{background:#f9e685;color:#fff}.priceColumn .topPart .name{display:block;background:#35a1d4;color:#fff;font-family:"Passion One",cursive;font-size:24px;line-height:2em;margin-left:30px;margin-right:30px;border-bottom-left-radius:5px;border-bottom-right-radius:5px;position:relative;margin-top:-10px;white-space:nowrap}.priceColumn .topPart .name img:first-child{position:absolute;top:0;left:-10px}.priceColumn .topPart .name img:nth-child(2){position:absolute;top:0;right:-10px}.priceColumn .topPart .name .popular,.priceColumn .topPart .name .discounted{position:absolute;width:100%;bottom:-40px;left:0;line-height:20px}.priceColumn .topPart .price{font-size:100px;color:#35a1d4;font-family:"Passion One",cursive;padding-top:20px;padding-bottom:10px}@media(max-width: 767.98px){.priceColumn .topPart .price{font-size:80px;padding-top:0;padding-bottom:0}}.priceColumn .topPart.discounted .discounted{color:#35a1d4;font-size:36px}.priceColumn .topPart.popular .popular{display:none}.priceColumn .topPart .btn{box-shadow:0px 0px 10px 0px #666;position:relative;margin-bottom:-30px}.priceColumn .bottomPart{border:1px solid #dbdee0;padding-top:40px;border-bottom-left-radius:14px;border-bottom-right-radius:14px;margin-bottom:40px}.priceColumn .bottomPart .item{border-bottom:1px solid #dbdee0;margin-left:30px;margin-right:30px;line-height:42px;min-height:42px}@media(max-width: 1199.98px){.priceColumn .bottomPart .item{text-align:left}.priceColumn .bottomPart .item img{margin-right:10px}}.priceColumn .bottomPart .item.featureName{color:#575a5c;font-family:"Passion One",cursive;font-size:22px;white-space:nowrap}.priceColumn .bottomPart .item.noBorderBtm{border-bottom:0;line-height:1.5em}.priceColumn .bottomPart .item.noBorderBtm .btn{margin-top:20px;margin-bottom:20px}.priceColumn .bottomPart .item .onlywhenSmall{display:none}@media(max-width: 1199.98px){.priceColumn .bottomPart .item .onlywhenSmall{display:inline}}.priceColumn.leftOne{text-align:right}.priceColumn.leftOne .topPart{visibility:hidden}.priceColumn.leftOne .bottomPart{border:0}.priceColumn.leftOne .bottomPart .item{border-bottom:1px solid #fff}@media(max-width: 1199.98px){.priceColumn.leftOne{display:none}}.lead{color:#575a5c;font-family:"Passion One",cursive;font-size:22px}.disclaimers{font-size:14px}.disclaimers p{margin-bottom:5px}.additionalTitle{background:#e2e5e6;color:#575a5c;font-family:"Passion One",cursive;font-size:22px;border-top-left-radius:14px;border-bottom-left-radius:14px;text-align:center;padding:25px;margin-top:20px;cursor:pointer;border:1px solid #e2e5e6;border-right:0;cursor:pointer}.additionalTitle.active,.additionalTitle:hover{background:#fff;color:#35a1d4;border:1px solid #e3e6e7;border-right:0;position:relative;margin-right:-1px}@media(max-width: 767.98px){.additionalTitle{display:none}}.additionalContent{display:none;background:#fff;border:1px solid #e3e6e7;border-radius:14px;padding:25px;margin-bottom:20px;height:100%}.additionalContent:first-child{display:block}@media(max-width: 767.98px){.additionalContent{display:block;height:auto}}.additionalContent .contentTitle{text-align:center;color:#35a1d4;font-family:"Passion One",cursive;font-size:32px;padding-bottom:30px;display:none}@media(max-width: 767.98px){.additionalContent .contentTitle{display:block}}.additionalContent .item{padding-bottom:25px}@media(max-width: 767.98px){.additionalContent .item{text-align:center}}.additionalContent .item .itemName{font-family:"Passion One",cursive;font-size:26px}.additionalContent .item .itemSpace{height:60%;border-bottom:2px solid #e3e6e7}@media(max-width: 767.98px){.additionalContent .item .itemSpace{display:none}}.additionalContent .item .itemCost{font-family:"Passion One",cursive;font-size:26px;color:#d22d16}.additionalContent p.small{padding-top:15px;font-size:14px}.additionalContent li.small{font-size:14px}.additionalContent .blueInfoBox{padding:20px;border-radius:7px;background:#e1f1f9}.nospaceright{padding-right:0;margin-right:0;position:relative;z-index:21;padding-bottom:20px}.nospaceleft{padding-left:0;margin-left:0;position:relative;z-index:20}.bottomPagePart{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIwIDY3MSIgd2lkdGg9IjE5MjAiIGhlaWdodD0iNjcxIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnRoZW1lcyUyRnNpdGVzYWx0JTJGYXNzZXRzJTJGZm9vdGVyLndlYnAiIGRhdGEtdz0iMTkyMCIgZGF0YS1oPSI2NzEiIGRhdGEtYmlwPSIiPjwvc3ZnPg==");background-repeat:no-repeat !important;background-position:center bottom !important;background-size:100%}@media(max-width: 767.98px){.bottomPagePart{background-size:cover !important}}.bottomPagePart .formWrap{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIwIDEwMjciIHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwMjciIGRhdGEtdT0iaHR0cHMlM0ElMkYlMkZ0aGVxdW90ZWJvdC5jb20lMkZ3cC1jb250ZW50JTJGdGhlbWVzJTJGc2l0ZXNhbHQlMkZhc3NldHMlMkZmb3JtLWJnLndlYnAiIGRhdGEtdz0iMTkyMCIgZGF0YS1oPSIxMDI3IiBkYXRhLWJpcD0iIj48L3N2Zz4=");background-repeat:no-repeat !important;background-position:center top !important;padding:60px;margin-bottom:80px;color:#fff;text-align:center;border-radius:14px;box-shadow:0px 0px 10px 0px #666;font-size:16px}@media(max-width: 767.98px){.bottomPagePart .formWrap{padding:35px}}.bottomPagePart .formWrap h2{font-family:"Passion One",cursive;font-size:45px}.bottomPagePart .formWrap form{width:70%;margin:0 auto}@media(max-width: 767.98px){.bottomPagePart .formWrap form{width:100%}}.bottomPagePart .formWrap input,.bottomPagePart .formWrap textarea{background:rgba(0,0,0,0);border:1px solid #fff;border-radius:7px;width:100%;padding:10px;color:#fff;margin-bottom:20px}.bottomPagePart .formWrap input::-moz-placeholder, .bottomPagePart .formWrap textarea::-moz-placeholder{color:#fff}.bottomPagePart .formWrap input::placeholder,.bottomPagePart .formWrap textarea::placeholder{color:#fff}.bottomPagePart .formWrap .text-danger{color:#d22d16;font-weight:bold;font-size:16px}.bottomPagePart .formWrap .text-success{color:#fff;font-weight:bold;font-size:16px}.bottomPagePart .nlaFormWrap{background-image:none;background-color:#fff;color:#000}.bottomPagePart .nlaFormWrap h2 span{color:#d22d16}.bottomPagePart .nlaFormWrap input,.bottomPagePart .nlaFormWrap textarea{color:#000}.bottomPagePart .nlaFormWrap input::-moz-placeholder, .bottomPagePart .nlaFormWrap textarea::-moz-placeholder{color:#000 !important;opacity:.8 !important}.bottomPagePart .nlaFormWrap input::placeholder,.bottomPagePart .nlaFormWrap textarea::placeholder{color:#000 !important;opacity:.8 !important}.bottomPagePart .nlaFormWrap .wpforms-field-description{text-align:left}.bottomPagePart .nlaFormWrap ul li::before{display:none}.bottomPagePart #footer{color:#688dba;font-size:17px;padding-bottom:60px}.bottomPagePart #footer strong{color:#fff}.bottomPagePart #footer a{color:#688dba}.bottomPagePart #footer a:hover{color:#fff}.bottomPagePart #footer .lead{color:#fff}.bottomPagePart #footer .footerMenu a{display:block}.bottomPagePart #footer .btn-primary{color:#fff;background-color:#e67235}.bottomPagePart #footer .btn-primary:hover{background-color:#d22d16}@media(max-width: 767.98px){.bottomPagePart #footer .socialLinks{text-align:center;padding-bottom:30px}}.bottomPagePart #footer .socialLinks a{display:inline-block;width:40px;height:40px;line-height:40px;border-radius:20px;background:#e67235;text-align:center;margin-right:5px}.bottomPagePart #footer .socialLinks a:hover{background:#d22d16}.clientLogos{text-align:center}.clientLogos .clientLogo{width:19%;display:inline-block}@media(max-width: 767.98px){.clientLogos .clientLogo{width:40%}}.demoLink{color:#fffd74}.demoLink:hover{color:#fff}/*# sourceMappingURL=css_part_homepage.css.map */.homeHeadWrap {
-	background: linear-gradient( rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) ), url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDM2IDk1NCIgd2lkdGg9IjIwMzYiIGhlaWdodD0iOTU0IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnRoZW1lcyUyRnNpdGVzYWx0JTJGYXNzZXRzJTJGaGVhZC1iYWNrZ3JvdW5kLndlYnAiIGRhdGEtdz0iMjAzNiIgZGF0YS1oPSI5NTQiIGRhdGEtYmlwPSIiPjwvc3ZnPg==');
-}
-</style>
+        }
 
+        /* feature box  */
+        .featureBox {
+            border: 1px solid #ddd;
 
-<a name="linkhome"></a>
-<div class="homeHeadWrap coverBg webpBg">
-	<div class="homeHead">
-		<div class="container">
-			<div class="row">
-				<div class="col-xl-6 homeLeftPart">
-					<h1>The Quote Bot</h1>
-					<p>Take control of your company's quoting process and make the most out of your quotes. </p>
-					<p>Do you know how much money you're leaving on the table? Are you converting at least 50% of your total quote value? Is your staff following-up and properly handling the quotes? </p>
-					<p>Answer these questions and much more with THE Quote Bot. </p>
-					<p>
-						<a href="#" onclick="scrolltoform(); return false;" class="btn btn-orange" title="Get Started Now">Get Started Now</a>
-						<a href="https://www.youtube.com/watch?v=G3nxzk7VUZ8" class="btn btn-white btnYT" title="Play Video">&#9654; Play Video</a>
-						<span class="float-xl-end" title="Give It a Try">Give It a Try <span class="rightArr">&rarr;</span> <span class="downArr">&darr;</span></span>
-					</p>
-				</div>
-				<div class="col-xl-5">
-					<div id="ssiframecontainerbot"></div>
-					<script type="text/javascript" src="https://demo.thequotebot.com/chat-script/12/inline" async></script>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 15px;
+            margin-bottom: 30px;
+            transition: box-shadow 0.3s ease;
+        }
 
-<script type="text/javascript">var fancyboxloaded=!1;function fancyboxload(){if(!fancyboxloaded){fancyboxloaded=!0;jQuery('head').append(jQuery('<link rel="stylesheet" type="text/css" />').attr('href','https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css'));jQuery.getScript("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js",function(){jQuery("a.btnYT").fancybox()})}}
-jQuery(document).on({mousemove:function(e){fancyboxload()},scroll:function(e){fancyboxload()}})</script>
+        .featureBox:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
+        .mainImage {
+            display: block;
+            margin: 0 auto;
+            transition: opacity 0.3s ease;
+        }
 
-<a name="linksamples"></a>
-<div class="container" id="clientsBox">
-	<h2 class="title text-center">See It Live On Some Of Our <span>Clients' Sites</span></h2>
-	<div class="clientLogos">
-						<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://leroslimo.com/" title="Leros Transportation Group"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDUgMTA3IiB3aWR0aD0iMjQ1IiBoZWlnaHQ9IjEwNyIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjA4JTJGbGVyb3MucG5nIiBkYXRhLXc9IjI0NSIgZGF0YS1oPSIxMDciIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="324" height="300" alt="Leros Transportation Group" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDUgMTA3IiB3aWR0aD0iMjQ1IiBoZWlnaHQ9IjEwNyIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjA4JTJGc3J0Yy5wbmciIGRhdGEtdz0iMjQ1IiBkYXRhLWg9IjEwNyIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="324" height="300" alt="SRTC Limo Worldwide" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://driverprovider.com/" title="The Driver Provider"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDUgMTA3IiB3aWR0aD0iMjQ1IiBoZWlnaHQ9IjEwNyIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjA4JTJGZHJpdmVycHJvdmlkZXIucG5nIiBkYXRhLXc9IjI0NSIgZGF0YS1oPSIxMDciIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="324" height="300" alt="The Driver Provider" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://www.rmalimo.com/" title="RMA Worldwide"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDUgMTA3IiB3aWR0aD0iMjQ1IiBoZWlnaHQ9IjEwNyIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjA4JTJGcm1hLnBuZyIgZGF0YS13PSIyNDUiIGRhdGEtaD0iMTA3IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="324" height="300" alt="RMA Worldwide" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://www.allstarvip.com/" title="Allstar Chauffeured Services"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDUgMTA3IiB3aWR0aD0iMjQ1IiBoZWlnaHQ9IjEwNyIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjA4JTJGYWxsc3Rhci5wbmciIGRhdGEtdz0iMjQ1IiBkYXRhLWg9IjEwNyIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="324" height="300" alt="Allstar Chauffeured Services" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://nashvillelimo.com/" title="Signature Transportation Services"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjEgMTE0IiB3aWR0aD0iMjYxIiBoZWlnaHQ9IjExNCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMSUyRjAyJTJGbmFzaHZpbGxlLTQ5NjMyODQucG5nIiBkYXRhLXc9IjI2MSIgZGF0YS1oPSIxMTQiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="324" height="300" alt="Signature Transportation Services" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://a1alimo.com/" title="A1A Limousine Service"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjEgMTE0IiB3aWR0aD0iMjYxIiBoZWlnaHQ9IjExNCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMiUyRjEwJTJGYTFhLnBuZyIgZGF0YS13PSIyNjEiIGRhdGEtaD0iMTE0IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="324" height="300" alt="A1A Limousine Service" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://strackground.com/" title="Strackground Transportation"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjEgMTE0IiB3aWR0aD0iMjYxIiBoZWlnaHQ9IjExNCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMiUyRjEwJTJGc3RyYWNrLnBuZyIgZGF0YS13PSIyNjEiIGRhdGEtaD0iMTE0IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="324" height="300" alt="Strackground Transportation" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://hermesworldwide.com/" title="Hermes Worldwide"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjEgMTE0IiB3aWR0aD0iMjYxIiBoZWlnaHQ9IjExNCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMiUyRjEwJTJGaGVybWVzLnBuZyIgZGF0YS13PSIyNjEiIGRhdGEtaD0iMTE0IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="324" height="300" alt="Hermes Worldwide" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-								<div class="clientLogo">
-					<div class="clearSpacer"></div>
-					<a target="_blank" href="https://www.eckolimo.com/" title="Ecko Worldwide Transportation"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjEgMTE0IiB3aWR0aD0iMjYxIiBoZWlnaHQ9IjExNCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMiUyRjEwJTJGZWNrby5wbmciIGRhdGEtdz0iMjYxIiBkYXRhLWg9IjExNCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="324" height="300" alt="Ecko Worldwide Transportation" class="img-fluid" /></a>
-					<div class="clearSpacer"></div>
-				</div>
-					</div>
-</div>
+        .hoverImage {
+            display: none;
+        }
 
-<div class="container">
-	<div class="bottom-line"></div>
-</div>
+        .featureBox:hover .hoverImage {
+            display: block;
+        }
 
+        .featureBox:hover .mainImage {
+            display: none;
 
-<a name="linkfeatures"></a>
-<div class="container" id="featuresBox">
-	<h2 class="title text-center">Key <span>Features &amp; Benefits</span></h2>
-	<p class="text-center">We have a long list of features and benefits and, while the list below is long, we've had to work really hard to keep it down to just 18 listed items. There's so much more to the system just waiting to be discovered and taken advantage of!</p>
-	<div class="clearSpacer"></div>
-	<div class="clearSpacer"></div>
-	<div class="row">
-						<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZpbnRlcmFjdGl2ZS53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Interactive and intuitive" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZpbnRlcmFjdGl2ZS1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Interactive and intuitive" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Interactive and intuitive</h3>
-								<p>Make the whole quote request process engaging and intuitive with a <strong>logic-based conversational approach</strong></p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZzZW5kLXF1b3Rlcy53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Send Quotes as easy as 1-2-3" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZzZW5kLXF1b3Rlcy1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Send Quotes as easy as 1-2-3" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Send Quotes as easy as 1-2-3</h3>
-								<p>With built-in templates and rules, sending out a <strong>professional-looking quote</strong> can be done with<strong> just a few clicks</strong>.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZtYXJrZXRpbmctYXV0b21hdGlvbi53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Marketing Automation" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZtYXJrZXRpbmctYXV0b21hdGlvbi1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Marketing Automation" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Marketing Automation</h3>
-								<p>Send custom emails at <strong>key points in the quoting pipeline</strong> to sell additional services, help to convert or send staff reminders.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZmdWxseS1jdXN0b21pemFibGUud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Fully Customizable" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZmdWxseS1jdXN0b21pemFibGUtcmVkLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Fully Customizable" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Fully Customizable</h3>
-								<p>Make it your own – <strong>change colors, icons, questions, rules and templates</strong>. The sky is the limit!</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZyZXBvcnRpbmcud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Reporting Capabilities" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZyZXBvcnRpbmctcmVkLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Reporting Capabilities" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Reporting Capabilities</h3>
-								<p>With the system’s customizable reports you will <strong>always know</strong> where you stand on <strong>conversion rates</strong>, $ amounts, user performance, and much more!</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZwcm9mZXNzaW9uYWwtcXVvdGVzLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Professional Quotes" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZwcm9mZXNzaW9uYWwtcXVvdGVzLVJFRC53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Professional Quotes" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Professional Quotes</h3>
-								<p>Your whole team working as one – <strong>always send out professional emails</strong> with built-in tracking, automatic reminders and management reporting.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjb21wcmVoZW5zaXZlLWRhdGEtY2FwdHVyZS53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Comprehensive Data Capture" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjb21wcmVoZW5zaXZlLWRhdGEtY2FwdHVyZS1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Comprehensive Data Capture" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Comprehensive Data Capture</h3>
-								<p>With the bot, we have the ability to gather <strong>every single bit of detail that we need</strong> (in an<strong> engaging manner</strong>) to generate a quote.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tdGVtcGxhdGVzLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Custom Quote Templates" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tdGVtcGxhdGVzLXJlZC53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Custom Quote Templates" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Custom Quote Templates</h3>
-								<p>One of the great features of The Quote Bot is that it allows the user to <strong>create and store an unlimited number of quote templates</strong> based on the specific service that is being requested.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZkYXNoYm9hcmQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Quote Dashboard" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZkYXNoYm9hcmQtcmVkLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Quote Dashboard" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Quote Dashboard</h3>
-								<p>Not only does this act as an <strong>internal CRM solution</strong> for your team, but it also allows owners and managers to <strong>identify and address any potential weaknesses</strong>.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZkYXRhYmFzZS53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="All Quote Data in a Single Database" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZkYXRhYmFzZS1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="All Quote Data in a Single Database" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>All Quote Data in a Single Database</h3>
-								<p>With The Quote Bot, we have built a very comprehensive backend in our software solution that will<strong> allow every single quote to be tracked</strong>.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZ6aXB3aGlwLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="SMS Integrations" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZ6aXB3aGlwLXJlZC53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="SMS Integrations" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>SMS Integrations</h3>
-								<p>The Quote Bot has an active API integration with Mobile-Text-Alerts &amp; Zipwhip to allow quotes and follow-up messages to be <strong>sent out as texts</strong> in addition to an email <strong>using your own phone number. </strong></p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZzeXN0ZW0tbm90aWZpY2F0aW9ucy53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="System Notifications" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZzeXN0ZW0tbm90aWZpY2F0aW9ucy1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="System Notifications" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>System Notifications</h3>
-								<p>These include notifying users <strong>if a quote goes unclaimed</strong> in a timely manner, notifying <strong>if a quote has not been sent</strong> out yet, notifying <strong>if a reply has come in</strong> from a quote that was sent out, and many others.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZtdWx0aS1sZXZlbC1hY2Nlc3Mud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Multi-level Access with Customizable Permissions" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZtdWx0aS1sZXZlbC1hY2Nlc3MtcmVkLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Multi-level Access with Customizable Permissions" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Multi-level Access with Customizable Permissions</h3>
-								<p>The Quote Bot also includes <strong>customizable permissions and roles</strong> within the system. This ensures that each individual user receives the appropriate permissions to manage their <strong>daily tasks and responsibilities</strong>.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjb21wbGV0ZS1oaXN0b3JpY2FsLWxvZy53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Complete Historical Log Attached to Each Quote" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjb21wbGV0ZS1oaXN0b3JpY2FsLWxvZy1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Complete Historical Log Attached to Each Quote" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Complete Historical Log Attached to Each Quote</h3>
-								<p>Everything that is done within The Quote Bot is tracked and added to a historical log for tracking purposes. <strong>Every single quote will have its own historical log</strong> that will track every step along the way.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZ3b3Jrcy1pbi10YW5kZW0ud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Works in Tandem with Existing Reservation/Booking Platforms" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZ3b3Jrcy1pbi10YW5kZW0tcmVkLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Works in Tandem with Existing Reservation/Booking Platforms" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Works in Tandem with Existing Reservation/Booking Platforms</h3>
-								<p>The great thing about The Quote Bot is that it <strong>DOES NOT compete with</strong> or try to replace your existing online reservation/booking system, it works in tandem with it.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tcXVvdGUtc291cmNlcy53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Custom Quote Sources" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tcXVvdGUtc291cmNlcy1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Custom Quote Sources" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Custom Quote Sources</h3>
-								<p>This handy little feature allows you to <strong>track where all of your quotes are coming in from</strong>. It can be very handy to track the effectiveness of marketing and advertising campaigns on an ongoing basis.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tcHJpY2luZy53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Santa Cruz Software Integration" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tcHJpY2luZy1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Santa Cruz Software Integration" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Santa Cruz Software Integration</h3>
-								<p>The quote bot has an <strong>API integration with Santa Cruz</strong>, a leading ground transportation software company.</p>
-<p>This integration allows Santa Cruz software users to <strong>fully automate the quoting and booking process</strong> based on their selected rates and booking rules set up on their back-end.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tcHJpY2luZy53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Livery Coach Software Integration" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjdXN0b20tcHJpY2luZy1yZWQud2VicCIgZGF0YS13PSI1OCIgZGF0YS1oPSI1OCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Livery Coach Software Integration" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Livery Coach Software Integration</h3>
-								<p>The quote bot has an <strong>API integration with Livery Coach</strong>, a leading ground transportation software company.</p>
-<p>This integration allows Livery Coach software users to <strong>fully automate the quoting and booking process</strong> based on their selected rates and booking rules set up on their back-end.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZlc2lnbmF0dXJlLWludGVncmF0aW9uLWJsdWUucG5nIiBkYXRhLXc9IjYwIiBkYXRhLWg9IjYwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="eSignature Integration" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZlc2lnbmF0dXJlLWludGVncmF0aW9uLXJlZC5wbmciIGRhdGEtdz0iNjAiIGRhdGEtaD0iNjAiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="eSignature Integration" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>eSignature Integration</h3>
-								<p>Integrated with Docusign, Pandadoc and DropboxSign to allow you to send out signature requests straight from within the system itself.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZzdXJnZS1wcmljaW5nLnBuZyIgZGF0YS13PSI2MCIgZGF0YS1oPSI2MCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Dynamic Pricing/Event Date Management" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZzdXJnZS1wcmljaW5nLXJlZC5wbmciIGRhdGEtdz0iNjAiIGRhdGEtaD0iNjAiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Dynamic Pricing/Event Date Management" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Dynamic Pricing/Event Date Management</h3>
-								<p>Provides flexibility to dynamically change rates based on time of day and day of week. Also useful for special events.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZtdWx0aXBsZS1icmFuZHMucG5nIiBkYXRhLXc9IjYwIiBkYXRhLWg9IjYwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Multiple Brands/Entities &#038; Pricing Rules" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZtdWx0aXBsZS1icmFuZHMtcmVkLnBuZyIgZGF0YS13PSI2MCIgZGF0YS1oPSI2MCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="60" height="60" alt="Multiple Brands/Entities &#038; Pricing Rules" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Multiple Brands/Entities &#038; Pricing Rules</h3>
-								<p>The system allows you to have multiple pricing rules and brands/entities set up with different rules for when each of them applies (per service/chatbot/form).</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZyYXRlLXNoYXJpbmcucG5nIiBkYXRhLXc9IjYwIiBkYXRhLWg9IjYwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Rate Sharing" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIzJTJGMTAlMkZyYXRlLXNoYXJpbmctaG92ZXIucG5nIiBkYXRhLXc9IjYwIiBkYXRhLWg9IjYwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Rate Sharing" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Rate Sharing</h3>
-								<p>Ability to share rates with other quote bot users in different markets allowing instant quoting/booking in those markets.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-md-6 col-xl-4">
-					<div class="featureBox">
-						<div class="row">
-							<div class="col-3">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjb25zdGFudGx5LWV2b2x2aW5nLndlYnAiIGRhdGEtdz0iNTgiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="60" height="60" alt="Constantly evolving​" class="img-fluid mainImage" />
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1OCA1OCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnVwbG9hZHMlMkYyMDIxJTJGMDYlMkZjb25zdGFudGx5LWV2b2x2aW5nLXJlZC53ZWJwIiBkYXRhLXc9IjU4IiBkYXRhLWg9IjU4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="60" height="60" alt="Constantly evolving​" class="img-fluid hoverImage" />
-							</div>
-							<div class="col-8">
-								<h3>Constantly evolving​</h3>
-								<p><strong>We listen to our clients</strong> and whenever we get a feature request that can be implemented and brings extra value to the system, we add it to the feature “wish list”. Once implemented, it usually <strong>becomes available to ALL</strong> users.</p>
-<p>After all, you know best what you need from the system and we’re here to make it happen!</p>
-							</div>
-						</div>
-					</div>
-				</div>
-					</div>
-</div>
+        }
 
-<div class="container">
-	<div class="bottom-line"></div>
-</div>
+        h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
 
-<a name="linktestimonials"></a>
-<div class="container" id="testimonialsBox">
-	<h2 class="title text-center">What Our <span>Clients Say</span></h2>
-	<p class="text-center">They Love it! &#x2764; Read what our customers have to say!</p>
-	<div class="clearSpacer"></div>
-	<div class="clearSpacer"></div>
-	<div class="row">
-						<div class="col-12 col-xl-6">
-					<div class="reviewBox">
-						<div class="row">
-							<div class="col">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjAzJTJGaGVybWVzLXNxdWFyZS0xNTB4MTUwLmpwZyIgZGF0YS13PSIxNTAiIGRhdGEtaD0iMTUwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="75" height="75" alt="Jorge Sanchez" class="img-fluid mainImage" />
-								<p>Hermes has been using The Quote Bot for about 6 months, and <strong>our team loves it!</strong> TQB removes the need for manual follow-up, can provide real-time accurate quotes (no additional source to update rate changes), self-service booking, and analytics to track your ROI. As a business owner, <strong>TQB helps me to provide a higher level of service to my clients for the equivalent of 1/2 FTE</strong> thus further increasing my ROI. TQB also allows for customization based on service types and vehicle types which provides you the opportunity to customize the experience for your clients. The response times for support are second to none. <strong>Couldn&#8217;t more highly recommend implementing TQB!</strong></p>
-								<div class="separatorLine"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<strong>Jorge Sanchez</strong><br />
-								Hermes Worldwide							</div>
-							<div class="col-6 text-end goldStars">
-								&starf;&starf;&starf;&starf;&starf;
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-xl-6">
-					<div class="reviewBox">
-						<div class="row">
-							<div class="col">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjAzJTJGYTFhLXNxdWFyZS0xNTB4MTUwLmpwZyIgZGF0YS13PSIxNTAiIGRhdGEtaD0iMTUwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="75" height="75" alt="Rick Versace" class="img-fluid mainImage" />
-								<p>We named our Quote Bot Allie, and <strong>she is the highest-performing Customer Service Rep in our office</strong>. She is so lifelike that people actually call the office looking to talk with her.</p>
-								<div class="separatorLine"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<strong>Rick Versace</strong><br />
-								A1A Limo							</div>
-							<div class="col-6 text-end goldStars">
-								&starf;&starf;&starf;&starf;&starf;
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-xl-6">
-					<div class="reviewBox">
-						<div class="row">
-							<div class="col">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjAzJTJGc3RyYWNrLXNxdWFyZS0xNTB4MTUwLmpwZyIgZGF0YS13PSIxNTAiIGRhdGEtaD0iMTUwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="75" height="75" alt="Matt Strack" class="img-fluid mainImage" />
-								<p><strong>Without any staff required</strong>, The Quote Bot has been a big help in capturing the organic leads to our site and converting them into reservations!</p>
-								<div class="separatorLine"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<strong>Matt Strack</strong><br />
-								Strackground Transportation							</div>
-							<div class="col-6 text-end goldStars">
-								&starf;&starf;&starf;&starf;&starf;
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-xl-6">
-					<div class="reviewBox">
-						<div class="row">
-							<div class="col">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjA5JTJGc2V0dGluZ19pbWFnZV9fMjk5MTM2NDIyXzQ5MzE0NDI2OTQ3OTcwMF8xMzg5MzEwODU3NDM3NjY5MzA5X24tMTUweDE1MC5qcGciIGRhdGEtdz0iMTUwIiBkYXRhLWg9IjE1MCIgZGF0YS1iaXA9IiI+PC9zdmc+" data-spai="1" width="75" height="75" alt="Mike Sobol" class="img-fluid mainImage" />
-								<p>The Quote Bot has become an integral part of our sales team. We utilize the functionality almost exclusively to receive online quotes and follow them through to booking automatically in our Santa Cruz software. We are new to The Quote Bot, but in a short time, our online requests and bookings have more than tripled. Additionally, their support team are eager to assist with any questions, changes and training issues which is so refreshing. I can’t say enough good comments about The Quote Bot.</p>
-<p>&nbsp;</p>
-								<div class="separatorLine"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<strong>Mike Sobol</strong><br />
-								East Coast Transportation							</div>
-							<div class="col-6 text-end goldStars">
-								&starf;&starf;&starf;&starf;&starf;
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-xl-6">
-					<div class="reviewBox">
-						<div class="row">
-							<div class="col">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjAzJTJGc2lnbmF0dXJlLXNxdWFyZS0xNTB4MTUwLmpwZyIgZGF0YS13PSIxNTAiIGRhdGEtaD0iMTUwIiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="75" height="75" alt="Mike Dozier" class="img-fluid mainImage" />
-								<p>Signature Transportation fully adopted The Quote Bot on 01/01/2021. Our staff was fully trained on the technology and very quickly adopted it into their daily routines. Now 100% of our quotes and subsequent client communication go through The Quote Bot so that we are able to track and manage every aspect of the sales process and subsequent customer service. Our quote volume is <strong>up over 200% since going live with The Quote Bot</strong>!</p>
-								<div class="separatorLine"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<strong>Mike Dozier</strong><br />
-								Signature Transportation							</div>
-							<div class="col-6 text-end goldStars">
-								&starf;&starf;&starf;&starf;&starf;
-							</div>
-						</div>
-					</div>
-				</div>
-								<div class="col-12 col-xl-6">
-					<div class="reviewBox">
-						<div class="row">
-							<div class="col">
-								<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZGF0YS11PSJodHRwcyUzQSUyRiUyRnRoZXF1b3RlYm90LmNvbSUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAyMyUyRjA5JTJGc2V0dGluZ19pbWFnZV9fZHJpdmVycHJvdmlkZXItc3F1YXJlLTE1MHgxNTAuanBnIiBkYXRhLXc9IjE1MCIgZGF0YS1oPSIxNTAiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="75" height="75" alt="Jason Kaplan" class="img-fluid mainImage" />
-								<p>The Driver Provider has been live on The Quote Bot for about 2 months. In this short time, “Alison” has helped to close many quotes and is inching her way to becoming one of our top Customer Service Agents. The feedback we are getting from Existing / New Customers regarding Alison has been amazing. The automation has made us more efficient and allows our Reservation Agents the ability to focus on other tasks.</p>
-								<div class="separatorLine"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<strong>Jason Kaplan</strong><br />
-								The Driver Provider							</div>
-							<div class="col-6 text-end goldStars">
-								&starf;&starf;&starf;&starf;&starf;
-							</div>
-						</div>
-					</div>
-				</div>
-					</div>
-</div>
+        p {
+            font-size: 1rem;
+        }
 
-<div class="container">
-	<div class="bottom-line"></div>
-</div>
+        /* clients review  */
+        .reviewBox {
+            border: 1px solid #ddd;
+            border-radius: .375rem;
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            margin-bottom: 1rem;
+        }
 
-<a name="linkpricing"></a>
-<div class="container" id="pricingBox">
-	<h2 class="title text-center">Choose The <span>Monthly Plan</span> That Works For You</h2>
-		<div class="clearSpacer"></div>
-	<div class="clearSpacer"></div>
+        .mainImage {
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
 
-	<!-- <div class="row justify-content-center mb-lg-4 px-3 px-md-0">
-		<div class="col-xl-3 col-md-6 pb-4 pb-xl-0 priceColumn">
-			<div class="topPart">
-				<p class="name">Advanced</p>
-				<p class="price">$450</p>
-			</div>
-		</div>
-		<div class="col-xl-3 col-md-6 pb-4 pb-xl-0 priceColumn">
-			<div class="topPart">
-				<p class="name">Premium</p>
-				<p class="price">$650</p>
-			</div>
-		</div>
-		<div class="col-xl-3 col-md-6 pb-4 pb-xl-0 priceColumn">
-			<div class="topPart">
-				<p class="name">Ultimate</p>
-				<p class="price">$950</p>
-			</div>
-		</div>
-		<div class="col-xl-3 col-md-6 pb-4 pb-xl-0 priceColumn">
-			<div class="topPart">
-				<p class="name">Enterprise</p>
-				<p class="price">$1,200</p>
-			</div>
-		</div>
-	</div> -->
+        .separatorLine {
+            border-top: 1px solid #ddd;
+            margin: 1rem 0;
+        }
 
-		<!-- <p class="text-center">Contact us using the form below for detailed information on all of our plans.</p> -->
-	<p class="text-center"><a class="btn btn-primary text-center" href="https://thequotebot.com/2023pricing/" target="_blank" title="Compare Plans">Compare Plans</a></p>
+        .goldStars {
+            color: #f0c14b;
+            /* Gold color for stars */
+        }
 
-	</div>
+        /* form style */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            /* Light background color for the page */
+        }
 
-<div class="container">
-	<div class="bottom-line"></div>
-</div>
+        .formWrap {
+            /* background-image: url('https://via.placeholder.com/1116x712'); Replace with your actual image URL */
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            border-radius: 0.375rem;
+            padding: 60px;
+            margin: 0 0 80px;
+            background-color: #333;
+        }
+
+        .formWrap .header {
+            font-weight: bold;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .formWrap .description {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .formWrap .btn-get-started {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .formWrap .btn-get-started:hover {
+            background-color: #0056b3;
+        }
+
+        /* navbar   */
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            max-width: 300px;
+            /* Combined width constraint */
+            height: 60px;
+            /* Height constraint */
+            overflow: hidden;
+            /* Ensure content does not overflow */
+        }
+
+        .navbar-brand img {
+            width: 60px;
+            /* Square logo width */
+            height: 60px;
+            /* Square logo height */
+            object-fit: contain;
+            /* Ensure logo aspect ratio is maintained */
+            margin-right: 10px;
+            /* Space between logo and text */
+        }
+
+        .navbar-custom {
+            background-color: #0D6EFD;
+        }
+
+        .navbar-brand h1 {
+            font-size: 1.5rem;
+            /* Adjust font size */
+            margin: 0;
+            /* Remove default margin */
+            line-height: 1.5;
+            /* Adjust line-height for better vertical alignment */
+            font-weight: bold;
+            /* Make text bold */
+            color: #f8f9fa;
+            /* Text color */
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: #f8f9fa;
+            /* Text color for nav links */
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #adb5bd;
+            /* Hover color for nav links */
+        }
+
+        .navbar-custom {
+            padding-bottom: 15px;
+            padding-top: 15px;
+        }
+
+        .btn-outline-success {
+            border-color: hwb(192 13% 15%);
+            /* Custom border color for buttons */
+            color: #28a745;
+            /* Custom text color for buttons */
+        }
+
+        .btn-outline-success:hover {
+            background-color: #28a745;
+            /* Background color on hover */
+            color: #fff;
+            /* Text color on hover */
+        }
+
+        .btn-outline-primary {
+            border-color: #007bff;
+            /* Custom border color for buttons */
+            color: #007bff;
+            /* Custom text color for buttons */
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            /* Background color on hover */
+            color: #fff;
+            /* Text color on hover */
+        }
+
+        /* footer style is here  */
+        .footer {
+            background-color: #0D6EFD;
+            /* Matches the navbar background color */
+            color: #f8f9fa;
+            /* Light text color */
+            padding: 20px 0;
+        }
+
+        .footer a {
+            color: #f8f9fa;
+        }
+
+        .footer a:hover {
+            color: #adb5bd;
+            /* Slightly lighter color on hover */
+        }
+
+        .footer .social-icons a {
+            color: #f8f9fa;
+            margin-right: 15px;
+        }
+
+        .footer .social-icons a:hover {
+            color: #adb5bd;
+        }
+
+        /* Custom styles for the homeHeadWrap section */
+        .button-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* Adjust this as needed */
+        }
+
+        .btn {
+            margin-right: 10px;
+            /* Add margin between buttons if desired */
+        }
+
+        .float-xl-end {
+            margin-left: auto;
+            /* Pushes this element to the end of the container */
+        }
+    </style>
+
+</head>
+
+<body style="background-color: #f7f7f7;">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="#" title="The Chat Bot">
+                <!-- Replace the <img> with the Bootstrap icon -->
+                <i class="bi bi-robot" style="font-size: 60px;"></i>
+                <h1>The Chat Bot</h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="" title="Home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#" title="Samples">Samples</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#" title="Features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#" title="Testimonials">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" title="/price.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light ms-2" href="/#" title="Contact Us">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light ms-2" href="/#" title="Buy Now">Buy Now</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <div class="container">
+        <div class="bottom-line"></div>
+    </div>
+
+    <div class="homeHeadWrap">
+        <div class="homeHead">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 homeLeftPart">
+                        <h1>The Chat Bot</h1>
+                        <p>Take control of your company's quoting process and make the most out of your quotes.</p>
+                        <p>Do you know how much money you're leaving on the table? Are you converting at least 50% of
+                            your total quote value? Is your staff following up and properly handling the quotes?</p>
+                        <p>Answer these questions and much more with THE Chat Bot.</p>
+                        <p class="button-container">
+                            <a href="#formSection" class="btn btn-outline-primary" title="Get Started Now">Get Started Now</a>
+                            <a href="https://www.youtube.com/watch?v=G3nxzk7VUZ8" class="btn btn-outline-danger"
+                                title="Play Video">&#9654; Play Video</a>
+                                <span class="float-xl-end" title="Give It a Try" style="font-weight: bold; font-size: 1.5em;">
+                                    Give It a Try <span class="rightArr">&rarr;</span>
+                                </span>
+                        </p>
+                    </div>
+                    <div class="col-xl-5">
+                        <div id="ssiframecontainerbot"></div>
+                        <script type="text/javascript" src="https://demo.thequotebot.com/chat-script/12/inline"
+                            async></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
+    <div class="container">
+        <div class="bottom-line"></div>
+    </div>
+    <a name="linksamples"></a>
+    <div class="container py-5" id="clientsBox">
+        <h2 class="text-center mb-4">See It Live On Some Of Our <span class="text-primary">Clients' Sites</span></h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col">
+                <div class="card border-0 shadow-sm">
+                    <a target="_blank" href="https://leroslimo.com/" title="Leros Transportation Group">
+                        <img src="./Images/img1.png.crdownload" class="card-img-top"
+                            alt="Leros Transportation Group">
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0 shadow-sm">
+                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
+                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0 shadow-sm">
+                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
+                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0 shadow-sm">
+                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
+                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0 shadow-sm">
+                    <a target="_blank" href="https://www.srtclimo.com/" title="SRTC Limo Worldwide">
+                        <img src="https://via.placeholder.com/324x300" class="card-img-top" alt="SRTC Limo Worldwide">
+                    </a>
+                </div>
+            </div>
+            <!-- Repeat similar blocks for other clients -->
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="bottom-line"></div>
+    </div>
+
+    <div class="container my-5" id="featuresBox">
+        <h2 class="title text-center mb-4">Key <span class="text-primary">Features &amp; Benefits</span></h2>
+        <p class="text-center mb-5">We have a long list of features and benefits and, while the list below is long,
+            we've had
+            to work really hard to keep it down to just 18 listed items. There's so much more to the system just waiting
+            to be discovered and taken advantage of!</p>
+        <div class="row">
+            <!-- Feature 1 -->
+            <div class="col-12 col-md-6 col-xl-4 mb-4">
+                <div class="featureBox p-3">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3">
+                            <img src="https://via.placeholder.com/60" alt="Interactive and intuitive"
+                                class="img-fluid" />
+                        </div>
+                        <div>
+                            <h3>Interactive and intuitive</h3>
+                            <p>Make the whole quote request process engaging and intuitive with a <strong>logic-based
+                                    conversational approach</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-12 col-md-6 col-xl-4 mb-4">
+                <div class="featureBox p-3">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3">
+                            <img src="https://via.placeholder.com/60" alt="Send Quotes as easy as 1-2-3"
+                                class="img-fluid" />
+                        </div>
+                        <div>
+                            <h3>Send Quotes as easy as 1-2-3</h3>
+                            <p>With built-in templates and rules, sending out a <strong>professional-looking
+                                    quote</strong> can be done with <strong>just a few clicks</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more feature boxes here -->
+        </div>
+    </div>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script> -->
+
+    <div class="container">
+        <div class="bottom-line"></div>
+    </div>
+
+    <div class="container my-5" id="testimonialsBox">
+        <h2 class="title text-center mb-4">What Our <span>Clients Say</span></h2>
+        <p class="text-center mb-4">They Love it! &#x2764; Read what our customers have to say!</p>
+        <div class="row">
+            <!-- Testimonial 1 -->
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="reviewBox">
+                    <img src="https://via.placeholder.com/75" alt="Client 1" class="img-fluid mainImage" />
+                    <p>Signature Transportation fully adopted The Chat Bot on 01/01/2021. Our staff was fully
+                        trained on the technology and very quickly adopted it into their daily routines. Now
+                        100% of our quotes and subsequent client communication go through The Chat Bot so that
+                        we are able to track and manage every aspect of the sales process and subsequent
+                        customer service. Our quote volume is <strong>up over 200% since going live with The
+                            Chat Bot</strong>!</p>
+                    <div class="separatorLine"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Mike Dozier</strong>
+                        <div class="goldStars">
+                            &starf;&starf;&starf;&starf;&starf;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 2 -->
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="reviewBox">
+                    <img src="https://via.placeholder.com/75" alt="Client 2" class="img-fluid mainImage" />
+                    <p>The Chat Bot has become an integral part of our sales team. We utilize the functionality
+                        almost exclusively to receive online quotes and follow them through to booking
+                        automatically in our Santa Cruz software. We are new to The Chat Bot, but in a short
+                        time, our online requests and bookings have more than tripled. Additionally, their
+                        support team are eager to assist with any questions, changes and training issues which
+                        is so refreshing. I can’t say enough good comments about The Chat Bot.</p>
+                    <div class="separatorLine"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Mike Sobol</strong>
+                        <div class="goldStars">
+                            &starf;&starf;&starf;&starf;&starf;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 3 -->
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="reviewBox">
+                    <img src="https://via.placeholder.com/75" alt="Client 3" class="img-fluid mainImage" />
+                    <p>We named our Chat Bot Allie, and <strong>she is the highest-performing Customer Service
+                            Rep in our office</strong>. She is so lifelike that people actually call the office
+                        looking to talk with her.</p>
+                    <div class="separatorLine"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Rick Versace</strong>
+                        <div class="goldStars">
+                            &starf;&starf;&starf;&starf;&starf;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 4 -->
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="reviewBox">
+                    <img src="https://via.placeholder.com/75" alt="Client 4" class="img-fluid mainImage" />
+                    <p><strong>Without any staff required</strong>, The Chat Bot has been a big help in
+                        capturing the organic leads to our site and converting them into reservations!</p>
+                    <div class="separatorLine"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Matt Strack</strong>
+                        <div class="goldStars">
+                            &starf;&starf;&starf;&starf;&starf;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 5 -->
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="reviewBox">
+                    <img src="https://via.placeholder.com/75" alt="Client 5" class="img-fluid mainImage" />
+                    <p>The Driver Provider has been live on The Chat Bot for about 2 months. In this short
+                        time, “Alison” has helped to close many quotes and is inching her way to becoming one of
+                        our top Customer Service Agents. The feedback we are getting from Existing / New
+                        Customers regarding Alison has been amazing. The automation has made us more efficient
+                        and allows our Reservation Agents the ability to focus on other tasks.</p>
+                    <div class="separatorLine"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Jason Kaplan</strong>
+                        <div class="goldStars">
+                            &starf;&starf;&starf;&starf;&starf;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 6 -->
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="reviewBox">
+                    <img src="https://via.placeholder.com/75" alt="Client 6" class="img-fluid mainImage" />
+                    <p>Hermes has been using The Chat Bot for about 6 months, and <strong>our team loves
+                            it!</strong> TQB removes the need for manual follow-up, can provide real-time
+                        accurate quotes (no additional source to update rate changes), self-service booking, and
+                        analytics to track your ROI. As a business owner, <strong>TQB helps me to provide a
+                            higher level of service to my clients for the equivalent of 1/2 FTE</strong> thus
+                        further increasing my ROI. TQB also allows for customization based on service types and
+                        vehicle types which provides you the opportunity to customize the experience for your
+                        clients. The response times for support are second to none. <strong>Couldn’t more
+                            highly recommend implementing TQB!</strong></p>
+                    <div class="separatorLine"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Jorge Sanchez</strong>
+                        <div class="goldStars">
+                            &starf;&starf;&starf;&starf;&starf;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-<div class="bottomPagePart webpBg">
-	
-	<a name="linkform"></a>
-	<div class="container">
-		<div class="formWrap webpBg">
-			<h2>Start making the most of your quotes</h2>
-			<p>Schedule a call for a demo session. It’s free and takes less than 30 minutes.<br />
-			We'll do our best to accommodate your requested day for the demo. <br />
-			A member of our team will be in touch to schedule the exact time for the meeting once we receive your request. </p>
-			<p>Alternatively you can schedule a demo by <a href="https://calendar.app.google/7dRaAiVkajgHBge57" target="_blank" title="Book a Demo" class="demoLink">clicking here</a>.</p>
-			<div class="formBox webpBg">
-				<form id="theformonpage" action="https://thequotebot.com/wp-admin/admin-ajax.php" method="post" class="form" >
-	<input type="hidden" id="security-code-here" name="security-code-here" value="956aa7067c" /><input type="hidden" name="_wp_http_referer" value="/" />	<input name="action" value="add_transfer" type="hidden">
-		<input name="gohereafter" value="https://thequotebot.com" type="hidden">
-	<div class="row">
-		<div class="col-6">
-			<label for="input-firstname" class="form-label notShown">First Name:</label>
-			<input name="firstname" type="text" class="form-control" id="input-firstname" placeholder="First Name" required="required">
-		</div>
-		<div class="col-6">
-			<label for="input-lastname" class="form-label notShown">Last Name:</label>
-			<input name="lastname" type="text" class="form-control" id="input-lastname" placeholder="Last Name" required="required">
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-6">
-			<label for="input-email" class="form-label notShown">Email address:</label>
-			<input name="email" type="email" class="form-control" id="input-email" placeholder="Email address" required="required">
-		</div>
-		<div class="col-6">
-			<label for="input-phone" class="form-label notShown">Phone:</label>
-			<input name="phone" type="text" class="form-control" id="input-phone" placeholder="Phone" required="required">
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-6">
-			<label for="input-company" class="form-label notShown">Company:</label>
-			<input name="company" type="text" class="form-control" id="input-company" placeholder="Company Name" required="required">
-		</div>
-				<div class="col-6">
-			<label for="input-date" class="form-label notShown">Requested Day:</label>
-			<input name="requested_day" type="text" class="form-control" id="input-date" placeholder="Requested Day" required="required" readonly="readonly">
-		</div>
-			</div>
-		<div class="row">
-		<div class="col">
-			<label for="input-message" class="form-label notShown">Message:</label>
-			<textarea placeholder="Your Message" name="message" id="input-message" cols="30" rows="4"></textarea>
-		</div>
-	</div>
-		<div class="mb-3"></div>
-		<div class="text-center"><button type="submit" class="btn btn-white">Get Started</button></div>
-				<input type="hidden" id="g-recaptcha-response" name="captcha-response">
-</form>
+    <div class="container">
+        <div class="bottom-line"></div>
+    </div>
 
-<script src="https://www.google.com/recaptcha/api.js?render=6LeP01YbAAAAADkOtoSdo_cG4N4oCY5h4QBkT_bm"></script>
-<script type="text/javascript">grecaptcha.ready(function(){grecaptcha.execute('6LeP01YbAAAAADkOtoSdo_cG4N4oCY5h4QBkT_bm',{action:'contactform'}).then(function(token){document.getElementById('g-recaptcha-response').value=token})});setInterval(function(){grecaptcha.ready(function(){grecaptcha.execute('6LeP01YbAAAAADkOtoSdo_cG4N4oCY5h4QBkT_bm',{action:'contactform'}).then(function(token){document.getElementById('g-recaptcha-response').value=token})})},90*1000)</script>
+    <a name="linkpricing"></a>
+    <div class="container" id="pricingBox">
+        <h2 class="title text-center">Choose The <span>Monthly Plan</span> That Works For You</h2>
+        <div class="clearSpacer"></div>
+        <div class="clearSpacer"></div>
 
+        <p class="text-center"><a class="btn btn-primary text-center" href="#" target="_blank"
+                title="Compare Plans">Compare Plans</a></p>
 
+    </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha512-f0tzWhCwVFS3WeYaofoLWkTP62ObhewQ1EZn65oSYDZUg1+CyywGKkWzm8BxaJj5HGKI72PnMH9jYyIFz+GH7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-<script type="text/javascript">var pickerscripted=!1;function pickerscript(){if(!pickerscripted){pickerscripted=!0;$('#input-date').datetimepicker({timepicker:!1,format:'m.d.Y'})}}
-$(document).on({mousemove:function(e){pickerscript()},scroll:function(e){pickerscript()}})</script>			</div>
-		</div>
-	</div>
-
-	
-
-	<!-- <div class="container">
-		<div class="formWrap webpBg">
-			<div class="row align-items-center justify-content-center">
-				<div class="col-md-6">
-					<h2>Join the deployment queue</h2>
-					<p>Please complete the form below in its entirety, and then click the button at the bottom to Secure Your Spot in line.  All completed requests will be handled in the order in which they are received.  The non-refundable deposit of $199 must be paid at the time of submission.  This deposit will be credited back to your account as long as you go live with TQB before the end of the 2023 calendar year.</p>
-					<p><a href="https://thequotebot.com/?page_id=1759" target="_blank" class="btn btn-orange" title="Join Now">Join Now</a></p>
-				</div>
-			</div>
-		</div>
-	</div> -->
-
-
-
-		<div id="footer">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-4">
-					<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgNTgiIHdpZHRoPSIyNTAiIGhlaWdodD0iNTgiIGRhdGEtdT0iaHR0cHMlM0ElMkYlMkZ0aGVxdW90ZWJvdC5jb20lMkZ3cC1jb250ZW50JTJGdGhlbWVzJTJGc2l0ZXNhbHQlMkZhc3NldHMlMkZ0cWItYWx0ZXJuYXRlLWxvZ28ud2VicCIgZGF0YS13PSIyNTAiIGRhdGEtaD0iNTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" alt="The Quote Bot" width="250" height="58">
-					<div class="clearSpacer"></div>
-					<p>Take control of your quoting process!</p>
-					<p><a href="#linkpricing" title="Purchase Now" class="btn btn-primary">Purchase Now</a></p>
-					<p>
-						<strong>Phone:</strong> <a href="tel:+16157277622" title="Phone">615-727-7622</a><br />
-						<strong>Email:</strong> <a href="mailto:sales@thequotebot.com" title="Email">sales@thequotebot.com</a><br />
-						<strong>Address:</strong> 1306 Antioch Pike, Nashville, TN 37211
-					</p>
-				</div>
-				<div class="col-md-4 footerMenu">
-					<p class="lead">Links</p>
-										<p>
-						<a class="" href="https://thequotebot.com/privacy-policy/" title="Privacy Policy">Privacy Policy</a>
-					</p>
-										<p>
-						<a class="" href="https://thequotebot.com/cancellation-and-refund-policies/" title="Cancellation and Refund Policies">Cancellation and Refund Policies</a>
-					</p>
-										<p>
-						<a class="" href="https://thequotebot.com/disclaimer/" title="Disclaimer">Disclaimer</a>
-					</p>
-										<p>
-						<a class="" href="https://thequotebot.com/terms-and-conditions/" title="Terms and Conditions">Terms and Conditions</a>
-					</p>
-										
-				</div>
-			</div>
-			<div class="clearSpacer"></div>
-			<div class="clearSpacer"></div>
-			<div class="row">
-				<div class="col-md-4 socialLinks">
-					<a href="https://www.facebook.com/The-Quote-Bot-104707355189655" target="_blank" title="Follow us on Facebook"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOCAxOCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnRoZW1lcyUyRnNpdGVzYWx0JTJGYXNzZXRzJTJGaWNvbi1mYWNlYm9vay53ZWJwIiBkYXRhLXc9IjE4IiBkYXRhLWg9IjE4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="18" height="18" alt="Follow us on Facebook"></a>
-					<a href="https://twitter.com/quotebotthe" target="_blank" title="Follow us on Twitter"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOCAxOCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnRoZW1lcyUyRnNpdGVzYWx0JTJGYXNzZXRzJTJGaWNvbi10d2l0dGVyLndlYnAiIGRhdGEtdz0iMTgiIGRhdGEtaD0iMTgiIGRhdGEtYmlwPSIiPjwvc3ZnPg==" data-spai="1" width="18" height="18" alt="Follow us on Twitter"></a>
-					<a href="https://www.linkedin.com/company/thequotebot" target="_blank" title="Follow us on LinkedIn"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOCAxOCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiBkYXRhLXU9Imh0dHBzJTNBJTJGJTJGdGhlcXVvdGVib3QuY29tJTJGd3AtY29udGVudCUyRnRoZW1lcyUyRnNpdGVzYWx0JTJGYXNzZXRzJTJGaWNvbi1saW5rZWRpbi53ZWJwIiBkYXRhLXc9IjE4IiBkYXRhLWg9IjE4IiBkYXRhLWJpcD0iIj48L3N2Zz4=" data-spai="1" width="18" height="18" alt="Follow us on LinkedIn"></a>
-				</div>
-				<div class="col-md-4 text-center">
-					Copyright &copy; 2024 <strong>The Quote Bot</strong>. All Rights Reserved
-				</div>
-			</div>
-		</div>
-	</div>
-	</div>	
-
-<script>jQuery(document).ready(function(){jQuery(".btnSignUp").click(function(){jQuery([document.documentElement,document.body]).animate({scrollTop:jQuery("#pricingBox").offset().top-60},2000);return!1});jQuery(".samplesBtn").click(function(){jQuery([document.documentElement,document.body]).animate({scrollTop:jQuery("#samplesBox").offset().top-60},2000);return!1});jQuery(".featuresBtn").click(function(){jQuery([document.documentElement,document.body]).animate({scrollTop:jQuery("#featuresBox").offset().top-60},2000);return!1});jQuery(".testimonialsBtn").click(function(){jQuery([document.documentElement,document.body]).animate({scrollTop:jQuery("#testimonialBox").offset().top-60},2000);return!1});jQuery(".pricingBtn").click(function(){jQuery([document.documentElement,document.body]).animate({scrollTop:jQuery("#pricingBox").offset().top-60},2000);return!1});jQuery(".contactBtn").click(function(){jQuery([document.documentElement,document.body]).animate({scrollTop:jQuery("#contactFormBox").offset().top-60},2000);return!1});jQuery(".btnGoToTop").click(function(){jQuery([document.documentElement,document.body]).animate({scrollTop:0},2000);return!1});jQuery(window).scroll(function(){if(jQuery(window).scrollTop()>60){jQuery("#headBox").addClass('sticky')}else{jQuery("#headBox").removeClass('sticky')}})})</script>
-<script type="text/javascript" id="spai-scripts-js-extra">
-/* <![CDATA[ */
-var spai_settings = {"api_domain":"cdn.shortpixel.ai","api_url":"https:\/\/cdn.shortpixel.ai\/spai\/w_%WIDTH%+q_lossy+ret_img","api_short_url":"https:\/\/cdn.shortpixel.ai\/spai\/ret_img","method":"src","crop":"","size_breakpoints":{"on":false,"base":50,"rate":10},"lqip":"","lazy_threshold":"500","hover_handling":"","native_lazy":"1","serve_svg":"1","debug":"","site_url":"https:\/\/thequotebot.com","plugin_url":"https:\/\/thequotebot.com\/wp-content\/plugins\/shortpixel-adaptive-images","version":"3.9.3","excluded_selectors":[],"eager_selectors":[],"noresize_selectors":[],"alter2wh":"1","use_first_sizes":[],"lazy_bg_style":"1","active_integrations":{"nextgen":false,"modula":false,"elementor":false,"elementor-addons":false,"viba-portfolio":false,"envira":false,"everest":false,"wp-bakery":false,"woocommerce":false,"wpc-variations":false,"foo":false,"global-gallery":false,"essential-grid":false,"oxygen":false,"slider-revolution":false,"custom-facebook-feed":false,"smart-slider":false,"real3d-flipbook":false,"wp-grid-builder":false,"beaver-builder":false,"the-grid":false,"social-pug":false,"instagram-feed":false,"insta-gallery":false,"content-views":false,"featherlight":false,"lightbox-photoswipe":false,"acf":true,"soliloquy":false,"jetpack":false,"wp-rocket":{"lazyload":false,"css-filter":false,"minify-css":false,"defer-all-js":false,"video-placeholder":false},"perfmatters":false,"swift-performance":false,"imagify":{"active":false},"wp-fastest-cache":false,"litespeed-cache":false,"w3-total-cache":false,"wp-super-cache":false,"wp-optimize":{"active":false,"enable_css":false,"enable_merging_of_css":false},"breeze":false,"smart-cookie-kit":false,"wpzoom-theme":false,"avia-gallery-module":false,"theme":"SITE SALT"},"parse_css_files":"1","backgrounds_max_width":"1920","sep":"+","webp":"1","avif":"","webp_detect":"","extensions_to_nextgenimg":{"png":true,"jpg":true,"gif":true},"sniper":"https:\/\/thequotebot.com\/wp-content\/plugins\/shortpixel-adaptive-images\/assets\/img\/target.cur","affected_tags":"{\"figure\":2,\"link\":1,\"script\":4}","ajax_url":"https:\/\/thequotebot.com\/wp-admin\/admin-ajax.php","ajax_nonce":"6ee179acb5","excluded_paths":["cmVnZXg6L1wvXC8oW15cL10qXC58KWdyYXZhdGFyLmNvbVwvLw=="]};
-/* ]]> */
-</script>
-<script data-cfasync="false" type="text/javascript" src="https://thequotebot.com/wp-content/plugins/shortpixel-adaptive-images/assets/js/ai-2.0.min.js" id="spai-scripts-js"></script>
-
-<script type="text/javascript">function showmenu(){jQuery("#menu").animate({width:"toggle"},"100%"),jQuery(".menuBtn").fadeOut(),jQuery(".closeBtn").fadeIn(),jQuery("#menu").css({height:jQuery("body").height()+"px"})}function hidemenu(){jQuery(window).width()<992&&(jQuery("#menu").animate({width:"toggle"},"0"),jQuery(".menuBtn").fadeIn(),jQuery(".closeBtn").fadeOut())}function scrollpage(){var n=jQuery(window).height();jQuery("html, body").animate({scrollTop:n,complete:function(){}},1e3)}jQuery(document).ready(function(){var n=jQuery("nav").outerHeight();jQuery(window).on("scroll",function(e){jQuery(window).scrollTop()>=n+50?jQuery("nav").addClass("affix"):jQuery("nav").removeClass("affix")}),jQuery(".submenu").click(function(){jQuery(window).width()<992&&jQuery(this).find(".submenuBox").slideToggle()})})</script>
-
-<script type="text/javascript">function scrolltoform(){var formlocationtop=jQuery(".formWrap").offset().top;var headerheight=jQuery("nav").outerHeight();jQuery([document.documentElement,document.body]).animate({scrollTop:formlocationtop-headerheight},500)}
-function scrolltoelementclick(elementid){var formlocationtop=jQuery(elementid).offset().top;var headerheight=jQuery("nav").outerHeight();jQuery('html, body').animate({scrollTop:formlocationtop-headerheight},500)}</script>
-
-
-
-<script type="text/javascript">
-/*! modernizr 3.6.0 (Custom Build) | MIT *
- * https://modernizr.com/download/?-webp-setclasses !*/
-!function(e,n,A){function o(e,n){return typeof e===n}function t(){var e,n,A,t,a,i,l;for(var f in r)if(r.hasOwnProperty(f)){if(e=[],n=r[f],n.name&&(e.push(n.name.toLowerCase()),n.options&&n.options.aliases&&n.options.aliases.length))for(A=0;A<n.options.aliases.length;A++)e.push(n.options.aliases[A].toLowerCase());for(t=o(n.fn,"function")?n.fn():n.fn,a=0;a<e.length;a++)i=e[a],l=i.split("."),1===l.length?Modernizr[l[0]]=t:(!Modernizr[l[0]]||Modernizr[l[0]]instanceof Boolean||(Modernizr[l[0]]=new Boolean(Modernizr[l[0]])),Modernizr[l[0]][l[1]]=t),s.push((t?"":"no-")+l.join("-"))}}function a(e){var n=u.className,A=Modernizr._config.classPrefix||"";if(c&&(n=n.baseVal),Modernizr._config.enableJSClass){var o=new RegExp("(^|\\s)"+A+"no-js(\\s|$)");n=n.replace(o,"$1"+A+"js$2")}Modernizr._config.enableClasses&&(n+=" "+A+e.join(" "+A),c?u.className.baseVal=n:u.className=n)}function i(e,n){if("object"==typeof e)for(var A in e)f(e,A)&&i(A,e[A]);else{e=e.toLowerCase();var o=e.split("."),t=Modernizr[o[0]];if(2==o.length&&(t=t[o[1]]),"undefined"!=typeof t)return Modernizr;n="function"==typeof n?n():n,1==o.length?Modernizr[o[0]]=n:(!Modernizr[o[0]]||Modernizr[o[0]]instanceof Boolean||(Modernizr[o[0]]=new Boolean(Modernizr[o[0]])),Modernizr[o[0]][o[1]]=n),a([(n&&0!=n?"":"no-")+o.join("-")]),Modernizr._trigger(e,n)}return Modernizr}var s=[],r=[],l={_version:"3.6.0",_config:{classPrefix:"",enableClasses:!0,enableJSClass:!0,usePrefixes:!0},_q:[],on:function(e,n){var A=this;setTimeout(function(){n(A[e])},0)},addTest:function(e,n,A){r.push({name:e,fn:n,options:A})},addAsyncTest:function(e){r.push({name:null,fn:e})}},Modernizr=function(){};Modernizr.prototype=l,Modernizr=new Modernizr;var f,u=n.documentElement,c="svg"===u.nodeName.toLowerCase();!function(){var e={}.hasOwnProperty;f=o(e,"undefined")||o(e.call,"undefined")?function(e,n){return n in e&&o(e.constructor.prototype[n],"undefined")}:function(n,A){return e.call(n,A)}}(),l._l={},l.on=function(e,n){this._l[e]||(this._l[e]=[]),this._l[e].push(n),Modernizr.hasOwnProperty(e)&&setTimeout(function(){Modernizr._trigger(e,Modernizr[e])},0)},l._trigger=function(e,n){if(this._l[e]){var A=this._l[e];setTimeout(function(){var e,o;for(e=0;e<A.length;e++)(o=A[e])(n)},0),delete this._l[e]}},Modernizr._q.push(function(){l.addTest=i}),Modernizr.addAsyncTest(function(){function e(e,n,A){function o(n){var o=n&&"load"===n.type?1==t.width:!1,a="webp"===e;i(e,a&&o?new Boolean(o):o),A&&A(n)}var t=new Image;t.onerror=o,t.onload=o,t.src=n}var n=[{uri:"data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=",name:"webp"},{uri:"data:image/webp;base64,UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAABBxAR/Q9ERP8DAABWUDggGAAAADABAJ0BKgEAAQADADQlpAADcAD++/1QAA==",name:"webp.alpha"},{uri:"data:image/webp;base64,UklGRlIAAABXRUJQVlA4WAoAAAASAAAAAAAAAAAAQU5JTQYAAAD/////AABBTk1GJgAAAAAAAAAAAAAAAAAAAGQAAABWUDhMDQAAAC8AAAAQBxAREYiI/gcA",name:"webp.animation"},{uri:"data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=",name:"webp.lossless"}],A=n.shift();e(A.name,A.uri,function(A){if(A&&"load"===A.type)for(var o=0;o<n.length;o++)e(n[o].name,n[o].uri)})}),t(),a(s),delete l.addTest,delete l.addAsyncTest;for(var p=0;p<Modernizr._q.length;p++)Modernizr._q[p]();e.Modernizr=Modernizr}(window,document);Modernizr.on('webp',function(result){if(!result){jQuery("img").each(function(k,el){var bg=jQuery(el).attr("src");var newSrc='https://thequotebot.com/wp-content/themes/sitesalt/oldbrowser.php?convert='+bg;jQuery(el).attr("src",newSrc)});jQuery(".webpBg").each(function(k,el){var bg=jQuery(el).css("background-image");var bg_full_url=bg.replace(/.*\s?url\([\'\"]?/,'').replace(/[\'\"]?\).*/,'');var newSrc='https://thequotebot.com/wp-content/themes/sitesalt/oldbrowser.php?convert='+bg_full_url;var fullreplace=bg.replace(bg_full_url,newSrc);jQuery(el).css('background-image',fullreplace)})}})</script>
-
-
+    <div class="container">
+        <div class="bottom-line"></div>
+    </div>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="formWrap">
+                    <div class="text-center">
+                        <div class="header">Start making the most of your quotes</div>
+                        <div class="description">
+                            Schedule a call for a demo session. It’s free and takes less than 30 minutes.
+                            We'll do our best to accommodate your requested day for the demo.
+                            A member of our team will be in touch to schedule the exact time for the meeting once we
+                            receive your request.
+                        </div>
+                    </div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="John">
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Doe">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" placeholder="example@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="+1 234 567 890">
+                        </div>
+                        <div class="mb-3">
+                            <label for="companyName" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="companyName" placeholder="Your Company">
+                        </div>
+                        <div class="mb-3">
+                            <label for="requestedDay" class="form-label">Requested Day</label>
+                            <input type="date" class="form-control" id="requestedDay">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Your Message</label>
+                            <textarea class="form-control" id="message" rows="4"
+                                placeholder="Type your message here..."></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-get-started">Get Started</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About Us</h5>
+                    <p>
+                        The Chat Bot is your go-to source for inspiring and motivational quotes. We strive to bring
+                        positivity into your life through carefully curated quotes from various sources.
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" title="Home">Home</a></li>
+                        <li><a href="/sample.html" title="Samples">Samples</a></li>
+                        <li><a href="/feature.html" title="Features">Features</a></li>
+                        <li><a href="/testimonials.html" title="Testimonials">Testimonials</a></li>
+                        <li><a href="#" title="/price.html">Pricing</a></li>
+                        <li><a href="/contact.html" title="Contact Us">Contact Us</a></li>
+                        <li><a href="/buy.html" title="Buy Now">Buy Now</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="https://facebook.com" target="_blank" title="Facebook"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com" target="_blank" title="Instagram"><i
+                                class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </body>
+
 </html>
 
-
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
 
 {% endblock %}
