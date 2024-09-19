@@ -17,6 +17,8 @@ from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import TemplateView
 import uuid
 import json
+from django.views.decorators.clickjacking import xframe_options_exempt
+from django.utils.decorators import method_decorator
 
 
 class ChatBot(TemplateView):
@@ -47,20 +49,28 @@ class ChatBot(TemplateView):
 
         return context
 
-    # def get(self, request, *args, **kwargs):
-    #     # Call the parent class to generate the response
-    #     response = super().get(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        # Call the parent class to generate the response
+        response = super().get(request, *args, **kwargs)
 
-    #     # Add CSP header to the response
-    #     response['Content-Security-Policy'] = (
-    #         "default-src 'self'; "
-    #         "script-src 'self' https://127.0.0.1:8000; "
-    #         "style-src 'self' https://127.0.0.1:8000; "
-    #         "img-src 'self' data: https://127.0.0.1:8000; "
-    #         "frame-src 'self' https://127.0.0.1:8000;"
-    #     )
+        # Fetch the chatbot configuration
+        chatbot_id = self.kwargs['chatbot_id']
+        chatbot_configurations = get_object_or_404(
+            ChatbotConfiguration, chatbot_id=chatbot_id)
 
-    #     return response
+        if hasattr(chatbot_configurations, "allow_iframe"):
+            # Exempt from X-Frame-Options (i.e., allow embedding in an iframe)
+            # Set allowed origin dynamically if needed
+            response['X-Frame-Options'] = 'ALLOW-FROM https://allowed-origin.com'
+        else:
+            # Set default X-Frame-Options to DENY or SAMEORIGIN
+            response['X-Frame-Options'] = 'SAMEORIGIN'
+
+        return response
+
+    @method_decorator(xframe_options_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 # Create and Manage Bots (Staff Users)
@@ -151,7 +161,8 @@ def get_question_details(question):
         "question_id": question_id,
         "response_type": response_type,
         "variable": variable,
-        "options": options
+        "options": options,
+        "is_completed": True if question is None else False
     }
 
 

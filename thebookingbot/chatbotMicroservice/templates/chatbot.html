@@ -7,50 +7,13 @@
 <meta name="chatbot-id" content="{{ chatbot_id }}" />
 <title>{{ bot_name }}</title>
 {% endblock %} {% block main %}
-<!-- <div class="chatbot-bubble" id="chatbot-bubble">
-  <i class="fas fa-comments fa-lg"></i>
-</div>
-<div class="chatbot-container d-none" id="chatbot">
-  <div class="chatbot-header d-flex justify-content-between align-items-center">
-    <div>
-      <i class="fas fa-robot me-2"></i>
-      <span>{{ bot_name }}</span>
-    </div>
-    <button class="btn btn-sm text-white" id="close-btn">
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-  <div class="chatbot-body" id="chatbot-body pt-1">
-    {% csrf_token %}
-    <div class="chatbot-message bot-message">{{ welcome_message }}</div>
-    <div class="chatbot-typing">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
-  </div>
-  <div class="chatbot-footer">
-    <div class="chatbot-input">
-      <input type="text" id="question-id" class="form-control" hidden />
-      <input
-        type="text"
-        id="user-input"
-        placeholder="Type your message..."
-        class="form-control"
-      />
-      <button id="send-btn">
-        <i class="fas fa-paper-plane"></i>
-      </button>
-    </div>
-  </div>
-</div> -->
-
 <script src="{% static 'js/chatbotMicroservice/embed.js' %}"></script>
 <script>
   // Initialize the chatbot with config
   document.addEventListener("DOMContentLoaded", () => {
     const chatbotConfig = {
-      token: "95996ae5-408c-4ce2-8f0d-9e3bff6dd80c", // Replace with your actual token
+      token: "95996ae5-408c-4ce2-8f0d-9e3bff6dd80c",
+      botName: "{{ bot_name }}"
     };
     new Chatbot(chatbotConfig);
   });

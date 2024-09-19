@@ -123,7 +123,7 @@ class Chatbot {
 
       console.log("Sending answer:", answer);
       if (answer) {
-        this.submitAnswer(answer, question_id);
+        this.fetchNextQuestion(answer, question_id);
       }
     });
   }
@@ -154,24 +154,72 @@ class Chatbot {
   }
 
   // Fetch next question
-  fetchNextQuestion() {
+  fetchNextQuestion(answer, question_id) {
     console.log("Fetching next question...");
-    this.showTypingIndicator();
-    fetch(`/chat/next-question/${this.sessionId}/`, {
-      method: "POST",
-      headers: this.getCSRFHeaders(),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Next question received:", data);
-        this.hideTypingIndicator();
-        this.renderQuestion(data);
+    if (answer) {
+      this.addMessage(answer, "user-message");
+      this.showTypingIndicator();
+
+      fetch(`/chat/next-question/${this.sessionId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ answer, question_id }),
       })
-      .catch((error) => {
-        console.error("Error fetching next question:", error);
-        this.hideTypingIndicator();
-        this.addMessage("Error fetching the next question.", "bot-message");
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Answer submitted. Next data:", data);
+          this.hideTypingIndicator();
+          if (data.is_completed) {
+            this.addMessage(
+              "Thank you! The session is complete.",
+              "bot-message"
+            );
+          } else {
+            this.renderQuestion(data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error submitting answer:", error);
+          this.hideTypingIndicator();
+          this.addMessage("Error submitting answer.", "bot-message");
+        });
+    }
+  }
+
+  submitAnswer(answer, question_id) {
+    console.log("Submitting answer:", answer);
+    if (answer) {
+      this.addMessage(answer, "user-message");
+      this.showTypingIndicator();
+
+      fetch(`/chat/next-question/${this.sessionId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ answer, question_id }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Answer submitted. Next data:", data);
+          this.hideTypingIndicator();
+          if (data.is_complete) {
+            this.addMessage(
+              "Thank you! The session is complete.",
+              "bot-message"
+            );
+          } else {
+            this.renderQuestion(data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error submitting answer:", error);
+          this.hideTypingIndicator();
+          this.addMessage("Error submitting answer.", "bot-message");
+        });
+    }
   }
 
   // Render the question
@@ -273,47 +321,13 @@ class Chatbot {
       button.textContent = option;
       button.addEventListener("click", () => {
         console.log("Click list option clicked:", option);
-        this.submitAnswer(option, question_id);
+        this.fetchNextQuestion(option, question_id);
       });
       clickListWrapper.appendChild(button);
     });
 
     this.chatbotBody.insertBefore(clickListWrapper, this.typingIndicator);
     this.chatbotBody.scrollTop = this.chatbotBody.scrollHeight;
-  }
-
-  submitAnswer(answer, question_id) {
-    console.log("Submitting answer:", answer);
-    if (answer) {
-      this.addMessage(answer, "user-message");
-      this.showTypingIndicator();
-
-      fetch(`/chat/next-question/${this.sessionId}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ answer, question_id }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Answer submitted. Next data:", data);
-          this.hideTypingIndicator();
-          if (data.is_complete) {
-            this.addMessage(
-              "Thank you! The session is complete.",
-              "bot-message"
-            );
-          } else {
-            this.renderQuestion(data);
-          }
-        })
-        .catch((error) => {
-          console.error("Error submitting answer:", error);
-          this.hideTypingIndicator();
-          this.addMessage("Error submitting answer.", "bot-message");
-        });
-    }
   }
 
   // Helper methods for showing messages and typing indicator
