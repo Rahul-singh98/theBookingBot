@@ -54,6 +54,10 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
       - thebookingbot_network
+    depends_on:
+      - userinterface
+      - chatbot
+      - auth
 
 networks:
   thebookingbot_network:
