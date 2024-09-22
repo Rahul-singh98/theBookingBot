@@ -1,64 +1,59 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Enum
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Enum, JSON
 from sqlalchemy.orm import relationship
 from app.database import Base
-import enum
-from datetime import datetime
-
-
-class QuestionTypes(enum.Enum):
-    INPUT = "input"
-    CLICKLIST = "clicklist"
-    DROPDOWN = "dropdown"
-
-
-class AuthMethodChoices(enum.Enum):
-    GET = "GET"
-    POST = "POST"
+from app.utils.constants import QuestionTypes, AuthMethodChoices
+from datetime import datetime, timezone
+from app.utils.generate_uuid import generate_uuid
 
 
 class ChatbotConfiguration(Base):
     __tablename__ = "chatbot_configurations"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, default='The Booking Bot')
-    chatbot_id = Column(String, unique=True, index=True)
-    hero_img = Column(String)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    name = Column(String(100))
+    hero_img = Column(String, nullable=True)
     welcome_message = Column(String, nullable=True)
-    primary_color = Column(String, nullable=True)
-    secondary_color = Column(String, nullable=True)
-    created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow)
+    primary_color = Column(String(7), nullable=True)
+    secondary_color = Column(String(7), nullable=True)
 
-    questions = relationship("Question", back_populates="bot")
-    submit_config = relationship(
-        "ChatbotSubmitConfiguration", back_populates="bot", uselist=False)
+    created_by = Column(String(36), nullable=False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=datetime.now(
+        timezone.utc), onupdate=datetime.now(timezone.utc))
+
+    questions = relationship(
+        "Question", back_populates="bot", cascade="all, delete-orphan")
+    submit_config = relationship("ChatbotSubmitConfiguration",
+                                 back_populates="bot", uselist=False, cascade="all, delete-orphan")
+    chat_sessions = relationship(
+        "ChatSession", back_populates="bot", cascade="all, delete-orphan")
 
 
 class Question(Base):
     __tablename__ = "questions"
 
-    id = Column(Integer, primary_key=True, index=True)
-    bot_id = Column(Integer, ForeignKey("chatbot_configurations.id"))
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    bot_id = Column(String(36), ForeignKey("chatbot_configurations.id"))
     question = Column(String)
     question_order = Column(Integer)
     response_type = Column(Enum(QuestionTypes))
     variable = Column(String)
-    created_by = Column(Integer, ForeignKey("users.id"))
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow)
+
+    created_by = Column(String(36), nullable=False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=datetime.now(
+        timezone.utc), onupdate=datetime.now(timezone.utc))
 
     bot = relationship("ChatbotConfiguration", back_populates="questions")
-    options = relationship("QuestionOption", back_populates="question")
+    options = relationship(
+        "QuestionOption", back_populates="question", cascade="all, delete-orphan")
 
 
 class QuestionOption(Base):
     __tablename__ = "question_options"
 
-    id = Column(Integer, primary_key=True, index=True)
-    question_id = Column(Integer, ForeignKey("questions.id"))
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    question_id = Column(String(36), ForeignKey("questions.id"))
     option_text = Column(String)
     option_order = Column(Integer)
 
@@ -68,48 +63,37 @@ class QuestionOption(Base):
 class ChatSession(Base):
     __tablename__ = "chat_sessions"
 
-    id = Column(Integer, primary_key=True, index=True)
-    session_id = Column(String, unique=True, index=True)
-    bot_id = Column(Integer, ForeignKey("chatbot_configurations.id"))
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    bot_id = Column(String(36), ForeignKey("chatbot_configurations.id"))
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=datetime.now(
+        timezone.utc), onupdate=datetime.now(timezone.utc))
 
-    bot = relationship("ChatbotConfiguration")
-    history = relationship("ChatHistory", back_populates="session")
+    bot = relationship("ChatbotConfiguration", back_populates="chat_sessions")
+    history = relationship(
+        "ChatHistory", back_populates="session", cascade="all, delete-orphan")
 
 
 class ChatHistory(Base):
     __tablename__ = "chat_history"
 
-    id = Column(Integer, primary_key=True, index=True)
-    session_id = Column(Integer, ForeignKey("chat_sessions.id"))
-    question_id = Column(Integer, ForeignKey("questions.id"))
-    response = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    session_id = Column(String(36), ForeignKey("chat_sessions.id"))
+
+    response = Column(JSON, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
     session = relationship("ChatSession", back_populates="history")
-    question = relationship("Question")
 
 
 class ChatbotSubmitConfiguration(Base):
     __tablename__ = "chatbot_submit_configurations"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String(36), primary_key=True, default=generate_uuid)
     url = Column(String)
     method = Column(Enum(AuthMethodChoices))
     authentication_key = Column(String, nullable=True)
-    bot_id = Column(Integer, ForeignKey("chatbot_configurations.id"))
+    bot_id = Column(String(36), ForeignKey("chatbot_configurations.id"))
 
     bot = relationship("ChatbotConfiguration", back_populates="submit_config")
-
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
-    is_staff = Column(Boolean, default=False)

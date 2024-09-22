@@ -1,36 +1,8 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
-
-
-class ChatbotConfigurationResponse(BaseModel):
-    id: int
-    name: str
-    chatbot_id: str
-    hero_img: str
-    welcome_message: Optional[str]
-    primary_color: Optional[str]
-    secondary_color: Optional[str]
-    created_by: Optional[int]
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        orm_mode = True
-
-
-class PaginationResponse(BaseModel):
-    total_records: int
-    per_page_count: int
-    current_page: int
-    total_pages: int
-    start_record: int
-    end_record: int
-
-
-class PaginatedChatbotConfigurationResponse(BaseModel):
-    items: List[ChatbotConfigurationResponse]
-    pagination: PaginationResponse
+from app.utils.pagination import PaginationResponse
+from app.utils.constants import AuthMethodChoices
 
 
 class ChatbotConfigurationBase(BaseModel):
@@ -42,4 +14,53 @@ class ChatbotConfigurationBase(BaseModel):
 
 
 class ChatbotConfigurationCreate(ChatbotConfigurationBase):
+    created_by = str
+
+
+class ChatbotConfigurationUpdate(ChatbotConfigurationBase):
     pass
+
+
+class ChatbotConfigurationResponse(BaseModel):
+    id: str
+    name: str
+    hero_img: str
+    welcome_message: Optional[str]
+    primary_color: Optional[str]
+    secondary_color: Optional[str]
+    created_by: Optional[str]
+
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class PaginatedChatbotConfigurationResponse(BaseModel):
+    items: List[ChatbotConfigurationResponse]
+    pagination: PaginationResponse
+
+
+class ChatbotSubmitConfigurationBase(BaseModel):
+    url: str
+    method: AuthMethodChoices
+    authentication_key: Optional[str] = None
+    bot_id: str
+
+
+class ChatbotSubmitConfigurationCreate(ChatbotSubmitConfigurationBase):
+    pass
+
+
+class ChatbotSubmitConfigurationUpdate(ChatbotSubmitConfigurationBase):
+    pass
+
+
+class ChatbotSubmitConfigurationResponse(ChatbotSubmitConfigurationBase):
+    id: str
+
+
+class PaginatedChatbotSubmitConfigurationResponse(BaseModel):
+    items: List[ChatbotSubmitConfigurationResponse]
+    pagination: PaginationResponse

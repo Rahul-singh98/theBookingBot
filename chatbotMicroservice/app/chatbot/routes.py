@@ -1,19 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import SQLAlchemyError
 from app.database import get_db
 from app.chatbot.schemas import (
-    ChatbotConfigurationResponse, ChatbotConfigurationCreate,
-    PaginatedChatbotConfigurationResponse
+    ChatbotConfigurationResponse, PaginatedChatbotConfigurationResponse,
+    ChatbotConfigurationCreate, ChatbotConfigurationUpdate,
+    ChatbotSubmitConfigurationResponse, PaginatedChatbotSubmitConfigurationResponse,
+    ChatbotSubmitConfigurationUpdate, ChatbotSubmitConfigurationCreate
 )
-from app.chatbot import services
+import uuid
+from app.chatbot import crud
 from app.utils.pagination import Pagination
 
 
-router = APIRouter()
+chatbot_router = APIRouter()
 
 
-@router.get("/", response_model=PaginatedChatbotConfigurationResponse)
+@chatbot_router.get("/", response_model=PaginatedChatbotConfigurationResponse)
 def list_chatbots(
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
@@ -22,43 +24,96 @@ def list_chatbots(
     # Calculate offset
     offset = Pagination.get_offset(page, size)
 
-    configurations, total = services.list_chatbots(db, offset, size)
+    configurations, total = crud.list_chatbots(db, offset, size)
 
     pagination_obj = Pagination.paginate(total, size, page)
 
-    return {"items": configurations, "pagination": pagination_obj}
+    return PaginatedChatbotConfigurationResponse(items=configurations, pagination=pagination_obj)
 
 
-@router.get("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
+@chatbot_router.get("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
 def read_chatbot(chatbot_id: str, db: Session = Depends(get_db)):
-    db_chatbot = services.get_chatbot(db, chatbot_id=chatbot_id)
+    db_chatbot = crud.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Chatbot not found")
+            status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
     # return ChatbotConfigurationResponse.from_orm(db_chatbot)
     return db_chatbot
 
 
-@router.post("/", response_model=ChatbotConfigurationResponse)
+@chatbot_router.post("/", response_model=ChatbotConfigurationResponse)
 def create_chatbot(chatbot: ChatbotConfigurationCreate, db: Session = Depends(get_db)):
     # Assuming user_id 1 for now
-    out = services.create_chatbot(db=db, chatbot=chatbot, user_id=1)
-    return ChatbotConfigurationResponse.from_orm(out)
+    out = crud.create_chatbot(db=db, chatbot=chatbot,
+                              user_id=str(uuid.uuid4()))
+    # return ChatbotConfigurationResponse.from_orm(out)
+    return out
 
 
-@router.delete("/{chatbot_id}", status_code=204)
-def delete_chatbot_configuration(chatbot_id: int, db: Session = Depends(get_db)):
-    configuration = services.get_chatbot(db, chatbot_id=chatbot_id)
-    if not configuration:
+@chatbot_router.put("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
+def update_chatbot(chatbot_id: str, bot_update: ChatbotConfigurationUpdate, db: Session = Depends(get_db)):
+    updated_bot = crud.update_chatbot(
+        db=db, chatbot_id=chatbot_id, bot_update=bot_update)
+    if not updated_bot:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Chatbot configuration not found")
+            status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
+    return updated_bot
 
-    try:
-        db.delete(configuration)
-        db.commit()
-    except SQLAlchemyError as e:
-        db.rollback()
+
+@chatbot_router.delete("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
+def delete_chatbot(chatbot_id: str, db: Session = Depends(get_db)):
+    db_bot = crud.delete_chatbot(db=db, chatbot_id=chatbot_id)
+    if db_bot is None:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error occurred")
+            status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
+    return db_bot
 
-    return None
+
+@chatbot_router.get("/submit-configs", response_model=PaginatedChatbotSubmitConfigurationResponse)
+def list_chatbots_sumit_configs(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number"),
+    size: int = Query(10, ge=1, le=100, description="Items per page")
+):
+    print("Executing", "list_chatbots_sumit_configs")
+    # Calculate offset
+    offset = Pagination.get_offset(page, size)
+
+    configurations, total = crud.list_chatbots_submit_configs(db, offset, size)
+
+    pagination_obj = Pagination.paginate(total, size, page)
+
+    return PaginatedChatbotSubmitConfigurationResponse(items=configurations, pagination=pagination_obj)
+
+
+@chatbot_router.get("/submit-configs/{config_id}", response_model=ChatbotSubmitConfigurationResponse)
+def read_chatbot_submit_configs(config_id: str, db: Session = Depends(get_db)):
+    db_chatbot = crud.get_chatbot_submit_config(db, config_id=config_id)
+    if db_chatbot is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Submit Configurations not found")
+    return db_chatbot
+
+
+@chatbot_router.post("/submit-configs/")
+def create_chatbot_submit_configs(sumbit_config: ChatbotSubmitConfigurationCreate, db: Session = Depends(get_db)):
+    return crud.create_chatbot_submit_config(db=db, config=sumbit_config)
+
+
+@chatbot_router.put("/submit-configs/{config_id}", response_model=ChatbotSubmitConfigurationResponse)
+def update_chatbot_submit_configs(config_id: str, bot_update: ChatbotSubmitConfigurationUpdate, db: Session = Depends(get_db)):
+    updated_bot = crud.update_chatbot_submit_config(
+        db=db, config_id=config_id, bot_update=bot_update)
+    if not updated_bot:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
+    return updated_bot
+
+
+@chatbot_router.delete("/submit-configs/{config_id}", response_model=ChatbotSubmitConfigurationResponse)
+def delete_chatbot_submit_configs(config_id: str, db: Session = Depends(get_db)):
+    db_bot = crud.delete_chatbot_submit_config(db=db, config_id=config_id)
+    if db_bot is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
+    return db_bot

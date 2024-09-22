@@ -1,31 +1,30 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
-from app.models import AuthMethodChoices
+from app.utils.pagination import PaginationResponse
+from typing import List
 
 
 class ChatSessionBase(BaseModel):
-    session_id: str
-    bot_id: int
+    bot_id: str
 
 
 class ChatSessionCreate(ChatSessionBase):
     pass
 
 
-class ChatSession(ChatSessionBase):
-    id: int
+class ChatSessionResponse(ChatSessionBase):
+    id: str
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
-        from_orm = True
+
+class PaginatedChatSessionReponse(BaseModel):
+    items: List[ChatSessionResponse]
+    pagination: PaginationResponse
 
 
 class ChatHistoryBase(BaseModel):
-    session_id: int
-    question_id: int
+    session_id: str
     response: str
 
 
@@ -33,27 +32,15 @@ class ChatHistoryCreate(ChatHistoryBase):
     pass
 
 
-class ChatHistory(ChatHistoryBase):
-    id: int
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-class ChatbotSubmitConfigurationBase(BaseModel):
-    url: str
-    method: AuthMethodChoices
-    authentication_key: Optional[str] = None
-    bot_id: int
-
-
-class ChatbotSubmitConfigurationCreate(ChatbotSubmitConfigurationBase):
+class ChatHistoryUpdate(ChatHistoryBase):
     pass
 
 
-class ChatbotSubmitConfiguration(ChatbotSubmitConfigurationBase):
-    id: int
+class ChatHistoryResponse(ChatHistoryBase):
+    id: str
+    created_at: datetime
 
-    class Config:
-        from_attributes = True
+
+class PaginatedChatHistoryReponse(BaseModel):
+    items: List[ChatHistoryResponse]
+    pagination: PaginationResponse

@@ -26,7 +26,7 @@ This is a FastAPI-based microservice for managing chatbots, questions, and chat 
 
 4. Run the application:
    ```
-   uvicorn app.main:app --reload
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
 
 The application will be available at `http://localhost:8000`.

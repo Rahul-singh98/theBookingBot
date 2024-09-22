@@ -1,4 +1,5 @@
 from typing import Dict, AnyStr
+from pydantic import BaseModel
 
 
 class Pagination:
@@ -50,3 +51,12 @@ class Pagination:
         }
 
         return pagination
+
+
+class PaginationResponse(BaseModel):
+    total_records: int
+    per_page_count: int
+    current_page: int
+    total_pages: int
+    start_record: int
+    end_record: int

@@ -3,47 +3,76 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from typing import Dict
 from app.chats.schemas import (
-    ChatSession, ChatHistory, ChatHistoryCreate
+    ChatSessionCreate, ChatSessionResponse, PaginatedChatSessionReponse,
+    ChatHistoryCreate, ChatHistoryUpdate, PaginatedChatHistoryReponse,
+    ChatHistoryResponse
+
 )
-from app.chats import services
-from app.chatbot import services as chatbot_services
-from app.questions import services as question_services
+from app.chats import crud
+from app.chatbot import crud as chatbot_services
+from app.questions import crud as question_services
+from app.utils.pagination import Pagination
 
-router = APIRouter(prefix="/sessions")
+chats_router = APIRouter(prefix="/sessions")
 
 
-@router.post("/{chatbot_id}", response_model=ChatSession)
-def start_chat_session(chatbot_id: str, db: Session = Depends(get_db)):
+@chats_router.get("/", response_model=PaginatedChatSessionReponse)
+def list_chat_session(page: int = 1, size: int = 100, db: Session = Depends(get_db)):
+    offset = Pagination.get_offset(page, size)
+    items, total = crud.list_chat_sessions(db, offset, size)
+    paginated_obj = Pagination.paginate(total, size, page)
+    return PaginatedChatSessionReponse(items=items, pagination=paginated_obj)
+
+
+@chats_router.get("/{session_id}", response_model=ChatSessionResponse)
+def read_chat_session(session_id: str, db: Session = Depends(get_db)):
+    return crud.get_chat_session(db, session_id)
+
+
+@chats_router.post("/{chatbot_id}", response_model=ChatSessionResponse)
+def start_chat_session(chatbot_id: str, session: ChatSessionCreate, db: Session = Depends(get_db)):
     db_chatbot = chatbot_services.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
-    out = services.create_chat_session(db, bot_id=db_chatbot.id)
-    return ChatSession.from_orm(out)
+
+    db_session = crud.create_chat_session(db, session, bot_id=chatbot_id)
+
+    history_create = ChatHistoryCreate(session_id=db_session.id, response=None)
+    _ = crud.create_chat_history(db, history_create)
+
+    return db_session
 
 
-@router.post("/{session_id}/answer", response_model=ChatHistory)
-def answer_question(session_id: str, answer: ChatHistoryCreate, db: Session = Depends(get_db)):
-    db_session = services.get_chat_session(db, session_id=session_id)
+@chats_router.delete("/{session_id}", response_model=ChatSessionResponse)
+def delete_chat_session(session_id: str, db: Session = Depends(get_db)):
+    return crud.delete_chat_session(db, session_id)
+
+
+@chats_router.post("/{session_id}/answer", response_model=ChatHistoryResponse)
+def answer_question(session_id: str, answer: ChatHistoryUpdate, db: Session = Depends(get_db)):
+    db_session = crud.get_chat_session(db, session_id=session_id)
     if db_session is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Chat session not found")
-    return services.create_chat_history(db, chat_history=answer)
+
+    return crud.update_chat_history(db, db_session.history.id, chat_history=answer)
 
 
-@router.get("/{session_id}/next-question", response_model=Dict)
+@chats_router.get("/{session_id}/next-question", response_model=Dict)
 def get_next_question(session_id: str, db: Session = Depends(get_db)):
-    db_session = services.get_chat_session(db, session_id=session_id)
+    db_session = crud.get_chat_session(db, session_id=session_id)
     if db_session is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Chat session not found")
 
     # Get all questions for this chatbot
-    questions = question_services.get_questions(db, bot_id=db_session.bot_id)
+    questions = question_services.get_questions_by_bot_id(
+        db, bot_id=db_session.bot_id)
 
     # Get answered questions for this session
-    answered = services.get_chat_history(db, session_id=db_session.id)
-    answered_ids = set(h.question_id for h in answered)
+    history = crud.get_chat_history(db, db_session.history.id)
+    answered_ids = set(h.question_id for h in history.response)
 
     # Find the next unanswered question
     next_question = next(
@@ -61,19 +90,19 @@ def get_next_question(session_id: str, db: Session = Depends(get_db)):
     }
 
 
-@router.post("/{session_id}/submit", response_model=Dict)
+@chats_router.post("/{session_id}/submit", response_model=Dict)
 async def submit_chat_responses(session_id: str, db: Session = Depends(get_db)):
-    db_session = services.get_chat_session(db, session_id=session_id)
+    db_session = crud.get_chat_session(db, session_id=session_id)
     if db_session is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Chat session not found")
 
     # Get all chat history for the session
-    history = services.get_chat_history(db, session_id=db_session.id)
+    history = crud.get_chat_history(db, session_id=db_session.id)
     responses = {h.question.variable: h.response for h in history}
 
     # Get submit configuration
-    submit_config = services.get_submit_configuration(
+    submit_config = crud.get_submit_configuration(
         db, bot_id=db_session.bot_id)
     if submit_config is None:
         raise HTTPException(

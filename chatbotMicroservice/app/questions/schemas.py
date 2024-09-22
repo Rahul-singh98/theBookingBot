@@ -1,10 +1,12 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 from datetime import datetime
-from app.models import QuestionTypes
+from app.utils.constants import QuestionTypes
+from app.utils.pagination import PaginationResponse
 
 
 class QuestionOptionBase(BaseModel):
+    question_id: str
     option_text: str
     option_order: int
 
@@ -18,39 +20,38 @@ class QuestionOptionUpdate(QuestionOptionBase):
 
 
 class QuestionOptionResponse(QuestionOptionBase):
-    id: int
+    id: str
 
-    class Config:
-        orm_mode = True
+
+class PaginatedQuestionOptionResponse(BaseModel):
+    items: List[QuestionOptionResponse]
+    pagination: PaginationResponse
 
 
 class QuestionBase(BaseModel):
-    bot_id: int
+    bot_id: str
     question: str
     question_order: int
     response_type: QuestionTypes
     variable: str
-    created_by: int
-
-
-class QuestionCreate(QuestionBase):
+    created_by: str
     options: List[QuestionOptionCreate] = []
 
 
-class QuestionUpdate(BaseModel):
-    bot_id: Optional[int] = None
-    question: Optional[str] = None
-    question_order: Optional[int] = None
-    response_type: Optional[QuestionTypes] = None
-    variable: Optional[str] = None
-    options: Optional[List[QuestionOptionCreate]] = None
+class QuestionCreate(QuestionBase):
+    pass
+
+
+class QuestionUpdate(QuestionBase):
+    pass
 
 
 class QuestionResponse(QuestionBase):
-    id: int
+    id: str
     created_at: datetime
     updated_at: datetime
-    options: List[QuestionOptionResponse] = []
 
-    class Config:
-        orm_mode = True
+
+class PaginatedQuestionsResponse(BaseModel):
+    items: List[QuestionOptionResponse]
+    pagination: PaginationResponse

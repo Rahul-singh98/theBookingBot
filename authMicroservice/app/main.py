@@ -10,5 +10,5 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # Register routes
-app.include_router(user_routes.router, prefix="/users")
-app.include_router(auth_routes.router, prefix="/auth")
+app.include_router(user_routes.router, prefix="/api/users")
+app.include_router(auth_routes.router, prefix="/api/auth")
