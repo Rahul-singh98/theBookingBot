@@ -1,50 +1,58 @@
+version: '3'
+
 services:
   userinterface:
     build: userinterface
     ports:
       - "3000:3000"
     networks:
-      - thebookingbot_network
-    # deploy:
-    #   replicas: 2
+      - app_network
+    environment:
+      - VITE_CHATBOT_SERVICE=http://chatbot:8000
 
   auth:
     build: authMicroservice
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=mysql://user:password@db:3306/user_db
+      - DATABASE_URL=mysql://user:h{8KPhW+9U!kuAr@main_db:3306/chatbot_db
     depends_on:
-      - db
+      main_db:
+        condition: service_healthy
     networks:
-      - thebookingbot_network
-    # deploy:
-    #   replicas: 2
+      - app_network
 
   chatbot:
     build: chatbotMicroservice
     ports:
       - "8001:8000"
     environment:
-      - DATABASE_URL=mysql://user:password@db:3306/chatbot_db
+      - DATABASE_URL=mysql://user:h{8KPhW+9U!kuAr@main_db:3306/chatbot_db
     depends_on:
-      - db
+      main_db:
+        condition: service_healthy
     networks:
-      - thebookingbot_network
-    # deploy:
-    #   replicas: 2
+      - app_network
 
-  db:
+  main_db:
     image: mysql:8.0
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_ROOT_PASSWORD=rooth{8KPhW+9U!kuAr
       - MYSQL_DATABASE=chatbot_db
       - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
+      - MYSQL_PASSWORD=h{8KPhW+9U!kuAr
+    # ports:
+    #   - "3306:3306"
+    expose:
+      - 3306
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - thebookingbot_network
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   nginx:
     image: nginx
@@ -53,14 +61,14 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
-      - thebookingbot_network
+      - app_network
     depends_on:
       - userinterface
       - chatbot
       - auth
 
 networks:
-  thebookingbot_network:
+  app_network:
     driver: bridge
 
 volumes:

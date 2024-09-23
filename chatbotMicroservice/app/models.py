@@ -11,8 +11,8 @@ class ChatbotConfiguration(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     name = Column(String(100))
-    hero_img = Column(String, nullable=True)
-    welcome_message = Column(String, nullable=True)
+    hero_img = Column(String(255), nullable=True)
+    welcome_message = Column(String(255), nullable=True)
     primary_color = Column(String(7), nullable=True)
     secondary_color = Column(String(7), nullable=True)
 
@@ -34,10 +34,10 @@ class Question(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     bot_id = Column(String(36), ForeignKey("chatbot_configurations.id"))
-    question = Column(String)
+    question = Column(String(255))
     question_order = Column(Integer)
     response_type = Column(Enum(QuestionTypes))
-    variable = Column(String)
+    variable = Column(String(255))
 
     created_by = Column(String(36), nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
@@ -54,7 +54,7 @@ class QuestionOption(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     question_id = Column(String(36), ForeignKey("questions.id"))
-    option_text = Column(String)
+    option_text = Column(String(255))
     option_order = Column(Integer)
 
     question = relationship("Question", back_populates="options")
@@ -91,9 +91,9 @@ class ChatbotSubmitConfiguration(Base):
     __tablename__ = "chatbot_submit_configurations"
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
-    url = Column(String)
+    url = Column(String(255))
     method = Column(Enum(AuthMethodChoices))
-    authentication_key = Column(String, nullable=True)
+    authentication_key = Column(String(255), nullable=True)
     bot_id = Column(String(36), ForeignKey("chatbot_configurations.id"))
 
     bot = relationship("ChatbotConfiguration", back_populates="submit_config")

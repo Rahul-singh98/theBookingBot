@@ -13,4 +13,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-ENTRYPOINT [ "serve", "-s", "build"]
+CMD [ "serve", "-s", "dist"]

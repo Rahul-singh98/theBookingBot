@@ -7,3 +7,4 @@ passlib==1.7.4
 python-multipart==0.0.5
 pymysql==1.0.2
 cryptography==3.4.7
+aiofiles==24.1.0
