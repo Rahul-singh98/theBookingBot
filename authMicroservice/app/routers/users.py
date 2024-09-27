@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, Response, HTTPException
 from sqlalchemy.orm import Session
 from app.dependencies import admin_required, get_current_user
 from app.database import get_db
-from app.users.schemas import UserUpdate
+from app.schemas.users import UserUpdate
 from app.models import User
 
 
@@ -15,7 +15,12 @@ def list_users(db: Session = Depends(get_db), current_user: User = Depends(admin
     return Response(users, status_code=status.HTTP_200_OK)
 
 
-@router.put("/{user_id}/update")
+@router.get("/{user_id}")
+def get_user(user_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return Response(current_user, status_code=status.HTTP_200_OK)
+
+
+@router.put("/{user_id}")
 def update_user(user_id: str, data: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     if current_user.id != user_id:
         raise HTTPException(
