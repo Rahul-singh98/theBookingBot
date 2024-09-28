@@ -16,6 +16,14 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=mysql://user:h{8KPhW+9U!kuAr@main_db:3306/chatbot_db
+      - SECRET_KEY='rcGxdzPSCGSGnmlfkjydATFgVqehWBRNkQnmdJbUQTYxRxrlZG'
+      - ALGORITHM="HS256"
+      - ACCESS_TOKEN_EXPIRE_MINUTES="30"
+      - ADMIN_GROUP_NAME="admin"
+      - STAFF_GROUP_NAME="staff"
+      - ALLOWED_ORIGINS="*"
+      - ALLOWED_METHODS="*"
+      - ALLOWED_HEADERS="*"
     depends_on:
       main_db:
         condition: service_healthy

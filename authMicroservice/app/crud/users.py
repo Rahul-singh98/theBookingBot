@@ -7,7 +7,8 @@ import uuid
 
 
 def get_users(db: Session, offset: int = 0, count: int = 10):
-    return db.query(User).offset(offset).count(count).all()
+    total = db.query(User).count()
+    return db.query(User).offset(offset).count(count).all(), total
 
 
 def get_user(db: Session, user_id: str):
