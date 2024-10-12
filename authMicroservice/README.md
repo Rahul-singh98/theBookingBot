@@ -1,3 +1,19 @@
+````json
+{
+  "sub": "e35f4d78-bae0-40f3-883b-5560f4f365bc",
+  "iss": "https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_28TAH1h7c",
+  "client_id": "3imcbf11agfa86mt216u5f34gt",
+  "origin_jti": "87f423ab-4f77-4a34-a510-b06a780dc3d9",
+  "event_id": "6f6614e9-b7d0-417b-bf92-684093d19ac8",
+  "token_use": "access",
+  "scope": "aws.cognito.signin.user.admin",
+  "auth_time": 1727605680,
+  "exp": 1727630880,
+  "iat": 1727605680,
+  "jti": "f5ea276a-081d-4f8a-a8df-238fa2449132",
+  "username": "tamet"
+}```
+
 # Authentication and Authorization API Endpoints
 
 ## User Management
@@ -169,3 +185,4 @@
 33. **Get Authentication Logs**
     - Endpoint: `GET /api/auth/logs`
     - Description: Retrieve authentication logs for the current user
+````

@@ -60,6 +60,7 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+*.db
 
 # Flask stuff:
 instance/
@@ -186,3 +187,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Hide pem file which connect to the ec2 instance
+*pem

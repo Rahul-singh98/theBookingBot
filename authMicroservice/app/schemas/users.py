@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
+from app.utils.pagination import PaginationResponse
 from datetime import datetime
 
 
@@ -12,7 +13,7 @@ class UserStatus(str, Enum):
 
 class UserBase(BaseModel):
     username: str
-    email: EmailStr
+    email: str
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     status: UserStatus = UserStatus.active
@@ -33,7 +34,12 @@ class UserInDB(UserBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+class PaginatedUserResponse(BaseModel):
+    items: List[UserInDB]
+    pagination: PaginationResponse
 
 
 # class UserCreate(BaseModel):

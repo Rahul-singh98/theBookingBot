@@ -19,12 +19,16 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 
+def get_user_by_username(db: Session, username: str):
+    return db.query(User).filter(User.username == username).first()
+
+
 def create_user(db: Session, user: UserCreate):
     db_user = User(
         id=str(uuid.uuid4()),
         username=user.username,
         email=user.email,
-        password_hash=get_password_hash(user.password),
+        hashed_password=get_password_hash(user.password),
         first_name=user.first_name,
         last_name=user.last_name,
         status=user.status

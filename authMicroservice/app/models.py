@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from sqlalchemy import (
     Column, Integer, String,
     Boolean, DateTime, Enum,
-    ForeignKey
+    ForeignKey, Text
 )
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -11,7 +11,7 @@ from app.database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String(36), primary_key=True, index=True)
     email = Column(String(100), unique=True, index=True)
     username = Column(String(100), unique=True, index=True)
     first_name = Column(String(50))
@@ -48,6 +48,7 @@ class Permission(Base):
 
     id = Column(String(36), primary_key=True, index=True)
     name = Column(String(50), unique=True, nullable=False, index=True)
+    scope = Column(Text, nullable=False)
     description = Column(String(255))
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
@@ -123,7 +124,7 @@ class AuthLog(Base):
     user_id = Column(String(36), ForeignKey("users.id"), index=True)
     action = Column(String(50), nullable=False)
     ip_address = Column(String(45))
-    user_agent = Column(String)
+    user_agent = Column((String(255)))
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
 
     user = relationship("User", back_populates="auth_logs")

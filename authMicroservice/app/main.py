@@ -3,17 +3,21 @@ from app.routers.auth import auth_router
 from app.routers.users import user_router
 from app.database import init_db
 from fastapi.middleware.cors import CORSMiddleware
+from app.utils.super_admin import create_super_admin
 import os
 
 
 app = FastAPI()
 
+
 # Create the database tables
-
-
 @app.on_event("startup")
 def on_startup():
     init_db()
+
+    print("Creating Super Admin Started")
+    create_super_admin()
+    print("Creating Super Admin Completed")
 
 
 ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")

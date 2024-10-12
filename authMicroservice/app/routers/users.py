@@ -1,39 +1,79 @@
-from fastapi import APIRouter, Depends, status, Response, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.dependencies import admin_required, get_current_user
+from typing import List
 from app.database import get_db
-from app.schemas.users import UserUpdate
-from app.crud.users import get_users
+from app.models import User
+from app.schemas.users import UserCreate, UserUpdate, UserInDB, PaginatedUserResponse
 from app.utils.pagination import Pagination
+from app.crud import users as user_crud
+from app.dependencies import has_permission
 
 
 user_router = APIRouter()
 
 
-@user_router.get("/")
-def list_users(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
-    offset = Pagination.get_offset(page, size)
-    db_users, total = get_users(db, offset, size)
-    return {
-        "items": db_users,
-        "pagination": Pagination.paginate(total, size, page)
-    }
+@user_router.get("/", response_model=List[UserInDB])
+def read_users(
+    page: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(has_permission("users:read"))
+):
+    offset = Pagination.get_offset(page, limit)
+    users, total = user_crud.get_users(db, offset, limit)
+    pagination_obj = Pagination.paginate(total, limit, page)
+
+    return PaginatedUserResponse(items=[UserInDB.model_validate(user) for user in users], pagination=pagination_obj)
 
 
-@user_router.get("/{user_id}")
-def get_user(user_id: str, db: Session = Depends(get_db)):
-    return
-    # return Response(current_user, status_code=status.HTTP_200_OK)
+@user_router.post("/", response_model=UserInDB)
+def create_user(
+    user: UserCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(has_permission("users:write"))
+):
+    db_user = user_crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    return user_crud.create_user(db=db, user=user)
 
 
-# @user_router.put("/{user_id}")
-# def update_user(user_id: str, data: UserUpdate, db: Session = Depends(get_db)):
-#     if current_user.id != user_id:
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user data provided")
+@user_router.get("/{user_id}", response_model=UserInDB)
+def read_user(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(has_permission("users:read"))
+):
+    db_user = user_crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return db_user
 
-#     current_user.email = data.email
-#     current_user.username = data.username
-#     db.commit()
-#     db.refresh(current_user)
-#     return Response({"msg": "User updated successfully", "user": current_user}, status_code=status.HTTP_200_OK)
+
+@user_router.put("/{user_id}", response_model=UserInDB)
+def update_user(
+    user_id: str,
+    user: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(has_permission("users:write"))
+):
+    db_user = user_crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return user_crud.update_user(db=db, user_id=user_id, user=user)
+
+
+@user_router.delete("/{user_id}", response_model=UserInDB)
+def delete_user(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(has_permission("users:delete"))
+):
+    db_user = user_crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return user_crud.delete_user(db=db, user_id=user_id)

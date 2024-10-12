@@ -1,10 +1,10 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    username: str
     password: str
 
 
@@ -24,4 +24,4 @@ class AuthLogInDB(AuthLogBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

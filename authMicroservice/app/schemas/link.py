@@ -8,7 +8,7 @@ class UserGroupLink(BaseModel):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class GroupPermissionLink(BaseModel):
@@ -17,4 +17,4 @@ class GroupPermissionLink(BaseModel):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
