@@ -3,7 +3,14 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "allowJs": true,       // Include JavaScript files (.js and .jsx)
+    "checkJs": false,       // Avoid TypeScript checking JS files
+    "jsx": "react-jsx",     // Enable React JSX transformation
+    "moduleResolution": "node", // Ensure proper Node.js-style module resolution
+    "esModuleInterop": true, // Fix issues with certain CommonJS modules
+    "skipLibCheck": true,   // Skip checking declaration files to avoid unnecessary errors
+    "strict": false         // Optional: Disable strict type-checking
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

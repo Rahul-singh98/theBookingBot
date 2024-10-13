@@ -67,7 +67,7 @@ Resources:
 
           # Switch to the cloned directory and start the application
           cd /home/ec2-user/theBookingBot && \
-          sudo docker compose up --build
+          sudo docker compose up --build -d
 
 Outputs:
   KeyPairName:
