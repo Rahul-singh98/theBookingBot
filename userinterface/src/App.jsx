@@ -4,7 +4,7 @@ import UserApp from "@/scenes/main";
 import Login from "@/scenes/auth/login";
 import Signup from "@/scenes/auth/signup";
 import ErrorPage from "@/errors/errorPage.jsx";
-import PageTitle from "./common/PageTitle";
+import PageTitle from "./components/PageTitle";
 import { AuthProvider } from "@/hooks/useAuth";
 
 const LayoutWithTitle = ({ children, title }) => (

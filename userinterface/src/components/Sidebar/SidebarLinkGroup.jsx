@@ -7,7 +7,7 @@ const SidebarLinkGroup = ({ children, activeCondition }) => {
     setOpen(!open);
   };
 
-  return <li>{children(handleClick, open)}</li>;
+  return <div>{children(handleClick, open)}</div>;
 };
 
 export default SidebarLinkGroup;
