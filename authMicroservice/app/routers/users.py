@@ -7,12 +7,13 @@ from app.schemas.users import UserCreate, UserUpdate, UserInDB, PaginatedUserRes
 from app.utils.pagination import Pagination
 from app.crud import users as user_crud
 from app.dependencies import has_permission
+from pydantic import parse_obj_as
 
 
 user_router = APIRouter()
 
 
-@user_router.get("/", response_model=List[UserInDB])
+@user_router.get("/", response_model=PaginatedUserResponse)
 def read_users(
     page: int = 0,
     limit: int = 10,
@@ -23,7 +24,11 @@ def read_users(
     users, total = user_crud.get_users(db, offset, limit)
     pagination_obj = Pagination.paginate(total, limit, page)
 
-    return PaginatedUserResponse(items=[UserInDB.model_validate(user) for user in users], pagination=pagination_obj)
+    # Use parse_obj_as to handle lists of models
+    items = parse_obj_as(List[UserInDB], users)
+
+    return PaginatedUserResponse(items=items, pagination=pagination_obj)
+
 
 
 @user_router.post("/", response_model=UserInDB)

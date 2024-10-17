@@ -100,7 +100,7 @@ const AdminHeader = ({ sidebarOpen, setSidebarOpen }) => {
             <DarkModeSwitcher />
 
             {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
+            {/* <DropdownNotification /> */}
           </ul>
 
           {/* <!-- User Area --> */}

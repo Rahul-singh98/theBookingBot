@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AdminApp from "@/scenes/admin";
-import UserApp from "@/scenes/main";
-import Login from "@/scenes/auth/login";
-import Signup from "@/scenes/auth/signup";
+import AdminApp from "@/scenes/Admin";
+import UserApp from "@/scenes/Main";
+import Login from "@/scenes/Auth/login";
+import Signup from "@/scenes/Auth/signup";
 import ErrorPage from "@/errors/errorPage.jsx";
 import PageTitle from "./components/PageTitle";
 import { AuthProvider } from "@/hooks/useAuth";
