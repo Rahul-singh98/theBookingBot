@@ -10,16 +10,18 @@ from app.chatbot.schemas import (
 import uuid
 from app.chatbot import crud
 from app.utils.pagination import Pagination
+from app.dependencies import check_permission
 
 
 chatbot_router = APIRouter()
 
 
 @chatbot_router.get("/", response_model=PaginatedChatbotConfigurationResponse)
-def list_chatbots(
-    db: Session = Depends(get_db),
+async def list_chatbots(
     page: int = Query(1, ge=1, description="Page number"),
-    size: int = Query(10, ge=1, le=100, description="Items per page")
+    size: int = Query(10, ge=1, le=100, description="Items per page"),
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("chatbots:list"))
 ):
     # Calculate offset
     offset = Pagination.get_offset(page, size)
@@ -32,7 +34,11 @@ def list_chatbots(
 
 
 @chatbot_router.get("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
-def read_chatbot(chatbot_id: str, db: Session = Depends(get_db)):
+def read_chatbot(
+    chatbot_id: str,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("chatbots:read"))
+):
     db_chatbot = crud.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:
         raise HTTPException(
@@ -42,10 +48,15 @@ def read_chatbot(chatbot_id: str, db: Session = Depends(get_db)):
 
 
 @chatbot_router.post("/", response_model=ChatbotConfigurationResponse)
-def create_chatbot(chatbot: ChatbotConfigurationCreate, db: Session = Depends(get_db)):
+def create_chatbot(
+    chatbot: ChatbotConfigurationCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(check_permission("chatbots:write"))
+):
+    print("CurrentUser", current_user)
     # Assuming user_id 1 for now
     out = crud.create_chatbot(db=db, chatbot=chatbot,
-                              user_id=str(uuid.uuid4()))
+                              user_id=current_user.get("id"))
     # return ChatbotConfigurationResponse.from_orm(out)
     return out
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { chatbots } from "@/api/chatbot";
+import { get_chatbots } from "@/api/chatbot";
 import { CHATBOT_API_URL, ChatRoutes } from "@/api/routes";
 
 const ChatbotComponent = () => {
@@ -10,7 +10,7 @@ const ChatbotComponent = () => {
     // Fetch chatbot data from the API
     const fetchChatbotData = async () => {
       try {
-        const response = await chatbots();
+        const response = await get_chatbots();
         console.log(response); // Debugging the response
         if (response?.data?.items && response.data.items.length > 0) {
           setChatbotResponse(response.data.items);
@@ -39,7 +39,7 @@ const ChatbotComponent = () => {
     const script = document.createElement("script");
     script.src = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_STATIC_JS_PATH}`;
     script.async = true;
-    
+
     script.onload = () => {
       console.log("Chatbot script loaded successfully");
       setScriptLoaded(true);
@@ -70,7 +70,7 @@ const ChatbotComponent = () => {
       } else {
         // Wait for DOM content to be loaded
         document.addEventListener("DOMContentLoaded", initializeChatbot);
-        
+
         // Cleanup listener
         return () => {
           document.removeEventListener("DOMContentLoaded", initializeChatbot);

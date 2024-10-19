@@ -8,7 +8,8 @@ services:
     networks:
       - app_network
     environment:
-      - VITE_CHATBOT_SERVICE=http://chatbot:8000
+      - VITE_AUTH_API_URL=http://auth:8000
+      - VITE_CHATBOT_API_URL=http://chatbot:8000
 
   auth:
     build: authMicroservice
@@ -42,6 +43,7 @@ services:
       - "8001:8000"
     environment:
       - DATABASE_URL=mysql://user:h{8KPhW+9U!kuAr@main_db:3306/chatbot_db
+      - AUTH_SERVICE_URL=http://auth:8000
     depends_on:
       main_db:
         condition: service_healthy

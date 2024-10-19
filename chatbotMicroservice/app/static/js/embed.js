@@ -7,25 +7,29 @@ class Chatbot {
     this.welcomeMessage =
       config.welcomeMessage || "Hello! How can I help you today?";
 
-    this.createChatbotHTML();
-    this.initializeElements();
-
+    this.injectStyles(); // Inject CSS dynamically
+    this.createChatbotHTML(); // Create the chatbot HTML
+    this.initializeElements(); // Initialize elements
     console.log("Chatbot initialized with config:", config);
     this.init();
   }
 
+  // init() {
+  //   console.log("Initializing chatbot...");
+  //   this.addEventListeners();
+  // }
   init() {
     console.log("Initializing chatbot...");
+    this.loadChatHistory();
     this.addEventListeners();
   }
 
-  // Retrieve CSRF token from meta tag
   getCsrfToken() {
     const csrfToken = document
       .querySelector('meta[name="csrf-token"]')
-      .getAttribute("content");
+      ?.getAttribute("content");
     console.log("Retrieved CSRF token:", csrfToken);
-    return csrfToken;
+    return csrfToken || "";
   }
 
   getCSRFHeaders() {
@@ -33,6 +37,154 @@ class Chatbot {
       "Content-Type": "application/json",
       "X-CSRFToken": this.csrfToken,
     };
+  }
+
+  injectStyles() {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      :root {
+        --primary-color: #e06936;
+        --secondary-color: #f0f4f8;
+      }
+      .chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        height: 500px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+        background-color: white;
+      }
+      .chatbot-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 15px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;  /* Ensures vertical alignment */
+        justify-content: space-between; /* Spaces out elements evenly */
+      }
+      .chatbot-header i {
+        margin-right: 8px; /* Adds space between the icon and bot name */
+      }
+      .chatbot-header button {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .chatbot-body {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+      .chatbot-footer {
+        padding: 10px;
+        background-color: var(--secondary-color);
+      }
+      .chatbot-message {
+        margin-bottom: 15px;
+        max-width: 80%;
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .user-message {
+        background-color: var(--primary-color);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+      }
+      .bot-message {
+        background-color: var(--secondary-color);
+        color: #333;
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+      }
+      .chatbot-input {
+        display: flex;
+        align-items: center;
+      }
+      .chatbot-input input {
+        flex-grow: 1;
+        border: none;
+        padding: 10px;
+        border-radius: 20px;
+        margin-right: 10px;
+      }
+      .chatbot-input button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+      .chatbot-bubble {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+      .chatbot-bubble:hover {
+        transform: scale(1.1);
+      }
+      .chatbot-typing {
+        display: none;
+        align-self: flex-start;
+        background-color: var(--secondary-color);
+        color: #333;
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+      .dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #333;
+        animation: wave 1.3s linear infinite;
+      }
+      .dot:nth-child(2) {
+        animation-delay: -1.1s;
+      }
+      .dot:nth-child(3) {
+        animation-delay: -0.9s;
+      }
+      @keyframes wave {
+        0%, 60%, 100% {
+          transform: initial;
+        }
+        30% {
+          transform: translateY(-10px);
+        }
+      }
+      .d-none {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   createChatbotHTML() {
@@ -75,13 +227,10 @@ class Chatbot {
       </div>
     `;
 
-    // Create a wrapper element and set its innerHTML
     const wrapper = document.createElement("div");
     wrapper.innerHTML = chatbotHTML;
-
-    // Append the chatbot elements to the body
-    document.body.appendChild(wrapper.firstElementChild); // Append bubble
-    document.body.appendChild(wrapper.lastElementChild); // Append container
+    document.body.appendChild(wrapper.firstElementChild);
+    document.body.appendChild(wrapper.lastElementChild);
   }
 
   initializeElements() {
@@ -94,275 +243,102 @@ class Chatbot {
     this.typingIndicator = document.querySelector(".chatbot-typing");
   }
 
+  // addEventListeners() {
+  //   this.chatbotBubble.addEventListener("click", () => {
+  //     this.chatbot.classList.remove("d-none");
+  //     this.chatbotBubble.classList.add("d-none");
+  //   });
+
+  //   this.closeBtn.addEventListener("click", () => {
+  //     this.chatbot.classList.add("d-none");
+  //     this.chatbotBubble.classList.remove("d-none");
+  //   });
+
+  //   this.sendBtn.addEventListener("click", () => {
+  //     const answer = this.userInput.value;
+  //     if (answer) {
+  //       this.addMessage(answer, "user-message");
+  //       this.userInput.value = "";
+  //     }
+  //   });
+  // }
+
   addEventListeners() {
-    console.log("Adding event listeners...");
-
-    // When chatbot bubble is clicked, start the session
+    // Toggle between showing chatbot and bubble
     this.chatbotBubble.addEventListener("click", () => {
-      console.log("Chatbot bubble clicked");
-      this.chatbot.classList.remove("d-none");
-      this.chatbotBubble.classList.add("d-none");
-      if (this.sessionId === null) {
-        this.startChatSession();
-      }
+      this.openChat();
     });
 
-    // Close chatbot event
     this.closeBtn.addEventListener("click", () => {
-      console.log("Closing chatbot...");
-      this.chatbot.classList.add("d-none");
-      this.chatbotBubble.classList.remove("d-none");
+      this.closeChat();
     });
 
-    // Submit answer
-    this.sendBtn.addEventListener("click", () => {
-      const inputElement = document.getElementById("user-input");
-      const answer = inputElement.value;
-      const questionIdElement = document.getElementById("question-id");
-      const question_id = questionIdElement.value;
-
-      console.log("Sending answer:", answer);
-      if (answer) {
-        this.fetchNextQuestion(answer, question_id);
-      }
+    // Send message when send button is clicked or Enter key is pressed
+    this.sendBtn.addEventListener("click", () => this.handleSendMessage());
+    this.userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") this.handleSendMessage();
     });
   }
 
-  // Start chat session
-  startChatSession() {
-    console.log("Starting new chat session...");
-    this.showTypingIndicator();
-    fetch(`/chat/start-session/${this.token}/`, {
-      method: "POST",
-      headers: this.getCSRFHeaders(),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Session started:", data);
-        this.sessionId = data.session_id;
-        this.hideTypingIndicator();
-        this.renderQuestion(data);
-      })
-      .catch((error) => {
-        console.error("Error starting session:", error);
-        this.hideTypingIndicator();
-        this.addMessage(
-          "Error starting session. Please try again.",
-          "bot-message"
-        );
-      });
-  }
-
-  // Fetch next question
-  fetchNextQuestion(answer, question_id) {
-    console.log("Fetching next question...");
-    if (answer) {
-      this.addMessage(answer, "user-message");
+  handleSendMessage() {
+    const userMessage = this.userInput.value.trim();
+    if (userMessage) {
+      this.addMessage(userMessage, "user-message");
+      this.userInput.value = "";
       this.showTypingIndicator();
 
-      fetch(`/chat/next-question/${this.sessionId}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ answer, question_id }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Answer submitted. Next data:", data);
-          this.hideTypingIndicator();
-          if (data.is_completed) {
-            this.addMessage(
-              "Thank you! The session is complete.",
-              "bot-message"
-            );
-          } else {
-            this.renderQuestion(data);
-          }
-        })
-        .catch((error) => {
-          console.error("Error submitting answer:", error);
-          this.hideTypingIndicator();
-          this.addMessage("Error submitting answer.", "bot-message");
-        });
+      // Simulate bot response after a short delay
+      setTimeout(() => {
+        this.addMessage("Thanks for your message!", "bot-message");
+        this.hideTypingIndicator();
+      }, 1000);
     }
   }
 
-  submitAnswer(answer, question_id) {
-    console.log("Submitting answer:", answer);
-    if (answer) {
-      this.addMessage(answer, "user-message");
-      this.showTypingIndicator();
-
-      fetch(`/chat/next-question/${this.sessionId}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ answer, question_id }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Answer submitted. Next data:", data);
-          this.hideTypingIndicator();
-          if (data.is_complete) {
-            this.addMessage(
-              "Thank you! The session is complete.",
-              "bot-message"
-            );
-          } else {
-            this.renderQuestion(data);
-          }
-        })
-        .catch((error) => {
-          console.error("Error submitting answer:", error);
-          this.hideTypingIndicator();
-          this.addMessage("Error submitting answer.", "bot-message");
-        });
-    }
-  }
-
-  // Render the question
-  renderQuestion(data) {
-    console.log("Rendering question:", data);
-    const question = data.question;
-    const question_id = data.question_id;
-    const inputType = data.response_type;
-    const options = data.options || [];
-
-    this.addMessage(question, "bot-message");
-
-    if (question_id !== null) {
-      this.replaceQuestionId(question_id);
-    }
-
-    let inputElement;
-    switch (inputType) {
-      case "dropdown":
-        inputElement = this.replaceInputWithDropdown(options);
-        break;
-      case "clicklist":
-        inputElement = this.createClickList(options, question_id);
-        break;
-      case "datetime":
-        inputElement = this.replaceInputFieldWith("datetime-local");
-        break;
-      case "address":
-        inputElement = this.replaceInputFieldWith("address");
-        break;
-      case "number":
-        inputElement = this.replaceInputFieldWith("number");
-        break;
-      case "phone":
-        inputElement = this.replaceInputFieldWith("tel");
-        break;
-      case "email":
-        inputElement = this.replaceInputFieldWith("email");
-        break;
-      default:
-        inputElement = this.replaceInputFieldWith("text");
-        break;
-    }
-
-    console.log("Question rendered with input type:", inputType);
+  showTypingIndicator() {
+    this.typingIndicator.style.display = "flex";
     this.chatbotBody.scrollTop = this.chatbotBody.scrollHeight;
   }
 
-  replaceQuestionId(question_id) {
-    console.log("Replacing question ID:", question_id);
-    const questionIdEle = document.getElementById("question-id");
-    questionIdEle.value = question_id;
+  hideTypingIndicator() {
+    this.typingIndicator.style.display = "none";
   }
 
-  replaceInputFieldWith(type) {
-    console.log("Replacing input field with type:", type);
-    const inputContainer = document.querySelector(".chatbot-input");
-    const oldInput = document.getElementById("user-input");
-
-    const userInput = document.createElement("input");
-    userInput.id = "user-input";
-    userInput.classList.add("form-control");
-    userInput.type = type;
-    userInput.value = "";
-    userInput.placeholder = `Type your ${
-      type === "datetime-local" ? "date" : type
-    }...`;
-
-    inputContainer.replaceChild(userInput, oldInput);
+  openChat() {
+    this.chatbot.classList.remove("d-none"); // Show chatbot
+    this.chatbotBubble.classList.add("d-none"); // Hide bubble
   }
 
-  replaceInputWithDropdown(options) {
-    console.log("Replacing input with dropdown:", options);
-    const inputContainer = document.querySelector(".chatbot-input");
-    const oldInput = document.getElementById("user-input");
-
-    const select = document.createElement("select");
-    select.id = "user-input";
-    select.classList.add("form-control");
-
-    options.forEach((option) => {
-      const optionElement = document.createElement("option");
-      optionElement.value = option;
-      optionElement.textContent = option;
-      select.appendChild(optionElement);
-    });
-
-    inputContainer.replaceChild(select, oldInput);
+  closeChat() {
+    this.chatbot.classList.add("d-none"); // Hide chatbot
+    this.chatbotBubble.classList.remove("d-none"); // Show bubble
   }
 
-  createClickList(options, question_id) {
-    console.log("Creating click list with options:", options);
-    const clickListWrapper = document.createElement("div");
-    clickListWrapper.classList.add("chatbot-clicklist");
-
-    options.forEach((option) => {
-      const button = document.createElement("button");
-      button.classList.add("btn", "btn-outline-primary", "m-1");
-      button.textContent = option;
-      button.addEventListener("click", () => {
-        console.log("Click list option clicked:", option);
-        this.fetchNextQuestion(option, question_id);
-      });
-      clickListWrapper.appendChild(button);
-    });
-
-    this.chatbotBody.insertBefore(clickListWrapper, this.typingIndicator);
-    this.chatbotBody.scrollTop = this.chatbotBody.scrollHeight;
-  }
-
-  // Helper methods for showing messages and typing indicator
+  // addMessage(message, className) {
+  //   const messageElement = document.createElement("div");
+  //   messageElement.classList.add("chatbot-message", className);
+  //   messageElement.textContent = message;
+  //   this.chatbotBody.insertBefore(messageElement, this.typingIndicator);
+  //   this.chatbotBody.scrollTop = this.chatbotBody.scrollHeight;
+  // }
   addMessage(message, className) {
-    console.log("Adding message:", message);
     const messageElement = document.createElement("div");
     messageElement.classList.add("chatbot-message", className);
     messageElement.textContent = message;
     this.chatbotBody.insertBefore(messageElement, this.typingIndicator);
     this.chatbotBody.scrollTop = this.chatbotBody.scrollHeight;
+
+    // Save messages to localStorage (Optional)
+    const chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+    chatHistory.push({ message, className });
+    localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
   }
 
-  showTypingIndicator() {
-    console.log("Showing typing indicator...");
-    this.typingIndicator.style.display = "block";
-    this.chatbotBody.scrollTop = this.chatbotBody.scrollHeight;
-  }
-
-  hideTypingIndicator() {
-    console.log("Hiding typing indicator...");
-    this.typingIndicator.style.display = "none";
+  // Load chat history on startup
+  loadChatHistory() {
+    const chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+    chatHistory.forEach(({ message, className }) => {
+      this.addMessage(message, className);
+    });
   }
 }
-
-// <style>
-// #chatbot-bubble {
-// /* Your bubble button styles */
-// }
-
-// .chatbot-message {
-// /* Styles for chatbot messages */
-// }
-
-// /* Customize typing indicator */
-// .chatbot-typing {
-// display: none;
-// /* Your styles for typing indicator */
-// }

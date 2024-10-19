@@ -4,6 +4,8 @@ export const CHATBOT_API_URL = import.meta.env.VITE_CHATBOT_API_URL;
 export const AuthRoutes = {
   LOGIN: "/api/auth/login",
   USERS: "/api/users",
+  GROUPS: "/api/groups",
+  PERMISSIONS: "/api/permissions"
 };
 
 export const ChatRoutes = {

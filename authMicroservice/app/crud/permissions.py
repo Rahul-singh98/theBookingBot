@@ -5,7 +5,8 @@ import uuid
 
 
 def get_permissions(db: Session, offset: int = 0, count: int = 10):
-    return db.query(Permission).offset(offset).count(count).all()
+    total = db.query(Permission).count()
+    return db.query(Permission).offset(offset).limit(count).all(), total
 
 
 def get_permission(db: Session, permission_id: str):

@@ -71,9 +71,10 @@ def create_super_admin():
 
         # Create all permissions and associate them with the SuperAdmin group
         all_permissions = [
-            "users:read", "users:write", "users:delete",
-            "groups:read", "groups:write", "groups:delete",
-            "permissions:read", "permissions:write", "permissions:delete"
+            "users:*:*",
+            "groups:*:*",
+            "permissions:*:*",
+            "chatbots:*:*"
         ]
 
         for perm_name in all_permissions:
@@ -81,7 +82,7 @@ def create_super_admin():
                 id=str(uuid.uuid4()),
                 name=perm_name,
                 scope="global",
-                description=f"Permission to {perm_name.split(':')[1]} {perm_name.split(':')[0]}"
+                description=f"Permission to {perm_name.split(':')[1]} {perm_name.split(':')[0]} {perm_name.split(':')[2]}"
             )
             db.add(permission)
             db.flush()

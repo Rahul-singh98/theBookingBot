@@ -9,3 +9,10 @@ export const getAccessToken = () => {
     return null;
   }
 };
+
+export const getAuthorizationHeader = () => {
+  const token = getAccessToken();
+  return {
+    Authorization: `${token.token_type} ${token.access_token}`,
+  };
+};

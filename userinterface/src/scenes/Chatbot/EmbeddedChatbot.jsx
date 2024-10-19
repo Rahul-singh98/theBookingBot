@@ -27,7 +27,7 @@ const EmbeddedChatbot = ({
     };
 
     // Load CSS files
-    loadCSS(`${CHATBOT_API_URL}${ChatRoutes.CHATBOT_STATIC_CSS_PATH}`);
+    // loadCSS(`${CHATBOT_API_URL}${ChatRoutes.CHATBOT_STATIC_CSS_PATH}`);
     loadCSS("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
     addCSRFMeta();
 

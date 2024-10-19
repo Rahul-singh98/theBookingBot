@@ -10,11 +10,13 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(
     os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
 
-def create_access_token(data: dict):
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + \
-        timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
+def get_expiry():
+    start_time = datetime.now(timezone.utc)
+    expiry = start_time + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    return int(start_time.timestamp()), int(expiry.timestamp())
+
+
+def create_access_token(to_encode: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 

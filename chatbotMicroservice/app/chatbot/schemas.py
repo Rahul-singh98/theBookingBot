@@ -14,7 +14,7 @@ class ChatbotConfigurationBase(BaseModel):
 
 
 class ChatbotConfigurationCreate(ChatbotConfigurationBase):
-    created_by = str
+    pass
 
 
 class ChatbotConfigurationUpdate(ChatbotConfigurationBase):
