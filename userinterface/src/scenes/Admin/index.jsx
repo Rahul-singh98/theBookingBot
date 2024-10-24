@@ -4,10 +4,12 @@ import AdminLayout from "@/layout/AdminLayout";
 import Loader from "@/components/Loader";
 import { useAuth } from "@/hooks/useAuth";
 import AdminTables from "@/components/Tables/AdminTables";
+import { useLocation } from "react-router-dom";
 
 const AdminApp = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
@@ -25,7 +27,7 @@ const AdminApp = () => {
       </Routes>
     </AdminLayout>
   ) : (
-    <Navigate to="/login?next=/admin" replace />
+    <Navigate to={`/login?next=${location.pathname}`} replace />
   );
 };
 

@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.utils.generate_uuid import generate_uuid
 from app.questions.schemas import (
     QuestionResponse, QuestionCreate, QuestionUpdate,
     QuestionOptionResponse, QuestionOptionCreate, QuestionOptionUpdate,
@@ -9,7 +8,9 @@ from app.questions.schemas import (
 )
 from typing import List
 from app.questions import crud
+from app.chatbot import crud as chatbot_crud
 from app.utils.pagination import Pagination
+from app.dependencies import check_permission
 
 
 questions_router = APIRouter()
@@ -17,7 +18,11 @@ questions_router = APIRouter()
 
 # Question CRUD operations
 @questions_router.get("/", response_model=PaginatedQuestionsResponse)
-def list_questions(page: int = 1, size: int = 100, db: Session = Depends(get_db)):
+def list_questions(
+    page: int = 1, size: int = 100,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("questions:list"))
+):
     offset = Pagination.get_offset(page, size)
 
     items, total = crud.list_questions(db, offset, size)
@@ -27,7 +32,11 @@ def list_questions(page: int = 1, size: int = 100, db: Session = Depends(get_db)
 
 
 @questions_router.get("/{question_id}", response_model=QuestionResponse)
-def read_question(question_id: str, db: Session = Depends(get_db)):
+def read_question(
+    question_id: str,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("questions:read"))
+):
     question = crud.get_question(db, question_id)
     if question is None:
         raise HTTPException(
@@ -36,12 +45,29 @@ def read_question(question_id: str, db: Session = Depends(get_db)):
 
 
 @questions_router.post("/", response_model=QuestionResponse)
-def create_question(question: QuestionCreate, db: Session = Depends(get_db)):
-    return crud.create_question(db, question, generate_uuid())
+def create_question(
+    question: QuestionCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(check_permission("questions:write"))
+):
+    if not chatbot_crud.get_chatbot(db, question.bot_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid chatbot id provided")
+
+    if not crud.filter_question_by_oc(db, question.question_order, question.bot_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Question Order must be unique in filter question")
+
+    return crud.create_question(db, question, current_user.get("id"))
 
 
 @questions_router.put("/{question_id}", response_model=QuestionResponse)
-def update_question(question_id: str, question_update: QuestionUpdate, db: Session = Depends(get_db)):
+def update_question(
+    question_id: str,
+    question_update: QuestionUpdate,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("questions:update"))
+):
     db_question = crud.update_question(db, question_id, question_update)
     if db_question is None:
         raise HTTPException(
@@ -51,7 +77,11 @@ def update_question(question_id: str, question_update: QuestionUpdate, db: Sessi
 
 
 @questions_router.delete("/{question_id}", status_code=204)
-def delete_question(question_id: str, db: Session = Depends(get_db)):
+def delete_question(
+    question_id: str,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("questions:delete"))
+):
     question = crud.delete_question(db, question_id)
     if question is None:
         raise HTTPException(
@@ -60,7 +90,12 @@ def delete_question(question_id: str, db: Session = Depends(get_db)):
 
 
 @questions_router.post("/{question_id}/options/", response_model=QuestionOptionResponse)
-def create_question_option(question_id: str, option: QuestionOptionCreate, db: Session = Depends(get_db)):
+def create_question_option(
+    question_id: str,
+    option: QuestionOptionCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(check_permission("question_options:write"))
+):
     db_question, db_option = crud.create_question_option(
         db, question_id, option)
     if db_question is None:
@@ -70,7 +105,11 @@ def create_question_option(question_id: str, option: QuestionOptionCreate, db: S
 
 
 @questions_router.get("/options", response_model=PaginatedQuestionsResponse)
-def list_questions_options(page: int = 1, size: int = 100, db: Session = Depends(get_db)):
+def list_questions_options(
+    page: int = 1, size: int = 100,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("question_options:list"))
+):
     offset = Pagination.get_offset(page, size)
 
     items, total = crud.list_question_options(db, offset, size)
@@ -79,19 +118,30 @@ def list_questions_options(page: int = 1, size: int = 100, db: Session = Depends
 
 
 @questions_router.get("/options/{option_id}", response_model=QuestionOptionResponse)
-def read_question_option(option_id: str, db: Session = Depends(get_db)):
+def read_question_option(
+    option_id: str, db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("question_options:read"))
+):
     return crud.get_question_option(db, option_id)
 
 
 @questions_router.get("/{question_id}/options/", response_model=List[QuestionOptionResponse])
-def list_questions_by_qid(question_id: str, page: int = 1, size: int = 100, db: Session = Depends(get_db)):
+def list_question_options_by_qid(
+        question_id: str, page: int = 1,
+        size: int = 100,
+        db: Session = Depends(get_db),
+        _: dict = Depends(check_permission("question_options:list"))):
     offset = Pagination.get_offset(page, size)
     items, _ = crud.list_question_options(db, offset, size, question_id)
     return items
 
 
 @questions_router.put("/options/{option_id}", response_model=QuestionOptionResponse)
-def update_question_option(option_id: int, option_update: QuestionOptionUpdate, db: Session = Depends(get_db)):
+def update_question_option(
+    option_id: int, option_update: QuestionOptionUpdate,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("question_options:update"))
+):
     db_question, db_option = crud.update_question_option(
         db, option_id, option_update)
 
@@ -107,7 +157,10 @@ def update_question_option(option_id: int, option_update: QuestionOptionUpdate, 
 
 
 @questions_router.delete("/options/{option_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_question_option(option_id: int, db: Session = Depends(get_db)):
+def delete_question_option(
+    option_id: int, db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("question_options:delete"))
+):
     db_option = crud.delete_question_option(
         db, option_id)
 

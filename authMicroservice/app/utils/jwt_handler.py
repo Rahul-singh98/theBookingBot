@@ -16,6 +16,13 @@ def get_expiry():
     return int(start_time.timestamp()), int(expiry.timestamp())
 
 
+def is_token_expired(exp: int) -> bool:
+    if not exp:
+        return True
+
+    return exp < int(datetime.now(timezone.utc).timestamp())
+
+
 def create_access_token(to_encode: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

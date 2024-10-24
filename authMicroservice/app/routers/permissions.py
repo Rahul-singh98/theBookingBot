@@ -31,13 +31,8 @@ def read_permissions(
 def create_permission(
     permission: PermissionCreate,
     db: Session = Depends(get_db),
-    current_permission: User = Depends(has_permission("permissions:write"))
+    _: User = Depends(has_permission("permissions:write"))
 ):
-    db_permission = permission_crud.get_permission_by_email(
-        db, email=permission.email)
-    if db_permission:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     return permission_crud.create_permission(db=db, permission=permission)
 
 
@@ -45,7 +40,7 @@ def create_permission(
 def read_permission(
     permission_id: str,
     db: Session = Depends(get_db),
-    current_permission: User = Depends(has_permission("permissions:read"))
+    _: User = Depends(has_permission("permissions:read"))
 ):
     db_permission = permission_crud.get_permission(
         db, permission_id=permission_id)
@@ -60,7 +55,7 @@ def update_permission(
     permission_id: str,
     permission: PermissionUpdate,
     db: Session = Depends(get_db),
-    current_permission: User = Depends(has_permission("permissions:write"))
+    _: User = Depends(has_permission("permissions:write"))
 ):
     db_permission = permission_crud.get_permission(
         db, permission_id=permission_id)
@@ -74,7 +69,7 @@ def update_permission(
 def delete_permission(
     permission_id: str,
     db: Session = Depends(get_db),
-    current_permission: User = Depends(has_permission("permissions:delete"))
+    _: User = Depends(has_permission("permissions:delete"))
 ):
     db_permission = permission_crud.get_permission(
         db, permission_id=permission_id)

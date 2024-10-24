@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import DynamicSelectField from "./DynamicSelectField";
 
 const DynamicForm = ({
   fields,
@@ -9,6 +10,7 @@ const DynamicForm = ({
   cancelLabel = "Cancel",
 }) => {
   const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (initialData) {
@@ -22,8 +24,6 @@ const DynamicForm = ({
         }),
         {}
       );
-
-      console.log("DefaultData in DyanamicForm", defaultData);
       setFormData(defaultData);
     }
   }, [initialData, fields]);
@@ -41,22 +41,86 @@ const DynamicForm = ({
     }
   };
 
+  const validateField = (field, value) => {
+    const { name, validationRules } = field;
+    if (!validationRules) return "";
+
+    if (validationRules.min !== undefined && value < validationRules.min) {
+      return `The value for ${field.label} cannot be less than ${validationRules.min}`;
+    }
+    if (validationRules.max !== undefined && value > validationRules.max) {
+      return `The value for ${field.label} cannot be greater than ${validationRules.max}`;
+    }
+
+    if (validationRules.pattern) {
+      const regex = new RegExp(validationRules.pattern);
+      if (!regex.test(value)) {
+        return validationRules.message || `Invalid format for ${field.label}`;
+      }
+    }
+
+    if (validationRules.required && !value) {
+      return `${field.label} is required`;
+    }
+
+    if (validationRules.custom) {
+      const customError = validationRules.custom(value);
+      if (customError) return customError;
+    }
+
+    return "";
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    fields.forEach((field) => {
+      const error = validateField(field, formData[field.name]);
+      if (error) {
+        newErrors[field.name] = error;
+        isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    console.log("Target", e.target, name, value, type, checked);
+    const newValue = type === "checkbox" ? checked : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }));
 
-    console.log("FormData", formData);
+    // Clear error when field is modified
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+
+    // Validate field on change if it has validation rules
+    const field = fields.find((f) => f.name === name);
+    if (field?.validationRules) {
+      const error = validateField(field, newValue);
+      setErrors((prev) => ({
+        ...prev,
+        [name]: error,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("handleSubmit in DyanamicForm", formData);
-    onSubmit(formData);
+    if (validateForm()) {
+      onSubmit(formData);
+    }
   };
 
   const renderField = (field) => {
@@ -75,42 +139,47 @@ const DynamicForm = ({
       "w-full rounded-md border border-stroke bg-transparent px-5 py-3 dark:border-strokedark dark:bg-meta-4 dark:text-white";
     const labelClass =
       "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+    const errorClass = "text-sm text-red-500 mt-1";
+
+    // Add error state to input class
+    const inputClass = `${baseInputClass} ${className} ${
+      errors[name] ? "border-red-500" : ""
+    }`;
 
     switch (type) {
       case "select":
         return (
-          <div key={name} className="mb-4">
-            <label className={labelClass}>{label}</label>
-            <select
-              name={name}
-              value={formData[name] || ""}
-              onChange={handleChange}
-              className={`${baseInputClass} ${className}`}
-              required={required}
-              {...rest}
-            >
-              {options?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <DynamicSelectField
+            name={name}
+            label={label}
+            options={options}
+            required={required}
+            formData={formData}
+            handleChange={handleChange}
+            errors={errors}
+            labelClass={labelClass}
+            inputClass={inputClass}
+            errorClass={errorClass}
+          />
         );
 
       case "textarea":
         return (
           <div key={name} className="mb-4">
-            <label className={labelClass}>{label}</label>
+            <label className={labelClass}>
+              {label}
+              {required && <span className="text-red-500 ml-1">*</span>}
+            </label>
             <textarea
               name={name}
               value={formData[name] || ""}
               onChange={handleChange}
-              className={`${baseInputClass} min-h-[100px] ${className}`}
+              className={`${inputClass} min-h-[100px]`}
               placeholder={placeholder}
               required={required}
               {...rest}
             />
+            {errors[name] && <div className={errorClass}>{errors[name]}</div>}
           </div>
         );
 
@@ -126,23 +195,28 @@ const DynamicForm = ({
               {...rest}
             />
             <label className={labelClass}>{label}</label>
+            {errors[name] && <div className={errorClass}>{errors[name]}</div>}
           </div>
         );
 
       default:
         return (
           <div key={name} className="mb-4">
-            <label className={labelClass}>{label}</label>
+            <label className={labelClass}>
+              {label}
+              {required && <span className="text-red-500 ml-1">*</span>}
+            </label>
             <input
               type={type}
               name={name}
               value={formData[name] || ""}
               onChange={handleChange}
-              className={`${baseInputClass} ${className}`}
+              className={inputClass}
               placeholder={placeholder}
               required={required}
               {...rest}
             />
+            {errors[name] && <div className={errorClass}>{errors[name]}</div>}
           </div>
         );
     }

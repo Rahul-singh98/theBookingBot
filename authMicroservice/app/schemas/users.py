@@ -16,7 +16,7 @@ class UserBase(BaseModel):
     email: str
     first_name: Optional[str] = None
     last_name: Optional[str] = None
-    status: UserStatus = UserStatus.active
+    status: Optional[UserStatus] = UserStatus.active
 
 
 class UserCreate(UserBase):

@@ -5,13 +5,15 @@ export const AuthRoutes = {
   LOGIN: "/api/auth/login",
   USERS: "/api/users",
   GROUPS: "/api/groups",
-  PERMISSIONS: "/api/permissions"
+  PERMISSIONS: "/api/permissions",
 };
 
 export const ChatRoutes = {
   GET_MESSAGES: "/messages",
   SEND_MESSAGE: "/messages/send",
   CHATBOT_CONFIGS: "/api/chatbots",
+  QUESTIONS: "/api/questions",
+  QUESTION_OPTIONS: "/api/question/options",
   CHATBOT_STATIC_JS_PATH: "/static/js/embed.min.js",
   CHATBOT_STATIC_CSS_PATH: "/static/css/embed.css",
 };

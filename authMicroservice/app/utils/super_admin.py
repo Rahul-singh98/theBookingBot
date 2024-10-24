@@ -71,10 +71,7 @@ def create_super_admin():
 
         # Create all permissions and associate them with the SuperAdmin group
         all_permissions = [
-            "users:*:*",
-            "groups:*:*",
-            "permissions:*:*",
-            "chatbots:*:*"
+            "*:*:*",
         ]
 
         for perm_name in all_permissions:

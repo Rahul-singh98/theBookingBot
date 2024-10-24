@@ -17,7 +17,8 @@ def create_permission(db: Session, permission: PermissionCreate):
     db_permission = Permission(
         id=str(uuid.uuid4()),
         name=permission.name,
-        description=permission.description
+        description=permission.description,
+        scope=permission.scope
     )
     db.add(db_permission)
     db.commit()

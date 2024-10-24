@@ -64,4 +64,19 @@ export const tableConfigs = {
     searchFields: ["id", "name", "scope", "description"],
     defaultSort: { field: "created_at", direction: "desc" },
   },
+  questions: {
+    columns: [
+      { key: "id", header: "ID" },
+      { key: "bot_id", header: "Chatbot ID" },
+      { key: "question", header: "Question" },
+      { key: "question_order", header: "Question Order" },
+      { key: "response_type", header: "Response Type" },
+      { key: "variable", header: "Variable Name" },
+      { key: "created_by", header: "Author" },
+      { key: "created_at", header: "Created On" },
+      { key: "updated_at", header: "Last Update On" },
+    ],
+    searchFields: ["question"],
+    defaultSort: { field: "created_at", direction: "desc" },
+  },
 };

@@ -15,21 +15,3 @@ export const login = async (username, password) => {
     throw error;
   }
 };
-
-// Function to get users
-export const get_users = async () => {
-  const apiRoute = `${AUTH_API_URL}${AuthRoutes.USERS}`;
-  return getAllAPI(apiRoute);
-};
-
-// Function to get groups
-export const get_groups = async () => {
-  const endpoint = `${AUTH_API_URL}${AuthRoutes.GROUPS}`;
-  return getAllAPI(endpoint);
-};
-
-// Function to get permissions
-export const get_permissions = async () => {
-  const endpoint = `${AUTH_API_URL}${AuthRoutes.PERMISSIONS}`;
-  return getAllAPI(endpoint);
-};

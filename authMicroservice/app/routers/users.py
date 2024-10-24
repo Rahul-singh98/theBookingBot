@@ -35,7 +35,7 @@ def read_users(
 def create_user(
     user: UserCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(has_permission("users:write"))
+    _: User = Depends(has_permission("users:write"))
 ):
     db_user = user_crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -48,7 +48,7 @@ def create_user(
 def read_user(
     user_id: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(has_permission("users:read"))
+    _: User = Depends(has_permission("users:read"))
 ):
     db_user = user_crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -62,7 +62,7 @@ def update_user(
     user_id: str,
     user: UserUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(has_permission("users:write"))
+    _: User = Depends(has_permission("users:write"))
 ):
     db_user = user_crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -75,7 +75,7 @@ def update_user(
 def delete_user(
     user_id: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(has_permission("users:delete"))
+    _: User = Depends(has_permission("users:delete"))
 ):
     db_user = user_crud.get_user(db, user_id=user_id)
     if db_user is None:

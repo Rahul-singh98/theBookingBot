@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from app.utils.pagination import PaginationResponse
-from typing import List
+from typing import List, Optional
 
 
 class ChatSessionBase(BaseModel):
@@ -17,6 +17,10 @@ class ChatSessionResponse(ChatSessionBase):
     created_at: datetime
     updated_at: datetime
 
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
 
 class PaginatedChatSessionReponse(BaseModel):
     items: List[ChatSessionResponse]
@@ -25,7 +29,7 @@ class PaginatedChatSessionReponse(BaseModel):
 
 class ChatHistoryBase(BaseModel):
     session_id: str
-    response: str
+    response: Optional[str]
 
 
 class ChatHistoryCreate(ChatHistoryBase):

@@ -1,21 +1,21 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { ChatRoutes, CHATBOT_API_URL } from "./routes";
+import { AuthRoutes, AUTH_API_URL } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
-// Function to get all chatbot configurations
-export const get_chatbots = async () => {
-  const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/`;
+// Function to get all user
+export const get_users = async () => {
+  const endpoint = `${AUTH_API_URL}${AuthRoutes.USERS}`;
   return getAllAPI(endpoint);
 };
 
-export const get_chatbot_configs = async (chatbot_config_id) => {
-  if (!chatbot_config_id) {
-    throw new Error("Invalid chatbot id provided");
+export const get_user_by_id = async (user_id) => {
+  if (!user_id) {
+    throw new Error("Invalid user id provided");
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.USERS}/${user_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -31,26 +31,28 @@ export const get_chatbot_configs = async (chatbot_config_id) => {
   }
 };
 
-export const create_chatbot_configs = async (
-  name,
-  hero_img,
-  welcome_message,
-  primary_color,
-  secondary_color
+export const create_user = async (
+  first_name,
+  last_name,
+  username,
+  email,
+  password,
+  status
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.USERS}/`;
 
     const payload = {
-      name,
-      hero_img,
-      welcome_message,
-      primary_color,
-      secondary_color,
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      status,
     };
 
-    console.log("Creating chatbot with", payload);
+    console.log("Creating user with", payload);
     const response = await axios.post(endpoint, payload, { headers });
 
     return response.data;
@@ -65,27 +67,29 @@ export const create_chatbot_configs = async (
   }
 };
 
-export const update_chatbot_configs = async (
-  chatbot_config_id,
-  name,
-  hero_img,
-  welcome_message,
-  primary_color,
-  secondary_color
+export const update_user = async (
+  user_id,
+  first_name,
+  last_name,
+  username,
+  email,
+  password,
+  status
 ) => {
-  if (!chatbot_config_id) {
-    throw new Error("Invalid chatbot id provided");
+  if (!user_id) {
+    throw new Error("Invalid user id provided");
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.USERS}/${user_id}`;
 
     const payload = {
-      name,
-      hero_img,
-      welcome_message,
-      primary_color,
-      secondary_color,
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      status,
     };
 
     const response = await axios.put(endpoint, payload, { headers });
@@ -102,14 +106,14 @@ export const update_chatbot_configs = async (
   }
 };
 
-export const delete_chatbot_configs = async (chatbot_config_id) => {
-  if (!chatbot_config_id) {
-    throw new Error("Invalid chatbot id provided");
+export const delete_user = async (user_id) => {
+  if (!user_id) {
+    throw new Error("Invalid user id provided");
   }
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.USERS}/${user_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

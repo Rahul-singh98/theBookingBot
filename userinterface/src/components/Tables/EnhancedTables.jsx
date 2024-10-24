@@ -9,7 +9,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 // Modal component
@@ -104,6 +104,7 @@ const EnhancedTable = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+  const location = useLocation();
 
   // Fetch data with automatic refresh
   useEffect(() => {
@@ -116,7 +117,7 @@ const EnhancedTable = ({
       } catch (err) {
         if (err.message === "Unauthorized") {
           afterLogout();
-          navigate("/login?next=/admin");
+          navigate(`/login?next=${location.pathname}`);
         } else {
           setError(err.message);
         }
@@ -142,7 +143,12 @@ const EnhancedTable = ({
       await fetchData();
       setIsCreateModalOpen(false);
     } catch (err) {
-      setError(err.message);
+      if (err.message === "Unauthorized") {
+        afterLogout();
+        navigate(`/login?next=${location.pathname}`);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -156,7 +162,12 @@ const EnhancedTable = ({
       setIsEditModalOpen(false);
       setCurrentItem(null);
     } catch (err) {
-      setError(err.message);
+      if (err.message === "Unauthorized") {
+        afterLogout();
+        navigate(`/login?next=${location.pathname}`);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -170,7 +181,12 @@ const EnhancedTable = ({
       setIsDeleteDialogOpen(false);
       setCurrentItem(null);
     } catch (err) {
-      setError(err.message);
+      if (err.message === "Unauthorized") {
+        afterLogout();
+        navigate(`/login?next=${location.pathname}`);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -425,6 +441,7 @@ const EnhancedTable = ({
         title="Edit Entry"
       >
         <FormComponent
+          fields={formFields}
           initialData={currentItem}
           onSubmit={handleEdit}
           onCancel={() => setIsEditModalOpen(false)}

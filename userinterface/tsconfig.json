@@ -12,6 +12,6 @@
     "skipLibCheck": true,   // Skip checking declaration files to avoid unnecessary errors
     "strict": false         // Optional: Disable strict type-checking
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "eslint.config.js"],
   "exclude": ["node_modules", "dist"]
 }

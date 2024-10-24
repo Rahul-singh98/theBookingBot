@@ -4,6 +4,15 @@ import SidebarLinkGroup from "./SidebarLinkGroup";
 import Logo from "@/images/logo/logo.svg";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const availableDbTables = [
+    { name: "Users", url: "/admin/tables/users" },
+    { name: "Groups", url: "/admin/tables/groups" },
+    { name: "Permissions", url: "/admin/tables/permissions" },
+    { name: "Chatbots Configs", url: "/admin/tables/chatbots" },
+    { name: "Questions", url: "/admin/tables/questions" },
+    { name: "Sessions", url: "/admin/tables/sessions" },
+  ];
+
   const location = useLocation();
   const { pathname } = location;
 
@@ -236,50 +245,20 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                         }`}
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
-                          <li>
-                            <NavLink
-                              to="/admin/tables/users"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Users
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/admin/tables/groups"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Groups
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/admin/tables/permissions"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Permissions
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/admin/tables/chatbots"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Chatbots
-                            </NavLink>
-                          </li>
+                          {availableDbTables.map((item) => (
+                            <li key={item.url}>
+                              <NavLink
+                                to={item.url}
+                                className={({ isActive }) =>
+                                  `group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
+                                    isActive ? "!text-white" : ""
+                                  }`
+                                }
+                              >
+                                {item.name}
+                              </NavLink>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
