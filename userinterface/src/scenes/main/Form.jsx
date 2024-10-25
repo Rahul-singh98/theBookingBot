@@ -69,7 +69,7 @@ const Form = () => {
                 {/* Container 2 */}
                 <div
                     className="absolute w-[491px] h-[580px] bg-black rounded-lg flex flex-col transition-transform duration-300 overflow-hidden"
-                    style={{ transform: 'translateX(20px)', top: '50px', left: '0' }} // Adjusted height and top position
+                    style={{ transform: 'translateX(20px)', top: '50px', left: '0' ,backgroundColor: '#000000'}} // Adjusted height and top position
                 >
                     {/* Contact Information */}
                     <h2 className="absolute w-[291px] h-[42px] left-[40px] top-[30px] font-poppins font-semibold text-[28px] leading-[42px] text-white">
