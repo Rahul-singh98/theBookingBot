@@ -1,21 +1,21 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { ChatRoutes, CHATBOT_API_URL } from "./routes";
+import { AuthRoutes, AUTH_API_URL } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
-// Function to get all chatbot configurations
-export const get_chatbots = async () => {
-  const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/`;
+// Function to get all permission
+export const get_permissions = async () => {
+  const endpoint = `${AUTH_API_URL}${AuthRoutes.PERMISSIONS}`;
   return getAllAPI(endpoint);
 };
 
-export const get_chatbot_configs = async (chatbot_config_id) => {
-  if (!chatbot_config_id) {
-    throw new Error("Invalid chatbot id provided");
+export const get_permission_by_id = async (permission_id) => {
+  if (!permission_id) {
+    throw new Error("Invalid permission id provided");
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.PERMISSIONS}/${permission_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -31,26 +31,18 @@ export const get_chatbot_configs = async (chatbot_config_id) => {
   }
 };
 
-export const create_chatbot_configs = async (
-  name,
-  hero_img,
-  welcome_message,
-  primary_color,
-  secondary_color
-) => {
+export const create_permission = async (name, description, scope) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.PERMISSIONS}/`;
 
     const payload = {
       name,
-      hero_img,
-      welcome_message,
-      primary_color,
-      secondary_color,
+      description,
+      scope,
     };
 
-    console.log("Creating chatbot with", payload);
+    console.log("Creating permission with", payload);
     const response = await axios.post(endpoint, payload, { headers });
 
     return response.data;
@@ -65,27 +57,17 @@ export const create_chatbot_configs = async (
   }
 };
 
-export const update_chatbot_configs = async (
-  chatbot_config_id,
-  name,
-  hero_img,
-  welcome_message,
-  primary_color,
-  secondary_color
-) => {
-  if (!chatbot_config_id) {
-    throw new Error("Invalid chatbot id provided");
+export const update_permission = async (permission_id, name, description) => {
+  if (!permission_id) {
+    throw new Error("Invalid permission id provided");
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.PERMISSIONS}/${permission_id}`;
 
     const payload = {
       name,
-      hero_img,
-      welcome_message,
-      primary_color,
-      secondary_color,
+      description,
     };
 
     const response = await axios.put(endpoint, payload, { headers });
@@ -102,14 +84,14 @@ export const update_chatbot_configs = async (
   }
 };
 
-export const delete_chatbot_configs = async (chatbot_config_id) => {
-  if (!chatbot_config_id) {
-    throw new Error("Invalid chatbot id provided");
+export const delete_permission = async (permission_id) => {
+  if (!permission_id) {
+    throw new Error("Invalid permission id provided");
   }
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${AUTH_API_URL}${AuthRoutes.PERMISSIONS}/${permission_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

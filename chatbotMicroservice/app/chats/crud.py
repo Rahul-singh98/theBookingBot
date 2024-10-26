@@ -12,11 +12,8 @@ def get_chat_session(db: Session, session_id: str):
     return db.query(models.ChatSession).filter(models.ChatSession.id == session_id).first()
 
 
-def create_chat_session(db: Session, session_create: schemas.ChatSessionCreate, bot_id: str = None):
-    db_session = models.ChatSession(**session_create.json())
-    if bot_id:
-        db_session.bot_id = bot_id
-
+def create_chat_session(db: Session, bot_id: str = None):
+    db_session = models.ChatSession(bot_id=bot_id)
     db.add(db_session)
     db.commit()
     db.refresh(db_session)
@@ -40,6 +37,10 @@ def list_chat_history(db: Session, offset: int, size: int):
 
 def get_chat_history(db: Session, history_id: str):
     return db.query(models.ChatHistory).filter(models.ChatHistory.id == history_id).first()
+
+
+def get_chat_history_by_session_id(db: Session, session_id: str):
+    return db.query(models.ChatHistory).filter(models.ChatHistory.session_id == session_id).order_by(-models.ChatHistory.created_at).first()
 
 
 def create_chat_history(db: Session, chat_history: schemas.ChatHistoryCreate):

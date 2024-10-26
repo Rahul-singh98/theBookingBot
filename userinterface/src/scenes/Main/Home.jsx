@@ -7,7 +7,7 @@ const Home = () => {
     <>
       <div>Hello From React</div>
       {/* <ChatbotComponent /> */}
-      <EmbeddedChatbot />
+      <EmbeddedChatbot token="0a617aaa-4fe4-4378-a1f5-f0acfd2f7e4e" />
     </>
   );
 };

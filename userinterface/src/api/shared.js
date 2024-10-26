@@ -19,6 +19,9 @@ export const getAllAPI = async (endpoint, isAuthNeeded = true) => {
     if (error.response && error.response.status === 401) {
       console.error("Unauthorized: Please check your credentials or token.");
       throw new Error("Unauthorized");
+    } else if (error.response && error.response.status === 403) {
+      console.error("Forbidden: Please check your permissions.");
+      throw new Error("Not Enough Permissions");
     } else {
       console.error("Error in API request:", error);
       throw error;

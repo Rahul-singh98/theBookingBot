@@ -7,7 +7,6 @@ from app.chatbot.schemas import (
     ChatbotSubmitConfigurationResponse, PaginatedChatbotSubmitConfigurationResponse,
     ChatbotSubmitConfigurationUpdate, ChatbotSubmitConfigurationCreate
 )
-import uuid
 from app.chatbot import crud
 from app.utils.pagination import Pagination
 from app.dependencies import check_permission
@@ -37,7 +36,7 @@ async def list_chatbots(
 def read_chatbot(
     chatbot_id: str,
     db: Session = Depends(get_db),
-    _: dict = Depends(check_permission("chatbots:read"))
+    # _: dict = Depends(check_permission("chatbots:read"))
 ):
     db_chatbot = crud.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:

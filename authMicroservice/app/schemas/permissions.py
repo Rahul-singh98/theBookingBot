@@ -11,7 +11,7 @@ class PermissionBase(BaseModel):
 
 
 class PermissionCreate(PermissionBase):
-    pass
+    scope: str
 
 
 class PermissionUpdate(PermissionBase):

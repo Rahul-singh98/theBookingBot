@@ -1,4 +1,4 @@
-````json
+```json
 {
   "sub": "e35f4d78-bae0-40f3-883b-5560f4f365bc",
   "iss": "https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_28TAH1h7c",
@@ -12,7 +12,8 @@
   "iat": 1727605680,
   "jti": "f5ea276a-081d-4f8a-a8df-238fa2449132",
   "username": "tamet"
-}```
+}
+```
 
 # Authentication and Authorization API Endpoints
 
@@ -185,4 +186,88 @@
 33. **Get Authentication Logs**
     - Endpoint: `GET /api/auth/logs`
     - Description: Retrieve authentication logs for the current user
-````
+
+```
+auth_service/
+├── Dockerfile
+├── docker-compose.yml
+├── requirements/
+│   ├── base.txt
+│   ├── dev.txt
+│   └── prod.txt
+├── README.md
+├── .env.example
+├── .gitignore
+├── src/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── config/
+│   │   ├── __init__.py
+│   │   ├── settings.py        # Configuration management
+│   │   └── logging.py         # Logging configuration
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── deps.py           # Dependency injection
+│   │   ├── exceptions.py     # Custom API exceptions
+│   │   └── v1/              # Version your API
+│   │       ├── __init__.py
+│   │       ├── auth/
+│   │       │   ├── __init__.py
+│   │       │   ├── routes.py
+│   │       │   └── services.py
+│   │       ├── users/
+│   │       │   ├── __init__.py
+│   │       │   ├── routes.py
+│   │       │   └── services.py
+│   │       ├── groups/
+│   │       │   ├── __init__.py
+│   │       │   ├── routes.py
+│   │       │   └── services.py
+│   │       └── permissions/
+│   │           ├── __init__.py
+│   │           ├── routes.py
+│   │           └── services.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── security.py      # Security utilities
+│   │   ├── jwt.py          # JWT handling
+│   │   └── pagination.py   # Pagination utilities
+│   ├── db/
+│   │   ├── __init__.py
+│   │   ├── session.py      # Database session management
+│   │   └── base.py        # Base database configuration
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── group.py
+│   │   ├── permission.py
+│   │   └── audit_log.py
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── group.py
+│   │   ├── permission.py
+│   │   └── auth.py
+│   ├── repositories/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── user.py
+│   │   ├── group.py
+│   │   └── permission.py
+│   └── utils/
+│       ├── __init__.py
+│       └── helpers.py
+└── tests/
+    ├── __init__.py
+    ├── conftest.py          # Test configuration and fixtures
+    ├── test_data/          # Test data fixtures
+    │   └── __init__.py
+    ├── unit/
+    │   ├── __init__.py
+    │   ├── test_auth.py
+    │   └── test_users.py
+    └── integration/
+        ├── __init__.py
+        ├── test_auth_api.py
+        └── test_users_api.py
+```

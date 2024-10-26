@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.utils.jwt_handler import decode_access_token
 from app.database import get_db
 from app.models import User
+from app.utils.jwt_handler import is_token_expired
 import re
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -14,18 +15,19 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 def get_current_user(token: str, db: Session = Depends(get_db)):
     payload = decode_access_token(token)
     if not payload:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
     sub = payload.get("sub")
-    print("Payload", payload)
-    print("Sub", sub)
     user = db.query(User).filter(User.id == sub).first()
-
-    print("User", user)
 
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    if is_token_expired(payload.get("exp")):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token Expired")
 
     return user
 
@@ -33,10 +35,6 @@ def get_current_user(token: str, db: Session = Depends(get_db)):
 def has_permission(required_permission: str):
     def permission_checker(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
         current_user = get_current_user(token, db)
-        if not current_user:
-            raise HTTPException(
-                status_code=401, detail="Invalid authentication credentials"
-            )
 
         # Add user id to the resource for fine grained permissions
         nonlocal required_permission
@@ -57,7 +55,7 @@ def has_permission(required_permission: str):
         # Check if required permission matches any user permission using regex
         if not any(permission_match(required_permission, perm) for perm in user_permissions):
             raise HTTPException(
-                status_code=403, detail="Not enough permissions"
+                status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions"
             )
 
         return current_user

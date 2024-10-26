@@ -17,6 +17,10 @@ def get_question(db: Session, question_id: str):
     return db.query(models.Question).filter(models.Question.id == question_id).first()
 
 
+def filter_question_by_oc(db: Session, question_order: int, chatbot_id: str):
+    return db.query(models.Question).filter(models.Question.bot_id == chatbot_id and models.Question.question_order == question_order)
+
+
 def create_question(db: Session, question: schemas.QuestionCreate, user_id: str):
     db_question = models.Question(
         **question.dict(exclude={"options"}), created_by=user_id)

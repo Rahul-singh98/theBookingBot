@@ -31,20 +31,16 @@ def read_groups(
 def create_group(
     group: GroupCreate,
     db: Session = Depends(get_db),
-    current_group: User = Depends(has_permission("groups:write"))
+    _: User = Depends(has_permission("groups:write"))
 ):
-    db_group = group_crud.get_group_by_email(db, email=group.email)
-    if db_group:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
-    return group_crud.create_group(db=db, group=group)
+    return group_crud.create_group(db, group)
 
 
 @groups_router.get("/{group_id}", response_model=GroupInDB)
 def read_group(
     group_id: str,
     db: Session = Depends(get_db),
-    current_group: User = Depends(has_permission("groups:read"))
+    _: User = Depends(has_permission("groups:read"))
 ):
     db_group = group_crud.get_group(db, group_id=group_id)
     if db_group is None:
@@ -58,7 +54,7 @@ def update_group(
     group_id: str,
     group: GroupUpdate,
     db: Session = Depends(get_db),
-    current_group: User = Depends(has_permission("groups:write"))
+    _: User = Depends(has_permission("groups:write"))
 ):
     db_group = group_crud.get_group(db, group_id=group_id)
     if db_group is None:
@@ -71,7 +67,7 @@ def update_group(
 def delete_group(
     group_id: str,
     db: Session = Depends(get_db),
-    current_group: User = Depends(has_permission("groups:delete"))
+    _: User = Depends(has_permission("groups:delete"))
 ):
     db_group = group_crud.get_group(db, group_id=group_id)
     if db_group is None:
