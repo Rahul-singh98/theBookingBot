@@ -3,7 +3,7 @@ from app import models
 from app.database import engine
 from app.chatbot.routes import chatbot_router
 from app.chats.routes import chats_router
-from app.questions.routes import questions_router
+from app.questions.routes import questions_router, options_router
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -35,5 +35,6 @@ app.add_middleware(
 app.include_router(chatbot_router, prefix='/api/chatbots')
 app.include_router(chats_router, prefix='/api/chats')
 app.include_router(questions_router, prefix='/api/questions')
+app.include_router(options_router, prefix='/api/options')
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

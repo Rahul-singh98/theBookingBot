@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException, status
 from app import models
 from app.chats import schemas
 
@@ -54,13 +55,26 @@ def create_chat_history(db: Session, chat_history: schemas.ChatHistoryCreate):
 def update_chat_history(db: Session, history_id: str, history_update: schemas.ChatHistoryUpdate):
     db_history = get_chat_history(db, history_id)
 
-    if db_history:
-        for key, value in history_update.dict(exclude_unset=True).items():
-            setattr(db_history, key, value)
+    if not db_history:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat history not found"
+        )
 
+    update_data = history_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_history, key, value)
+
+    try:
         db.add(db_history)
         db.commit()
         db.refresh(db_history)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error updating chat history: {str(e)}"
+        )
 
     return db_history
 

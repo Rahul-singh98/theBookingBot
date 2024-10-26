@@ -141,6 +141,12 @@ const EnhancedTable = ({
       setLoading(true);
       await createData(formData);
       await fetchData();
+
+      // const result = await fetchData();
+      // setData((prevData) => {
+      //   return [...prevData, result];
+      // });
+
       setIsCreateModalOpen(false);
     } catch (err) {
       if (err.message === "Unauthorized") {

@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Json
 from datetime import datetime
 from app.utils.pagination import PaginationResponse
-from typing import List, Optional
+from typing import List, Optional, Any, Dict
 
 
 class ChatSessionBase(BaseModel):
@@ -29,20 +29,32 @@ class PaginatedChatSessionReponse(BaseModel):
 
 class ChatHistoryBase(BaseModel):
     session_id: str
-    response: Optional[str]
+    response: Optional[Json]
 
 
 class ChatHistoryCreate(ChatHistoryBase):
     pass
 
 
-class ChatHistoryUpdate(ChatHistoryBase):
-    pass
+class ChatAnswer(BaseModel):
+    question_id: str
+    question: str
+    answer: str
 
 
-class ChatHistoryResponse(ChatHistoryBase):
+class ChatHistoryUpdate(BaseModel):
+    session_id: str
+    response: Optional[str] = None
+
+
+class ChatHistoryResponse(BaseModel):
     id: str
-    created_at: datetime
+    session_id: str
+    response: Optional[List[Dict[str, Any]]] = None
+
+    class Config:
+        from_attributes = True
+        orm_mode = True
 
 
 class PaginatedChatHistoryReponse(BaseModel):

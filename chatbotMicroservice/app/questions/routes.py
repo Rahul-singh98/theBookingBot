@@ -4,7 +4,7 @@ from app.database import get_db
 from app.questions.schemas import (
     QuestionResponse, QuestionCreate, QuestionUpdate,
     QuestionOptionResponse, QuestionOptionCreate, QuestionOptionUpdate,
-    PaginatedQuestionsResponse
+    PaginatedQuestionsResponse, PaginatedQuestionOptionResponse
 )
 from typing import List
 from app.questions import crud
@@ -14,6 +14,7 @@ from app.dependencies import check_permission
 
 
 questions_router = APIRouter()
+options_router = APIRouter()
 
 
 # Question CRUD operations
@@ -26,8 +27,8 @@ def list_questions(
     offset = Pagination.get_offset(page, size)
 
     items, total = crud.list_questions(db, offset, size)
-
     paginated_obj = Pagination.paginate(total, size, page)
+
     return PaginatedQuestionsResponse(items=items, pagination=paginated_obj)
 
 
@@ -89,22 +90,19 @@ def delete_question(
     return None
 
 
-@questions_router.post("/{question_id}/options/", response_model=QuestionOptionResponse)
-def create_question_option(
-    question_id: str,
-    option: QuestionOptionCreate,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(check_permission("question_options:write"))
+# Options CRUD Operations
+@questions_router.get("/{question_id}/options", response_model=List[QuestionOptionResponse])
+def list_question_options_by_qid(
+    question_id: str, page: int = 1,
+    size: int = 100,
+    db: Session = Depends(get_db)
 ):
-    db_question, db_option = crud.create_question_option(
-        db, question_id, option)
-    if db_question is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
-    return db_option
+    offset = Pagination.get_offset(page, size)
+    items, _ = crud.list_question_options(db, offset, size, question_id)
+    return items
 
 
-@questions_router.get("/options", response_model=PaginatedQuestionsResponse)
+@options_router.get("", response_model=PaginatedQuestionOptionResponse)
 def list_questions_options(
     page: int = 1, size: int = 100,
     db: Session = Depends(get_db),
@@ -114,10 +112,10 @@ def list_questions_options(
 
     items, total = crud.list_question_options(db, offset, size)
     paginated_obj = Pagination.paginate(total, size, page)
-    return PaginatedQuestionsResponse(items=items, pagination=paginated_obj)
+    return PaginatedQuestionOptionResponse(items=items, pagination=paginated_obj)
 
 
-@questions_router.get("/options/{option_id}", response_model=QuestionOptionResponse)
+@options_router.get("/{option_id}", response_model=QuestionOptionResponse)
 def read_question_option(
     option_id: str, db: Session = Depends(get_db),
     _: dict = Depends(check_permission("question_options:read"))
@@ -125,18 +123,21 @@ def read_question_option(
     return crud.get_question_option(db, option_id)
 
 
-@questions_router.get("/{question_id}/options/", response_model=List[QuestionOptionResponse])
-def list_question_options_by_qid(
-        question_id: str, page: int = 1,
-        size: int = 100,
-        db: Session = Depends(get_db),
-        _: dict = Depends(check_permission("question_options:list"))):
-    offset = Pagination.get_offset(page, size)
-    items, _ = crud.list_question_options(db, offset, size, question_id)
-    return items
+@options_router.post("", response_model=QuestionOptionResponse)
+def create_question_option(
+    option: QuestionOptionCreate,
+    db: Session = Depends(get_db),
+    _: dict = Depends(check_permission("question_options:write"))
+):
+    db_question, db_option = crud.create_question_option(
+        db, option.question_id, option)
+    if db_question is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Question not found")
+    return db_option
 
 
-@questions_router.put("/options/{option_id}", response_model=QuestionOptionResponse)
+@options_router.put("/{option_id}", response_model=QuestionOptionResponse)
 def update_question_option(
     option_id: int, option_update: QuestionOptionUpdate,
     db: Session = Depends(get_db),
@@ -156,7 +157,7 @@ def update_question_option(
     return db_option
 
 
-@questions_router.delete("/options/{option_id}", status_code=status.HTTP_204_NO_CONTENT)
+@options_router.delete("/{option_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_question_option(
     option_id: int, db: Session = Depends(get_db),
     _: dict = Depends(check_permission("question_options:delete"))

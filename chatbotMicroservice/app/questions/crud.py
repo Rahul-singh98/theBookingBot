@@ -76,7 +76,7 @@ def delete_question(db: Session, question_id: str):
 def list_question_options(db: Session, offset: int, size: int, question_id: str = None):
     total = 0
     query_result = None
-    if question_id == None:
+    if question_id:
         total = db.query(models.QuestionOption).filter(
             models.QuestionOption.question_id == question_id).count()
         query_result = db.query(models.QuestionOption).filter(
@@ -97,8 +97,7 @@ def get_question_option(db: Session, option_id: str):
 def create_question_option(db: Session, question_id: str, option: schemas.QuestionOptionCreate):
     db_question = get_question(db, question_id)
     if db_question:
-        db_option = models.QuestionOption(
-            **option.dict(), question_id=question_id)
+        db_option = models.QuestionOption(**option.dict())
         db.add(db_option)
         db.commit()
         return db_question, db_option

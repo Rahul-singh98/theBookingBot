@@ -9,8 +9,9 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
     { name: "Groups", url: "/admin/tables/groups" },
     { name: "Permissions", url: "/admin/tables/permissions" },
     { name: "Chatbots Configs", url: "/admin/tables/chatbots" },
-    { name: "Questions", url: "/admin/tables/questions" },
     { name: "Sessions", url: "/admin/tables/sessions" },
+    { name: "Questions", url: "/admin/tables/questions" },
+    { name: "Options", url: "/admin/tables/question-options" },
   ];
 
   const location = useLocation();

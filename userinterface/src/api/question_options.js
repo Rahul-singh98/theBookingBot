@@ -5,17 +5,39 @@ import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all question_option configurations
 export const get_question_options = async () => {
-  const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/`;
+  const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}`;
   return getAllAPI(endpoint);
 };
 
-export const get_question_option_by_id = async (question_option_id) => {
-  if (!question_option_id) {
+export const get_questions_options = async (question_id) => {
+  if (!question_id) {
+    throw new Error("Invalid option id provided");
+  }
+  try {
+    headers = getAuthorizationHeader();
+    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/options`;
+
+    const response = await axios.get(endpoint, { headers });
+
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.error("Unauthorized: Please check your credentials or token.");
+      throw new Error("Unauthorized");
+    } else {
+      console.error("Error in API request:", error);
+      throw error;
+    }
+  }
+};
+
+export const get_question_option_by_id = async (option_id) => {
+  if (!option_id) {
     throw new Error("Invalid question_option id provided");
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/${question_option_id}`;
+    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -32,24 +54,20 @@ export const get_question_option_by_id = async (question_option_id) => {
 };
 
 export const create_question_options = async (
-  bot_id,
-  question_option,
-  question_option_order,
-  response_type,
-  variable
+  question_id,
+  option_text,
+  option_order
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/`;
+    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/`;
 
-    question_option_order = Number(question_option_order);
+    option_order = Number(option_order);
 
     const payload = {
-      bot_id,
-      question_option,
-      question_option_order,
-      response_type,
-      variable,
+      question_id,
+      option_text,
+      option_order,
     };
 
     console.log("Creating question_option with", payload);
@@ -68,26 +86,22 @@ export const create_question_options = async (
 };
 
 export const update_question_options = async (
-  question_option_id,
-  bot_id,
-  question_option,
-  question_option_order,
-  response_type,
-  variable
+  option_id,
+  question_id,
+  option_text,
+  option_order
 ) => {
-  if (!question_option_id) {
+  if (!option_id) {
     throw new Error("Invalid question_option id provided");
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/${question_option_id}`;
+    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
 
     const payload = {
-      bot_id,
-      question_option,
-      question_option_order,
-      response_type,
-      variable,
+      question_id,
+      option_text,
+      option_order,
     };
 
     const response = await axios.put(endpoint, payload, { headers });
@@ -104,14 +118,14 @@ export const update_question_options = async (
   }
 };
 
-export const delete_question_options = async (question_option_id) => {
-  if (!question_option_id) {
+export const delete_question_options = async (option_id) => {
+  if (!option_id) {
     throw new Error("Invalid question_option id provided");
   }
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/${question_option_id}`;
+    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

@@ -79,4 +79,13 @@ export const tableConfigs = {
     searchFields: ["question"],
     defaultSort: { field: "created_at", direction: "desc" },
   },
+  "question-options": {
+    columns: [
+      { key: "id", header: "ID" },
+      { key: "question_id", header: "Question ID" },
+      { key: "option_text", header: "Option" },
+      { key: "option_order", header: "Option Order" },
+    ],
+    searchFields: ["option_text"],
+  },
 };

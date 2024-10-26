@@ -5,9 +5,9 @@ from typing import Dict
 from app.chats.schemas import (
     ChatSessionResponse, PaginatedChatSessionReponse,
     ChatHistoryCreate, ChatHistoryUpdate,
-    ChatHistoryResponse
-
+    ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse
 )
+import json
 from app.dependencies import check_permission
 from app.chats import crud
 from app.chatbot import crud as chatbot_services
@@ -54,13 +54,54 @@ def delete_chat_session(session_id: str, db: Session = Depends(get_db)):
 
 
 @chats_router.post("/{session_id}/answer", response_model=ChatHistoryResponse)
-def answer_question(session_id: str, answer: ChatHistoryUpdate, db: Session = Depends(get_db)):
+def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(get_db)):
     db_session = crud.get_chat_session(db, session_id=session_id)
     if db_session is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail="Chat session not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat session not found"
+        )
 
-    return crud.update_chat_history(db, db_session.history.id, chat_history=answer)
+    history = crud.get_chat_history_by_session_id(db, db_session.id)
+    if history is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat history not found"
+        )
+
+    # Parse existing response or initialize new list
+    current_response = []
+    if history.response:
+        try:
+            if isinstance(history.response, str):
+                current_response = json.loads(history.response)
+            else:
+                current_response = history.response
+        except json.JSONDecodeError:
+            current_response = []
+
+    # Add new answer
+    current_response.append({
+        "question_id": answer.question_id,
+        "question": answer.question,
+        "answer": answer.answer,
+    })
+
+    # Update history with new response
+    updated_history = crud.update_chat_history(
+        db,
+        history.id,
+        ChatHistoryUpdate(
+            session_id=session_id,
+            response=json.dumps(current_response)
+        )
+    )
+
+    # Convert string response back to list for response
+    if isinstance(updated_history.response, str):
+        updated_history.response = json.loads(updated_history.response)
+
+    return updated_history
 
 
 @chats_router.get("/{session_id}/next-question", response_model=Dict)
@@ -77,7 +118,7 @@ def get_next_question(session_id: str, db: Session = Depends(get_db)):
     # Get answered questions for this session
     history = crud.get_chat_history_by_session_id(db, db_session.id)
     answered_ids = set(
-        h.question_id for h in history.response) if history and history.response else set()
+        h.get("question_id") for h in json.loads(history.response)) if history and history.response else set()
 
     # Find the next unanswered question
     next_question = next(

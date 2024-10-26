@@ -13,7 +13,7 @@ export const ChatRoutes = {
   SEND_MESSAGE: "/messages/send",
   CHATBOT_CONFIGS: "/api/chatbots",
   QUESTIONS: "/api/questions",
-  QUESTION_OPTIONS: "/api/question/options",
+  QUESTION_OPTIONS: "/api/options",
   CHATBOT_STATIC_JS_PATH: "/static/js/embed.min.js",
   CHATBOT_STATIC_CSS_PATH: "/static/css/embed.css",
 };

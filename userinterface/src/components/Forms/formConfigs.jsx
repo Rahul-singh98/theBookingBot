@@ -38,6 +38,15 @@ import {
   delete_questions,
 } from "@/api/questions";
 
+import {
+  get_question_options,
+  get_questions_options,
+  get_question_option_by_id,
+  create_question_options,
+  update_question_options,
+  delete_question_options,
+} from "@/api/question_options";
+
 export const formConfigs = {
   chatbots: {
     fields: [
@@ -380,6 +389,68 @@ export const formConfigs = {
     },
     fetchData: async () => {
       const response = await get_questions();
+      return response.items;
+    },
+  },
+
+  "question-options": {
+    fields: [
+      {
+        name: "question_id",
+        label: "Question ID",
+        type: "select",
+        required: true,
+        options: async () => {
+          // Fetch chatbot configs
+          const response = await get_questions();
+
+          return response.items.map((ques) => ({
+            value: ques.id,
+            label: ques.question,
+          }));
+        },
+      },
+      {
+        name: "option_text",
+        label: "Details",
+        type: "text",
+        required: true,
+        placeholder: "Option Value",
+      },
+      {
+        name: "option_order",
+        label: "Option Order",
+        type: "number",
+        required: true,
+        placeholder: "Set priority of question",
+        validationRules: {
+          min: 0,
+          max: 100,
+          required: true,
+        },
+      },
+    ],
+    createData: async (formData) => {
+      const { question_id, option_text, option_order } = formData;
+      return create_question_options(question_id, option_text, option_order);
+    },
+    updateData: async (option_id, formData) => {
+      const { question_id, option_text, option_order } = formData;
+      return update_question_options(
+        option_id,
+        question_id,
+        option_text,
+        option_order
+      );
+    },
+    deleteData: async (option_id) => {
+      return delete_question_options(option_id);
+    },
+    getData: async (option_id) => {
+      return get_question_option_by_id(option_id);
+    },
+    fetchData: async () => {
+      const response = await get_question_options();
       return response.items;
     },
   },
