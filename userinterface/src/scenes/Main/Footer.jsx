@@ -169,7 +169,7 @@ const Footer = () => {
                 </div>
 
                 {/* Column 3: Stay Updated */}
-                <div className="flex flex-col items-start gap-6">
+                {/* <div className="flex flex-col items-start gap-6">
                     <h4 className="font-inter font-semibold text-white text-[20px] leading-[28px]">Stay Updated</h4>
                     <div className="flex items-center">
                         <input
@@ -180,6 +180,20 @@ const Footer = () => {
                         />
                         <button className="w-10 h-[40px] bg-[#263238] rounded-r-md flex items-center justify-center transition-colors duration-300 hover:bg-[#1C1F22]">
                             <FaPaperPlane className="text-white text-lg" />
+                        </button>
+                    </div>
+                </div> */}
+                <div className="flex flex-col items-start gap-6">
+                    <h4 className="font-inter font-semibold text-white text-[20px] leading-[28px]">Stay Updated</h4>
+                    <div className="flex items-center bg-white rounded-md overflow-hidden"> {/* Added bg-white and rounded-md */}
+                        <input
+                            type="email"
+                            placeholder="Your email address"
+                            className="w-[255px] h-[40px] bg-transparent opacity-100 rounded-l-md p-2 placeholder-opacity-70" // Changed bg to transparent for input
+                            style={{ outline: 'none' }}
+                        />
+                        <button className="w-10 h-[40px] bg-[#ffffff] rounded-r-md flex items-center justify-center transition-colors duration-300 hover:bg-[#1C1F22]">
+                            <FaPaperPlane className="text-black text-lg" /> {/* Changed text color to black */}
                         </button>
                     </div>
                 </div>
