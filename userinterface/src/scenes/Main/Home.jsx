@@ -9,10 +9,12 @@ import PartnerSection from "./Partnersection";
 import MarqueeSection from "../Main/Marquee";
 import CounterSection from "./Countersection";
 import ServiceTabs from "../Main/Service";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
-  const { token: routeToken } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const routeToken = searchParams.get("token");
   const token = routeToken || "e55758c5-b2cf-49ad-a440-02b99769f7c1";
 
   return (
