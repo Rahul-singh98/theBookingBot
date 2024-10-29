@@ -1,6 +1,14 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
+# Install necessary build tools
+RUN apt-get update && \
+    apt-get install -y gcc libc-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip
+RUN pip install --upgrade pip
+
 # Set the working directory in the container
 WORKDIR /app
 
