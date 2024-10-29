@@ -18,7 +18,7 @@ options_router = APIRouter()
 
 
 # Question CRUD operations
-@questions_router.get("/", response_model=PaginatedQuestionsResponse)
+@questions_router.get("", response_model=PaginatedQuestionsResponse)
 def list_questions(
     page: int = 1, size: int = 100,
     db: Session = Depends(get_db),
@@ -45,7 +45,7 @@ def read_question(
     return question
 
 
-@questions_router.post("/", response_model=QuestionResponse)
+@questions_router.post("", response_model=QuestionResponse)
 def create_question(
     question: QuestionCreate,
     db: Session = Depends(get_db),

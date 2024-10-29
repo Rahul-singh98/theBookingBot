@@ -17,7 +17,7 @@ from app.utils.pagination import Pagination
 chats_router = APIRouter(prefix="/sessions")
 
 
-@chats_router.get("/", response_model=PaginatedChatSessionReponse)
+@chats_router.get("", response_model=PaginatedChatSessionReponse)
 def list_chat_session(
         page: int = 1, size: int = 100,
         db: Session = Depends(get_db),

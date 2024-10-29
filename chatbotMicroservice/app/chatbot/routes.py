@@ -15,7 +15,7 @@ from app.dependencies import check_permission
 chatbot_router = APIRouter()
 
 
-@chatbot_router.get("/", response_model=PaginatedChatbotConfigurationResponse)
+@chatbot_router.get("", response_model=PaginatedChatbotConfigurationResponse)
 async def list_chatbots(
     page: int = Query(1, ge=1, description="Page number"),
     size: int = Query(10, ge=1, le=100, description="Items per page"),
@@ -46,7 +46,7 @@ def read_chatbot(
     return db_chatbot
 
 
-@chatbot_router.post("/", response_model=ChatbotConfigurationResponse)
+@chatbot_router.post("", response_model=ChatbotConfigurationResponse)
 def create_chatbot(
     chatbot: ChatbotConfigurationCreate,
     db: Session = Depends(get_db),
