@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { ChatRoutes, CHATBOT_API_URL } from "./routes";
+import { ChatRoutes } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all chatbot configurations
 export const get_chatbots = async () => {
-  const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/`;
+  const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}/`;
   return getAllAPI(endpoint);
 };
 
@@ -15,7 +15,7 @@ export const get_chatbot_configs = async (chatbot_config_id) => {
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -40,7 +40,7 @@ export const create_chatbot_configs = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/`;
+    const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}/`;
 
     const payload = {
       name,
@@ -78,7 +78,7 @@ export const update_chatbot_configs = async (
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
 
     const payload = {
       name,
@@ -109,7 +109,7 @@ export const delete_chatbot_configs = async (chatbot_config_id) => {
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

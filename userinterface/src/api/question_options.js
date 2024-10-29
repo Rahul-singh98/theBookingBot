@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { ChatRoutes, CHATBOT_API_URL } from "./routes";
+import { ChatRoutes } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all question_option configurations
 export const get_question_options = async () => {
-  const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}`;
+  const endpoint = `${ChatRoutes.QUESTION_OPTIONS}`;
   return getAllAPI(endpoint);
 };
 
@@ -15,7 +15,7 @@ export const get_questions_options = async (question_id) => {
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/options`;
+    const endpoint = `${ChatRoutes.QUESTIONS}/options`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -37,7 +37,7 @@ export const get_question_option_by_id = async (option_id) => {
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
+    const endpoint = `${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -60,7 +60,7 @@ export const create_question_options = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/`;
+    const endpoint = `${ChatRoutes.QUESTION_OPTIONS}/`;
 
     option_order = Number(option_order);
 
@@ -96,7 +96,7 @@ export const update_question_options = async (
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
+    const endpoint = `${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
 
     const payload = {
       question_id,
@@ -125,7 +125,7 @@ export const delete_question_options = async (option_id) => {
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
+    const endpoint = `${ChatRoutes.QUESTION_OPTIONS}/${option_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

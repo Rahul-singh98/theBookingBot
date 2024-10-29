@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { ChatRoutes, CHATBOT_API_URL } from "./routes";
+import { ChatRoutes } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all question configurations
 export const get_questions = async () => {
-  const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/`;
+  const endpoint = `${ChatRoutes.QUESTIONS}/`;
   return getAllAPI(endpoint);
 };
 
@@ -15,7 +15,7 @@ export const get_question_by_id = async (question_id) => {
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/${question_id}`;
+    const endpoint = `${ChatRoutes.QUESTIONS}/${question_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -40,7 +40,7 @@ export const create_questions = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/`;
+    const endpoint = `${ChatRoutes.QUESTIONS}/`;
 
     question_order = Number(question_order);
 
@@ -80,7 +80,7 @@ export const update_questions = async (
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/${question_id}`;
+    const endpoint = `${ChatRoutes.QUESTIONS}/${question_id}`;
 
     const payload = {
       bot_id,
@@ -111,7 +111,7 @@ export const delete_questions = async (question_id) => {
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL}${ChatRoutes.QUESTIONS}/${question_id}`;
+    const endpoint = `${ChatRoutes.QUESTIONS}/${question_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

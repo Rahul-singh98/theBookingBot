@@ -38,6 +38,10 @@ Resources:
       ImageId: ami-0c8eea98010057bd0
       SecurityGroupIds:
         - !Ref InstanceSecurityGroup
+      Tags:
+        - Key: Name
+          Value: Chatbot-Application
+      # UserData script
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
@@ -61,24 +65,14 @@ Resources:
           docker --version && \
           docker compose version && \
 
-
           # Clone GitHub Repository
           GITHUB_REPO_URL=https://${GithubPersonalAccessToken}@github.com/Rahul-singh98/theBookingBot.git && \
           git clone -b microservices $GITHUB_REPO_URL /home/ec2-user/theBookingBot && \
 
-          # Switch to the cloned directory and start the application
+          # Switch to the cloned directory
           cd /home/ec2-user/theBookingBot && \
 
-          # Get public ip address
-          PUBLIC_IP=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep -o '"public-ipv4":"[^"]*' | cut -d'"' -f4) && \
-
-          # Set the file path
-          FILE_PATH="docker-compose.yaml" && \
-
-          sudo sed -i "s/VITE_AUTH_API_URL=.*$/VITE_AUTH_API_URL=http:\/\/$PUBLIC_IP/" "$FILE_PATH" && \
-          sudo sed -i "s/VITE_CHATBOT_API_URL=.*$/VITE_CHATBOT_API_URL=http:\/\/$PUBLIC_IP/" "$FILE_PATH" && \
-
-          # Build and run the image
+          # Build and run the Docker containers
           sudo docker compose up --build -d
 
 Outputs:
