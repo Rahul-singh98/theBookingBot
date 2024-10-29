@@ -34,7 +34,7 @@ export const get_group_by_id = async (group_id) => {
 export const create_group = async (name, description) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.GROUPS}/`;
+    const endpoint = `${AuthRoutes.GROUPS}`;
 
     const payload = {
       name,

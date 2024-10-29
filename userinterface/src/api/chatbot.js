@@ -5,7 +5,7 @@ import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all chatbot configurations
 export const get_chatbots = async () => {
-  const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}/`;
+  const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}`;
   return getAllAPI(endpoint);
 };
 
@@ -40,7 +40,7 @@ export const create_chatbot_configs = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}/`;
+    const endpoint = `${ChatRoutes.CHATBOT_CONFIGS}`;
 
     const payload = {
       name,

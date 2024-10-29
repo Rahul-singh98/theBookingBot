@@ -60,7 +60,7 @@ export const create_question_options = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${ChatRoutes.QUESTION_OPTIONS}/`;
+    const endpoint = `${ChatRoutes.QUESTION_OPTIONS}`;
 
     option_order = Number(option_order);
 

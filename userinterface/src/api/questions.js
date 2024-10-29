@@ -5,7 +5,7 @@ import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all question configurations
 export const get_questions = async () => {
-  const endpoint = `${ChatRoutes.QUESTIONS}/`;
+  const endpoint = `${ChatRoutes.QUESTIONS}`;
   return getAllAPI(endpoint);
 };
 
@@ -40,7 +40,7 @@ export const create_questions = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${ChatRoutes.QUESTIONS}/`;
+    const endpoint = `${ChatRoutes.QUESTIONS}`;
 
     question_order = Number(question_order);
 

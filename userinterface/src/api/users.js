@@ -41,7 +41,7 @@ export const create_user = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.USERS}/`;
+    const endpoint = `${AuthRoutes.USERS}`;
 
     const payload = {
       first_name,

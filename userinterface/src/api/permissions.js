@@ -34,7 +34,7 @@ export const get_permission_by_id = async (permission_id) => {
 export const create_permission = async (name, description, scope) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.PERMISSIONS}/`;
+    const endpoint = `${AuthRoutes.PERMISSIONS}`;
 
     const payload = {
       name,
