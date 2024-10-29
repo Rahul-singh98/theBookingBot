@@ -92,7 +92,7 @@ class ChatbotSubmitConfiguration(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     url = Column(String(255))
-    method = Column(Enum(AuthMethodChoices))
+    auth_type = Column(Enum(AuthMethodChoices))
     authentication_key = Column(String(255), nullable=True)
     bot_id = Column(String(36), ForeignKey("chatbot_configurations.id"))
 

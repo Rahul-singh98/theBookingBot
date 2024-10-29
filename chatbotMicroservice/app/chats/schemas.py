@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel, Json
 from datetime import datetime
 from app.utils.pagination import PaginationResponse
@@ -40,6 +41,7 @@ class ChatAnswer(BaseModel):
     question_id: str
     question: str
     answer: str
+    variable: str
 
 
 class ChatHistoryUpdate(BaseModel):

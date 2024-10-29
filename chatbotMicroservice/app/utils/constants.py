@@ -13,6 +13,6 @@ class QuestionTypes(enum.Enum):
 
 
 class AuthMethodChoices(enum.Enum):
-    GET = "GET"
-    POST = "POST"
-    PUT = "PUT"
+    NONE = "none"
+    BASIC = "basic"
+    BEARER = "bearer"

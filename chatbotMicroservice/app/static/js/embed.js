@@ -260,11 +260,40 @@ const fetchNextQuestion = async () => {
       `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/next-question`
     );
     hideTypingIndicator();
-    addMessage(response.question, "bot", response);
+
+    console.log("FetchNextQuestion", response.is_completed);
+    if (response.is_completed === true) {
+      addMessage("Thank you! The session is complete.", "bot");
+      await submitAPIResponse();
+    } else {
+      addMessage(response.question, "bot", response);
+    }
   } catch (error) {
     hideTypingIndicator();
     addMessage("Error fetching the next question.", "bot");
     console.error("Error fetching question:", error);
+  }
+};
+
+const submitAPIResponse = async () => {
+  if (!clientBotState.sessionId) return;
+
+  try {
+    const response = await $.ajax({
+      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/submit`,
+      method: "POST",
+      contentType: "application/json", // Ensures JSON format
+      dataType: "json",
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+    });
+
+    if (response.redirect !== undefined) {
+      window.location.href = response.redirect;
+    } else {
+      throw new Error(response);
+    }
+  } catch (error) {
+    console.error("Answer submission error:", error);
   }
 };
 
@@ -285,17 +314,14 @@ const submitAnswer = async (answer, answerText) => {
         answer,
         question_id: clientBotState.current.questionId,
         question: clientBotState.current.question,
+        variable: clientBotState.current.variable,
       }), // Stringify the data
       headers: { "X-Requested-With": "XMLHttpRequest" },
     });
 
     hideTypingIndicator();
 
-    if (response.is_complete) {
-      addMessage("Thank you! The session is complete.", "bot");
-    } else {
-      await fetchNextQuestion();
-    }
+    await fetchNextQuestion();
   } catch (error) {
     hideTypingIndicator();
     addMessage("Error submitting answer.", "bot");
@@ -384,9 +410,10 @@ const addMessage = (
 
 // Render input based on type
 const renderInput = (data) => {
-  const { question, question_id, response_type, options = [] } = data;
+  const { question, question_id, response_type, variable, options = [] } = data;
   clientBotState.current.question = question;
   clientBotState.current.questionId = question_id;
+  clientBotState.current.variable = variable;
 
   if (question_id) {
     $("#question-id").val(question_id);

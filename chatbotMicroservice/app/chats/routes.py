@@ -83,6 +83,7 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
     # Add new answer
     current_response.append({
         "question_id": answer.question_id,
+        "variable": answer.variable,
         "question": answer.question,
         "answer": answer.answer,
     })
@@ -127,11 +128,11 @@ def get_next_question(session_id: str, db: Session = Depends(get_db)):
     is_completed = next_question is None
 
     return {
-        "question": next_question.question,
-        "question_id": next_question.id,
-        "response_type": next_question.response_type.value,
-        "variable": next_question.variable,
-        "options": [{"text": opt.option_text, "order": opt.option_order} for opt in next_question.options],
+        "question": next_question.question if next_question else None,
+        "question_id": next_question.id if next_question else None,
+        "response_type": next_question.response_type.value if next_question else None,
+        "variable": next_question.variable if next_question else None,
+        "options": [{"text": opt.option_text, "order": opt.option_order} for opt in next_question.options] if next_question else [],
         "is_completed": is_completed
     }
 
@@ -144,16 +145,17 @@ async def submit_chat_responses(session_id: str, db: Session = Depends(get_db)):
                             detail="Chat session not found")
 
     # Get all chat history for the session
-    history = crud.get_chat_history(db, session_id=db_session.id)
-    responses = {h.question.variable: h.response for h in history}
+    history = crud.get_chat_history_by_session_id(db, db_session.id)
+    formData = json.loads(
+        history.response) if history and history.response else None
 
     # Get submit configuration
-    submit_config = crud.get_submit_configuration(
-        db, bot_id=db_session.bot_id)
-    if submit_config is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Submit configuration not found")
+    # submit_config = crud.get_submit_configuration(
+    #     db, bot_id=db_session.bot_id)
+    # if submit_config is None:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_404_NOT_FOUND, detail="Submit configuration not found")
 
     # In a real-world scenario, you would make an HTTP request to the external URL
     # For this example, we'll just return a success message
-    return {"status": "submitted", "responses": responses}
+    return {"status": "submitted", "redirect": "https://example.com/"}
