@@ -88,3 +88,7 @@ def delete_chat_history(db: Session, history_id: str):
         db.refresh(db_history)
 
     return db_history
+
+
+def get_submit_configurations(db: Session, bot_id: str):
+    return db.query(models.ChatbotSubmitConfiguration).filter(models.ChatbotSubmitConfiguration.bot_id == bot_id).first()

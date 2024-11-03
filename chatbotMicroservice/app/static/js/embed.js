@@ -7,6 +7,7 @@ const BACKEND_CHATBOT_CHATBOT_API_ENDPOINT = "/api/chatbots";
 const clientBotState = {
   token: null,
   sessionId: null,
+  backendUrl: null,
   botName: "Chatbot",
   welcomeMessage: "Hello! How can I help you today?",
   primaryColor: "e06936",
@@ -31,6 +32,7 @@ const initChatbot = async (config) => {
   }
 
   BACKEND_CHATBOT_API_URL = config.backendUrl;
+  clientBotState.backendUrl = config.backendUrl;
   clientBotState.botImage = `${config.backendUrl}/static/images/bot.svg`;
   clientBotState.token = config.token;
   clientBotState.sessionId = localStorage.getItem("chatbot_session_id");
@@ -146,7 +148,7 @@ const createChatbotHTML = () => {
           </div>
           <div class="ch-right">
             <div class="refresh-chat-box" tabindex="0" role="button" aria-label="Refresh Chatbot">
-              <img src="${BACKEND_CHATBOT_API_URL}/static/images/refresh.svg" />
+              <img src="${BACKEND_CHATBOT_API_URL}/static/images/refresh-23x23.svg" />
             </div>
             <div class="close-chat-box" tabindex="0" role="button" aria-label="Close Chatbot">
               <img src="${BACKEND_CHATBOT_API_URL}/static/images/cross.svg" />
@@ -419,6 +421,9 @@ const renderInput = (data) => {
     $("#question-id").val(question_id);
   }
 
+  // Show the regular input by default
+  $(".chat-footer input").show();
+
   let inputHtml = "";
 
   switch (response_type) {
@@ -469,19 +474,33 @@ const createDropdown = (options) => {
   `;
 };
 
-// Create clickable list
+// Modified createClickList function
 const createClickList = (options, questionId) => {
+  // Remove any existing clicklist
+  $(".chatbot-clicklist").remove();
+
+  // Create wrapper div
   const $wrapper = $("<div>").addClass("chatbot-clicklist");
 
+  // Create button for each option
   options.forEach((option) => {
     $("<button>")
       .addClass("btn btn-outline-primary m-1")
-      .text(option)
-      .on("click", async () => await submitAnswer(option, option))
+      .text(option.text)
+      .on("click", async () => await submitAnswer(option.text, option.text))
       .appendTo($wrapper);
   });
 
-  $wrapper.insertBefore(clientBotState.elements.typingIndicator);
+  // Insert after the last message in the chat body
+  clientBotState.elements.chatBody.append($wrapper);
+
+  // Scroll to the bottom to show the new options
+  clientBotState.elements.chatBody.scrollTop(
+    clientBotState.elements.chatBody[0].scrollHeight
+  );
+
+  // Hide the regular input while showing clicklist
+  $(".chat-footer input").hide();
 };
 
 // Show typing indicator
@@ -561,7 +580,10 @@ const refreshChatbot = async () => {
 
   // Reinitialize the chatbot
   try {
-    await initChatbot({ token: clientBotState.token });
+    await initChatbot({
+      token: clientBotState.token,
+      backendUrl: clientBotState.backendUrl,
+    });
     // await handleChatboxClick();
   } catch (error) {
     console.error("Error refreshing chatbot:", error);

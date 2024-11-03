@@ -46,6 +46,21 @@ def read_chatbot(
     return db_chatbot
 
 
+@chatbot_router.get("/{chatbot_id}/history", response_model=ChatbotConfigurationResponse)
+def read_chatbot_history(
+    chatbot_id: str,
+    db: Session = Depends(get_db)
+):
+    db_chatbot = crud.get_chatbot(db, chatbot_id=chatbot_id)
+    if db_chatbot is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
+    
+    db_chatbot.chat_sessions
+    # return ChatbotConfigurationResponse.from_orm(db_chatbot)
+    return db_chatbot
+
+
 @chatbot_router.post("", response_model=ChatbotConfigurationResponse)
 def create_chatbot(
     chatbot: ChatbotConfigurationCreate,

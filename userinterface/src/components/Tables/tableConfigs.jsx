@@ -88,4 +88,14 @@ export const tableConfigs = {
     ],
     searchFields: ["option_text"],
   },
+  "submit-configs": {
+    columns: [
+      { key: "id", header: "ID" },
+      { key: "bot_id", header: "Chatbot ID" },
+      { key: "url", header: "URL" },
+      { key: "auth_type", header: "Authentication Type" },
+      { key: "authentication_key", header: "Authentication Key" },
+    ],
+    searchFields: ["url"],
+  },
 };

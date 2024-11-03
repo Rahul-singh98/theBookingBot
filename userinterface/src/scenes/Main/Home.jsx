@@ -19,7 +19,6 @@ const Home = () => {
 
   return (
     <>
-      {/* <EmbeddedChatbot token="0a617aaa-4fe4-4378-a1f5-f0acfd2f7e4e" /> */}
       <EmbeddedChatbot token={token} />
       <Navbar />
       <Intro />

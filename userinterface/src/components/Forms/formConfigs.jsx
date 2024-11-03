@@ -47,6 +47,14 @@ import {
   delete_question_options,
 } from "@/api/question_options";
 
+import {
+  get_submit_configs,
+  get_submit_config_by_id,
+  create_submit_config,
+  update_submit_config,
+  delete_submit_config,
+} from "@/api/submit_configs";
+
 export const formConfigs = {
   chatbots: {
     fields: [
@@ -451,6 +459,75 @@ export const formConfigs = {
     },
     fetchData: async () => {
       const response = await get_question_options();
+      return response.items;
+    },
+  },
+
+  "submit-configs": {
+    fields: [
+      {
+        name: "bot_id",
+        label: "Chatbot ID",
+        type: "select",
+        required: true,
+        options: async () => {
+          // Fetch chatbot configs
+          const response = await get_chatbots();
+
+          return response.items.map((bot) => ({
+            value: bot.id,
+            label: bot.name,
+          }));
+        },
+      },
+      {
+        name: "url",
+        label: "Submit URL",
+        type: "text",
+        required: true,
+        placeholder: "Enter the URL",
+      },
+      {
+        name: "auth_type",
+        label: "URL Method",
+        type: "select",
+        required: true,
+        options: [
+          { value: "none", label: "NONE" },
+          { value: "basic", label: "BASIC" },
+          { value: "bearer", label: "BEARER" },
+        ],
+      },
+      {
+        name: "authentication_key",
+        label: "Authentication Key",
+        type: "text",
+        required: false,
+        placeholder: "Enter the API Key",
+      },
+    ],
+    createData: async (formData) => {
+      const { bot_id, url, auth_type, authentication_key } = formData;
+      return create_submit_config(bot_id, url, auth_type, authentication_key);
+    },
+    updateData: async (submit_config_id, formData) => {
+      const { bot_id, url, auth_type, authentication_key } = formData;
+      return update_submit_config(
+        submit_config_id,
+        bot_id,
+        url,
+        auth_type,
+        authentication_key
+      );
+    },
+    deleteData: async (submit_config_id) => {
+      return delete_submit_config(submit_config_id);
+    },
+    getData: async (submit_config_id) => {
+      return get_submit_config_by_id(submit_config_id);
+    },
+    fetchData: async () => {
+      const response = await get_submit_configs();
       return response.items;
     },
   },

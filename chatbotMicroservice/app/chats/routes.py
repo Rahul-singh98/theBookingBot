@@ -150,12 +150,36 @@ async def submit_chat_responses(session_id: str, db: Session = Depends(get_db)):
         history.response) if history and history.response else None
 
     # Get submit configuration
-    # submit_config = crud.get_submit_configuration(
-    #     db, bot_id=db_session.bot_id)
-    # if submit_config is None:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_404_NOT_FOUND, detail="Submit configuration not found")
+    submit_config = crud.get_submit_configurations(
+        db, bot_id=db_session.bot_id)
+
+    if submit_config is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Submit configuration not found")
 
     # In a real-world scenario, you would make an HTTP request to the external URL
     # For this example, we'll just return a success message
-    return {"status": "submitted", "redirect": "https://example.com/"}
+    return {"status": "submitted", "redirect": f'{submit_config.url}?cId={db_session.bot_id}&sID={db_session.id}'}
+
+
+@chats_router.get("/{session_id}/history", response_model=ChatHistoryResponse)
+def get_session_history(session_id: str, db: Session = Depends(get_db)):
+    db_session = crud.get_chat_session(db, session_id=session_id)
+    if db_session is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat session not found"
+        )
+
+    history = crud.get_chat_history_by_session_id(db, db_session.id)
+    if history is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat history not found"
+        )
+
+    # Convert string response back to list for response
+    if isinstance(history.response, str):
+        history.response = json.loads(history.response)
+
+    return history

@@ -1,7 +1,7 @@
-import enum
+from enum import Enum
 
 
-class QuestionTypes(enum.Enum):
+class QuestionTypes(Enum):
     DROPDOWN = "dropdown"
     DATETIME = "datetime"
     ADDRESS = "address"
@@ -12,7 +12,7 @@ class QuestionTypes(enum.Enum):
     EMAIL = "email"
 
 
-class AuthMethodChoices(enum.Enum):
+class AuthMethodChoices(str, Enum):
     NONE = "none"
     BASIC = "basic"
     BEARER = "bearer"

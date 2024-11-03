@@ -1,37 +1,130 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chatbot Demo</title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
-    <!-- Chatbot script -->
     <script
-      src="http://localhost:8001/static/js/test.js"
-      onload="initChatbot({token:'0a617aaa-4fe4-4378-a1f5-f0acfd2f7e4e', backendUrl: 'http\://localhost:8001'})"
+      src="http://localhost:8001/static/js/embed.min.js"
+      onload="initChatbot({token:'e55758c5-b2cf-49ad-a440-02b99769f7c1', backendUrl: 'http\://localhost:8001'})"
       defer
     ></script>
+  </body>
+</html> -->
 
-    <!-- <script>
-      window.difyChatbotConfig = {
-        token: "IMXAPpf3EaS2Gj1k",
-      };
-    </script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Form</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Booking Form</h1>
+    <form id="bookingForm">
+      <div class="form-group">
+        <label for="service_type">Service Type</label>
+        <select id="service_type" name="service_type">
+          <option value="0">Standard</option>
+          <option value="1">Premium</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="pu_date">Pick Up Date</label>
+        <input type="datetime-local" id="pu_date" name="pu_date" />
+      </div>
+
+      <div class="form-group">
+        <label for="pu_location">Pick Up Location</label>
+        <input type="text" id="pu_location" name="pu_location" />
+      </div>
+
+      <div class="form-group">
+        <label for="do_location">Drop Off Location</label>
+        <input type="text" id="do_location" name="do_location" />
+      </div>
+
+      <div class="form-group">
+        <label for="passengers">Number of Passengers</label>
+        <input type="number" id="passengers" name="passengers" min="1" />
+      </div>
+
+      <div class="form-group">
+        <label for="luggage">Luggage Count</label>
+        <input type="number" id="luggage" name="luggage" min="0" />
+      </div>
+
+      <div class="form-group">
+        <label for="df_reservation">Differently Abled</label>
+        <select id="df_reservation" name="df_reservation">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="vehicle">Select Vehicle</label>
+        <select id="vehicle" name="vehicle">
+          <option value="0">Standard</option>
+          <option value="1">Premium</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" />
+      </div>
+
+      <button type="button" onclick="">Fetch Data</button>
+    </form>
+
     <script
-      src="https://udify.app/embed.min.js"
-      id="IMXAPpf3EaS2Gj1k"
+      src="http://localhost:8001/static/js/chatEmbed.js"
+      onload="getChatHistory({backendUrl: 'http\://localhost:8001'})"
       defer
     ></script>
-    <style>
-      #dify-chatbot-bubble-button {
-        background-color: #1c64f2 !important;
-      }
-      #dify-chatbot-bubble-window {
-        width: 24rem !important;
-        height: 40rem !important;
-      }
-    </style> -->
   </body>
 </html>

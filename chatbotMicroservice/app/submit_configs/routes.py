@@ -35,12 +35,12 @@ async def read_configuration(config_id: str, db: Session = Depends(get_db)):
 
 
 @submit_config_router.post("", response_model=schemas.ChatbotSubmitConfigurationResponse)
-async def create_configuration(
+def create_configuration(
     config: schemas.ChatbotSubmitConfigurationCreate,
     db: Session = Depends(get_db),
     _=Depends(check_permission("submitConfigs:create"))
 ):
-    return await crud.create_submit_configuration(db, config)
+    return crud.create_submit_configuration(db, config)
 
 
 @submit_config_router.put("{config_id}", response_model=schemas.ChatbotSubmitConfigurationResponse)

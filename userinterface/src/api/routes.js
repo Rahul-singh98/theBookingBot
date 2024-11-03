@@ -14,6 +14,7 @@ export const ChatRoutes = {
   CHATBOT_CONFIGS: "/api/chatbots",
   QUESTIONS: "/api/questions",
   QUESTION_OPTIONS: "/api/options",
+  SUBMIT_CONFIGS: "/api/submit-configs",
   CHATBOT_STATIC_JS_PATH: "/static/js/embed.min.js",
   CHATBOT_STATIC_CSS_PATH: "/static/css/embed.css",
 };
