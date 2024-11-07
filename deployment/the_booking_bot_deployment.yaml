@@ -12,11 +12,22 @@ Parameters:
     Description: GitHub Personal Access Token (PAT) to clone the repository
     NoEcho: true # Hide the value in CloudFormation logs for security
 
+  VpcId:
+    Description: The ID of the VPC in which to launch the RDS instance.
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-02299f2e32ea097f3
+
+  SubnetId:
+    Description: The ID of the subnet in which to launch the EC2 instance.
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-0c30ea84f6f73cb94
+
 Resources:
   # Security Group for the EC2 instance
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      VpcId: !Ref VpcId
       GroupDescription: Enable SSH and HTTP access to the EC2 instance
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -36,6 +47,7 @@ Resources:
       InstanceType: t4g.micro
       KeyName: !Ref EC2KeyPairName
       ImageId: ami-0c8eea98010057bd0
+      SubnetId: !Ref SubnetId
       SecurityGroupIds:
         - !Ref InstanceSecurityGroup
       Tags:
