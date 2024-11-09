@@ -1,12 +1,33 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
+from typing import Optional
 from app import models
 from app.questions import schemas
+from app.utils.constants import QuestionTypes
 
 
 def list_questions(db: Session, offset: int, size: int):
     total = db.query(models.Question).count()
 
     return db.query(models.Question).offset(offset).limit(size).all(), total
+
+
+def get_start_question(db: Session, chatbot_id: str) -> Optional[models.Question]:
+    return db.query(models.Question).filter(
+        and_(
+            models.Question.bot_id == chatbot_id,
+            models.Question.question_type == QuestionTypes.START
+        )
+    ).first()
+
+
+def get_end_question(db: Session, chatbot_id: str) -> Optional[models.Question]:
+    return db.query(models.Question).filter(
+        and_(
+            models.Question.bot_id == chatbot_id,
+            models.Question.question_type == QuestionTypes.END
+        )
+    ).first()
 
 
 def get_questions_by_bot_id(db: Session, bot_id: str):
@@ -17,20 +38,19 @@ def get_question(db: Session, question_id: str):
     return db.query(models.Question).filter(models.Question.id == question_id).first()
 
 
+def get_next_question(db: Session, question_id: str):
+    current_question = get_question(db, question_id)
+    return db.query(models.Question).filter(models.Question.id == current_question.next_ques).first()
+
+
 def filter_question_by_oc(db: Session, question_order: int, chatbot_id: str):
     return db.query(models.Question).filter(models.Question.bot_id == chatbot_id and models.Question.question_order == question_order)
 
 
 def create_question(db: Session, question: schemas.QuestionCreate, user_id: str):
     db_question = models.Question(
-        **question.dict(exclude={"options"}), created_by=user_id)
+        **question.dict(), created_by=user_id)
     db.add(db_question)
-    db.flush()
-
-    for option in question.options:
-        db_option = models.QuestionOption(
-            **option.dict(), question_id=db_question.id)
-        db.add(db_option)
 
     db.commit()
     db.refresh(db_question)
@@ -42,19 +62,7 @@ def update_question(db: Session, question_id: str, question_update: schemas.Ques
     if db_question:
         question_data = question_update.dict(exclude_unset=True)
         for key, value in question_data.items():
-            if key != "options":
-                setattr(db_question, key, value)
-
-        if "options" in question_data:
-            # Delete existing options
-            db.query(models.QuestionOption).filter(
-                models.QuestionOption.question_id == question_id).delete()
-
-            # Add new options
-            for option in question_update.options:
-                db_option = models.QuestionOption(
-                    **option.dict(), question_id=question_id)
-                db.add(db_option)
+            setattr(db_question, key, value)
 
         db.commit()
         db.refresh(db_question)

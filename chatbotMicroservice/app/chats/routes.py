@@ -5,14 +5,18 @@ from typing import Dict
 from app.chats.schemas import (
     ChatSessionResponse, PaginatedChatSessionReponse,
     ChatHistoryCreate, ChatHistoryUpdate,
-    ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse
+    ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse,
 )
 import json
 from app.dependencies import check_permission
 from app.chats import crud
 from app.chatbot import crud as chatbot_services
 from app.questions import crud as question_services
+from app.questions import schemas as question_schemas
 from app.utils.pagination import Pagination
+from app.utils.constants import QuestionTypes
+from app.utils import dt_utils
+from app.utils import cb_utils
 
 chats_router = APIRouter(prefix="/sessions")
 
@@ -62,6 +66,13 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
             detail="Chat session not found"
         )
 
+    question = question_services.get_question(db, answer.question_id)
+    if question is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat question not found"
+        )
+
     history = crud.get_chat_history_by_session_id(db, db_session.id)
     if history is None:
         raise HTTPException(
@@ -79,6 +90,16 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
                 current_response = history.response
         except json.JSONDecodeError:
             current_response = []
+
+    if answer.question_type == QuestionTypes.DATETIME:
+        answer.answer = dt_utils.parse_datetime(
+            answer.answer, question.data.get("format"))
+    elif answer.question_type == QuestionTypes.DATE:
+        answer.answer = dt_utils.parse_date(
+            answer.answer, question.data.get("format"))
+    elif answer.question_type == QuestionTypes.TIME:
+        answer.answer = dt_utils.parse_time(
+            answer.answer, question.data.get("format"))
 
     # Add new answer
     current_response.append({
@@ -112,27 +133,65 @@ def get_next_question(session_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Chat session not found")
 
-    # Get all questions for this chatbot
-    questions = question_services.get_questions_by_bot_id(
-        db, bot_id=db_session.bot_id)
-
     # Get answered questions for this session
     history = crud.get_chat_history_by_session_id(db, db_session.id)
-    answered_ids = set(
-        h.get("question_id") for h in json.loads(history.response)) if history and history.response else set()
+    next_question = None
 
-    # Find the next unanswered question
-    next_question = next(
-        (q for q in questions if q.id not in answered_ids), None)
+    if history and not history.response:
+        next_question = question_services.get_start_question(
+            db, db_session.bot_id)
+        hresponse = [{
+            "question_id": next_question.id,
+            "variable": None,
+            "question": next_question.question,
+            "question_type": QuestionTypes.START,
+            "answer": None
+        }]
 
-    is_completed = next_question is None
+        crud.update_chat_history(
+            db,
+            history.id,
+            ChatHistoryUpdate(
+                session_id=session_id,
+                response=json.dumps(hresponse)
+            )
+        )
+    elif history:
+        last_answered_ques = json.loads(history.response)[-1]
+        next_question = question_services.get_next_question(
+            db, last_answered_ques.get("question_id"))
+
+        if next_question.question_type == QuestionTypes.CONDITIONAL:
+            cdata = next_question.data
+
+            session_variables = cb_utils.generate_params(history.response)
+            session_variables["cId"] = db_session.bot_id
+            session_variables["sId"] = session_id
+
+            evaluator = question_schemas.ConditionEvaluator(session_variables)
+            nq_id = None
+
+            for branch in cdata.get("branches"):
+                condition = question_schemas.parse_condition_data(
+                    branch.get("condition"))
+
+                if evaluator.evaluate(condition):
+                    nq_id = branch.get("next_question_id")
+                    break
+
+            if not nq_id:
+                nq_id = cdata.get("default_next_question_id")
+
+            next_question = question_services.get_question(db, nq_id)
+
+    is_completed = next_question is None or next_question.question_type == QuestionTypes.END
 
     return {
-        "question": next_question.question if next_question else None,
         "question_id": next_question.id if next_question else None,
-        "response_type": next_question.response_type.value if next_question else None,
+        "question": next_question.question if next_question else None,
+        "question_type": next_question.question_type if next_question else None,
         "variable": next_question.variable if next_question else None,
-        "options": [{"text": opt.option_text, "order": opt.option_order} for opt in next_question.options] if next_question else [],
+        "data": next_question.data if next_question else None,
         "is_completed": is_completed
     }
 
@@ -146,20 +205,23 @@ async def submit_chat_responses(session_id: str, db: Session = Depends(get_db)):
 
     # Get all chat history for the session
     history = crud.get_chat_history_by_session_id(db, db_session.id)
-    formData = json.loads(
-        history.response) if history and history.response else None
 
-    # Get submit configuration
-    submit_config = crud.get_submit_configurations(
-        db, bot_id=db_session.bot_id)
+    end_question = question_services.get_end_question(db, db_session.bot_id)
+    session_variables = cb_utils.generate_params(history.response)
+    session_variables["cId"] = db_session.bot_id
+    session_variables["sId"] = session_id
 
-    if submit_config is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Submit configuration not found")
+    redirect_link = end_question.data.get("redirect_to")
+    if end_question.data.get("queryParams"):
+        redirect_link += "?"
+        params = []
 
-    # In a real-world scenario, you would make an HTTP request to the external URL
-    # For this example, we'll just return a success message
-    return {"status": "submitted", "redirect": f'{submit_config.url}?cId={db_session.bot_id}&sID={db_session.id}'}
+        for key in end_question.data.get("queryParams"):
+            params.append(f"{key}={session_variables.get(key, '')}")
+
+        redirect_link += "&".join(params)
+
+    return {"status": "submitted", "redirect": redirect_link}
 
 
 @chats_router.get("/{session_id}/history", response_model=ChatHistoryResponse)

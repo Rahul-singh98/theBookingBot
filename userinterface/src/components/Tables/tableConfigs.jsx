@@ -32,14 +32,13 @@ export const tableConfigs = {
       { key: "id", header: "ID" },
       { key: "name", header: "Chatbot Name" },
       { key: "hero_img", header: "Image URL" },
-      { key: "welcome_message", header: "Welcome Message" },
       { key: "primary_color", header: "Primary Color" },
       { key: "secondary_color", header: "Secondary Color" },
       { key: "created_by", header: "Author" },
       { key: "created_at", header: "Created On" },
       { key: "updated_at", header: "Last Update On" },
     ],
-    searchFields: ["name", "welcome_message"],
+    searchFields: ["name"],
     defaultSort: { field: "created_at", direction: "desc" },
   },
   groups: {
@@ -68,15 +67,26 @@ export const tableConfigs = {
     columns: [
       { key: "id", header: "ID" },
       { key: "bot_id", header: "Chatbot ID" },
-      { key: "question", header: "Question" },
-      { key: "question_order", header: "Question Order" },
-      { key: "response_type", header: "Response Type" },
+      { key: "question", header: "Asked Question" },
+      { key: "question_type", header: "Type Of Question" },
+      {
+        key: "data",
+        header: "Question Data",
+        render: (value) => {
+          try {
+            return <>{JSON.stringify(value, null, 2)}</>;
+          } catch (e) {
+            return <span>Error parsing data</span>;
+          }
+        },
+      },
       { key: "variable", header: "Variable Name" },
+      { key: "next_ques", header: "Next" },
       { key: "created_by", header: "Author" },
       { key: "created_at", header: "Created On" },
       { key: "updated_at", header: "Last Update On" },
     ],
-    searchFields: ["question"],
+    searchFields: ["question_type"],
     defaultSort: { field: "created_at", direction: "desc" },
   },
   "question-options": {

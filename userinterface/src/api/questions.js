@@ -34,22 +34,22 @@ export const get_question_by_id = async (question_id) => {
 export const create_questions = async (
   bot_id,
   question,
-  question_order,
-  response_type,
-  variable
+  question_type,
+  data,
+  variable,
+  next_ques
 ) => {
   try {
     const headers = getAuthorizationHeader();
     const endpoint = `${ChatRoutes.QUESTIONS}`;
 
-    question_order = Number(question_order);
-
     const payload = {
       bot_id,
       question,
-      question_order,
-      response_type,
+      question_type,
+      data,
       variable,
+      next_ques,
     };
 
     console.log("Creating question with", payload);
@@ -71,9 +71,10 @@ export const update_questions = async (
   question_id,
   bot_id,
   question,
-  question_order,
-  response_type,
-  variable
+  question_type,
+  data,
+  variable,
+  next_ques
 ) => {
   if (!question_id) {
     throw new Error("Invalid question id provided");
@@ -85,9 +86,10 @@ export const update_questions = async (
     const payload = {
       bot_id,
       question,
-      question_order,
-      response_type,
+      question_type,
+      data,
       variable,
+      next_ques,
     };
 
     const response = await axios.put(endpoint, payload, { headers });

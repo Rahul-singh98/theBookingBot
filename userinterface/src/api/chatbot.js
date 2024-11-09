@@ -34,7 +34,6 @@ export const get_chatbot_configs = async (chatbot_config_id) => {
 export const create_chatbot_configs = async (
   name,
   hero_img,
-  welcome_message,
   primary_color,
   secondary_color
 ) => {
@@ -45,7 +44,6 @@ export const create_chatbot_configs = async (
     const payload = {
       name,
       hero_img,
-      welcome_message,
       primary_color,
       secondary_color,
     };
@@ -69,7 +67,6 @@ export const update_chatbot_configs = async (
   chatbot_config_id,
   name,
   hero_img,
-  welcome_message,
   primary_color,
   secondary_color
 ) => {
@@ -83,7 +80,6 @@ export const update_chatbot_configs = async (
     const payload = {
       name,
       hero_img,
-      welcome_message,
       primary_color,
       secondary_color,
     };

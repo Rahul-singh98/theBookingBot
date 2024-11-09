@@ -11,10 +11,13 @@ const DynamicForm = ({
 }) => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
+  const [prettyJson, setPrettyJson] = useState({});
 
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
+      // Format any JSON fields on initial load
+      formatJsonFields(initialData);
     } else {
       // Initialize with default values
       const defaultData = fields.reduce(
@@ -25,8 +28,27 @@ const DynamicForm = ({
         {}
       );
       setFormData(defaultData);
+      formatJsonFields(defaultData);
     }
   }, [initialData, fields]);
+
+  const formatJsonFields = (data) => {
+    const formattedJson = {};
+    fields.forEach((field) => {
+      if (field.type === "json" && data[field.name]) {
+        try {
+          const parsed =
+            typeof data[field.name] === "string"
+              ? JSON.parse(data[field.name])
+              : data[field.name];
+          formattedJson[field.name] = JSON.stringify(parsed, null, 2);
+        } catch (e) {
+          formattedJson[field.name] = data[field.name];
+        }
+      }
+    });
+    setPrettyJson(formattedJson);
+  };
 
   const getDefaultValueByType = (type) => {
     switch (type) {
@@ -36,14 +58,44 @@ const DynamicForm = ({
         return false;
       case "select":
         return "";
+      case "json":
+        return "{}";
       default:
         return "";
     }
   };
 
   const validateField = (field, value) => {
-    const { name, validationRules } = field;
+    const { name, validationRules, type } = field;
     if (!validationRules) return "";
+
+    // JSON-specific validation
+    if (type === "json") {
+      // Skip validation if value is empty and not required
+      if (!value && !validationRules.required) return "";
+
+      // If value is a string, try to parse it
+      if (typeof value === "string") {
+        try {
+          const parsedValue = JSON.parse(value);
+          // Ensure the parsed value is an object/dictionary
+          if (
+            !parsedValue ||
+            typeof parsedValue !== "object" ||
+            Array.isArray(parsedValue)
+          ) {
+            return `${field.label} must be a valid JSON object`;
+          }
+        } catch (e) {
+          return `Invalid JSON format for ${field.label}: ${e.message}`;
+        }
+      } else if (typeof value === "object" && !Array.isArray(value)) {
+        // If it's already an object (but not an array), it's valid
+        return "";
+      } else {
+        return `${field.label} must be a valid JSON object`;
+      }
+    }
 
     if (validationRules.min !== undefined && value < validationRules.min) {
       return `The value for ${field.label} cannot be less than ${validationRules.min}`;
@@ -88,13 +140,31 @@ const DynamicForm = ({
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
+    const { name, value, type: inputType, checked } = e.target;
+    const newValue = inputType === "checkbox" ? checked : value;
 
     setFormData((prev) => ({
       ...prev,
       [name]: newValue,
     }));
+
+    // Handle JSON formatting
+    const field = fields.find((f) => f.name === name);
+    if (field?.type === "json") {
+      try {
+        const parsed = JSON.parse(newValue);
+        setPrettyJson((prev) => ({
+          ...prev,
+          [name]: JSON.stringify(parsed, null, 2),
+        }));
+      } catch (e) {
+        // Don't format if JSON is invalid
+        setPrettyJson((prev) => ({
+          ...prev,
+          [name]: newValue,
+        }));
+      }
+    }
 
     // Clear error when field is modified
     if (errors[name]) {
@@ -105,7 +175,6 @@ const DynamicForm = ({
     }
 
     // Validate field on change if it has validation rules
-    const field = fields.find((f) => f.name === name);
     if (field?.validationRules) {
       const error = validateField(field, newValue);
       setErrors((prev) => ({
@@ -119,7 +188,18 @@ const DynamicForm = ({
     e.preventDefault();
 
     if (validateForm()) {
-      onSubmit(formData);
+      // Parse JSON fields before submitting
+      const processedData = { ...formData };
+      fields.forEach((field) => {
+        if (field.type === "json" && processedData[field.name]) {
+          try {
+            processedData[field.name] = JSON.parse(processedData[field.name]);
+          } catch (e) {
+            // If JSON is invalid, it won't pass validation anyway
+          }
+        }
+      });
+      onSubmit(processedData);
     }
   };
 
@@ -161,6 +241,27 @@ const DynamicForm = ({
             inputClass={inputClass}
             errorClass={errorClass}
           />
+        );
+
+      case "json":
+        return (
+          <div key={name} className="mb-4">
+            <label className={labelClass}>
+              {label}
+              {required && <span className="text-red-500 ml-1">*</span>}
+            </label>
+            <textarea
+              name={name}
+              value={prettyJson[name] || formData[name] || ""}
+              onChange={handleChange}
+              className={`${inputClass} min-h-[200px] font-mono text-sm`}
+              placeholder={placeholder || "Enter valid JSON"}
+              required={required}
+              spellCheck="false"
+              {...rest}
+            />
+            {errors[name] && <div className={errorClass}>{errors[name]}</div>}
+          </div>
         );
 
       case "textarea":

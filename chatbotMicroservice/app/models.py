@@ -12,7 +12,6 @@ class ChatbotConfiguration(Base):
     id = Column(String(36), primary_key=True, default=generate_uuid)
     name = Column(String(100))
     hero_img = Column(String(255), nullable=True)
-    welcome_message = Column(String(255), nullable=True)
     primary_color = Column(String(7), nullable=True)
     secondary_color = Column(String(7), nullable=True)
 
@@ -34,10 +33,11 @@ class Question(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     bot_id = Column(String(36), ForeignKey("chatbot_configurations.id"))
-    question = Column(String(255))
-    question_order = Column(Integer)
-    response_type = Column(Enum(QuestionTypes))
+    question = Column(String(255), nullable=False)
+    question_type = Column(String(20), nullable=False)
+    data = Column(JSON, nullable=False)
     variable = Column(String(255))
+    next_ques = Column(String(36), ForeignKey("questions.id"))
 
     created_by = Column(String(36), nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
@@ -45,8 +45,6 @@ class Question(Base):
         timezone.utc), onupdate=datetime.now(timezone.utc))
 
     bot = relationship("ChatbotConfiguration", back_populates="questions")
-    options = relationship(
-        "QuestionOption", back_populates="question", cascade="all, delete-orphan")
 
 
 class QuestionOption(Base):
@@ -57,7 +55,7 @@ class QuestionOption(Base):
     option_text = Column(String(255))
     option_order = Column(Integer)
 
-    question = relationship("Question", back_populates="options")
+    # question = relationship("Question", back_populates="options")
 
 
 class ChatSession(Base):

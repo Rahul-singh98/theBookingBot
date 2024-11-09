@@ -40,6 +40,7 @@ class ChatHistoryCreate(ChatHistoryBase):
 class ChatAnswer(BaseModel):
     question_id: str
     question: str
+    question_type: str
     answer: str
     variable: str
 

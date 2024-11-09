@@ -8,7 +8,6 @@ from app.utils.constants import AuthMethodChoices
 class ChatbotConfigurationBase(BaseModel):
     name: str
     hero_img: str
-    welcome_message: Optional[str] = None
     primary_color: Optional[str] = None
     secondary_color: Optional[str] = None
 
@@ -21,13 +20,8 @@ class ChatbotConfigurationUpdate(ChatbotConfigurationBase):
     pass
 
 
-class ChatbotConfigurationResponse(BaseModel):
+class ChatbotConfigurationResponse(ChatbotConfigurationBase):
     id: str
-    name: str
-    hero_img: str
-    welcome_message: Optional[str]
-    primary_color: Optional[str]
-    secondary_color: Optional[str]
     created_by: Optional[str]
 
     created_at: datetime

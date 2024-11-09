@@ -9,7 +9,6 @@ const clientBotState = {
   sessionId: null,
   backendUrl: null,
   botName: "Chatbot",
-  welcomeMessage: "Hello! How can I help you today?",
   primaryColor: "e06936",
   secondaryColor: "f0f4f8",
   botImage: `${BACKEND_CHATBOT_API_URL}/static/images/bot.svg`,
@@ -97,8 +96,6 @@ const configureChatbot = async () => {
       `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}`
     );
     clientBotState.botName = config.name || clientBotState.botName;
-    clientBotState.welcomeMessage =
-      config.welcome_message || clientBotState.welcomeMessage;
     clientBotState.primaryColor =
       config.primary_color || clientBotState.primaryColor;
     clientBotState.secondaryColor =
@@ -239,7 +236,7 @@ const startChatSession = async () => {
     localStorage.setItem("chatbot_session_id", clientBotState.sessionId);
 
     hideTypingIndicator();
-    addMessage(clientBotState.welcomeMessage, "bot");
+    // addMessage(clientBotState.welcomeMessage, "bot");
     await fetchNextQuestion();
 
     return clientBotState.sessionId;
@@ -263,13 +260,37 @@ const fetchNextQuestion = async () => {
     );
     hideTypingIndicator();
 
-    console.log("FetchNextQuestion", response.is_completed);
+    // Handle different response scenarios
+    if (!response) {
+      throw new Error("Empty response received");
+    }
+
+    // Session completion handling
     if (response.is_completed === true) {
       addMessage("Thank you! The session is complete.", "bot");
-      await submitAPIResponse();
-    } else {
-      addMessage(response.question, "bot", response);
+      await submitAPIResponse().catch((error) => {
+        console.error("Error submitting API response:", error);
+        addMessage("There was an issue saving your responses.", "bot", false);
+      });
+      return;
     }
+    // Question type handling
+    switch (response.question_type?.toLowerCase()) {
+      case "start":
+        addMessage(response.question, "bot");
+        // Add delay before fetching next question to prevent rapid succession
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return await fetchNextQuestion();
+
+      case undefined:
+      case null:
+        throw new Error("Question type not specified");
+
+      default:
+        addMessage(response.question, "bot", response);
+    }
+
+    return response;
   } catch (error) {
     hideTypingIndicator();
     addMessage("Error fetching the next question.", "bot");
@@ -317,6 +338,7 @@ const submitAnswer = async (answer, answerText) => {
         question_id: clientBotState.current.questionId,
         question: clientBotState.current.question,
         variable: clientBotState.current.variable,
+        question_type: clientBotState.current.question_type,
       }), // Stringify the data
       headers: { "X-Requested-With": "XMLHttpRequest" },
     });
@@ -411,11 +433,12 @@ const addMessage = (
 };
 
 // Render input based on type
-const renderInput = (data) => {
-  const { question, question_id, response_type, variable, options = [] } = data;
+const renderInput = (renderData) => {
+  const { question, question_id, question_type, variable, data } = renderData;
   clientBotState.current.question = question;
   clientBotState.current.questionId = question_id;
   clientBotState.current.variable = variable;
+  clientBotState.current.question_type = question_type;
 
   if (question_id) {
     $("#question-id").val(question_id);
@@ -426,26 +449,39 @@ const renderInput = (data) => {
 
   let inputHtml = "";
 
-  switch (response_type) {
-    case "dropdown":
-      inputHtml = createDropdown(options);
+  switch (question_type) {
+    case "Dropdown":
+      inputHtml = createDropdown(data.options);
       break;
-    case "clicklist":
-      createClickList(options, question_id);
+    case "ClickList":
+      createClickList(data.options, question_id);
       return;
-    case "datetime":
+    case "DateTime":
       inputHtml = createInput("datetime-local");
       break;
-    case "address":
+    case "Date":
+      inputHtml = createInput("date");
+      break;
+    case "Time":
+      inputHtml = createInput("time");
+      break;
+    case "Address":
       inputHtml = createInput("text", "Type your address...");
       break;
-    case "number":
-      inputHtml = createInput("number", "Enter a number...");
+    case "Number":
+      inputHtml = createInput(
+        "number",
+        "Enter a number...",
+        (min = data.min),
+        (max = data.max),
+        (defaultValue = data.default),
+        (step = data.step)
+      );
       break;
-    case "phone":
+    case "Phone":
       inputHtml = createInput("tel", "Enter your phone number...");
       break;
-    case "email":
+    case "Email":
       inputHtml = createInput("email", "Enter your email...");
       break;
     default:
@@ -456,15 +492,53 @@ const renderInput = (data) => {
   clientBotState.elements.userInput = $("#user-input");
 };
 
-// Create input element
-const createInput = (type, placeholder = "Type your response...") => {
-  return `<input id="user-input" type="${type}" placeholder="${placeholder}" class="form-control">`;
+const createInput = (
+  type,
+  placeholder = "Type your response...",
+  defaultValue = null,
+  min = null,
+  max = null,
+  step = null
+) => {
+  // Swap min and max if min is greater than max
+  if (min !== null && max !== null && min > max) {
+    // Swap values
+    [min, max] = [max, min];
+  }
+
+  // Base input element with type and placeholder
+  let inputElement = `<input id="user-input" type="${type}" placeholder="${placeholder}" class="form-control"`;
+
+  // If type is 'number', add min, max, and step attributes if they are provided
+  if (type === "number") {
+    if (min !== null) {
+      inputElement += ` min="${min}"`;
+    }
+    if (max !== null) {
+      inputElement += ` max="${max}"`;
+    }
+    if (step !== null) {
+      inputElement += ` step="${step}"`;
+    }
+  }
+
+  // Add default value if provided
+  if (defaultValue !== null) {
+    inputElement += ` value="${defaultValue}"`;
+  }
+
+  // Close the input element
+  inputElement += ">";
+
+  return inputElement;
 };
 
 // Create dropdown element
 const createDropdown = (options) => {
   const optionsHtml = options
-    .map((option) => `<option value="${option.order}">${option.text}</option>`)
+    .map(
+      (option) => `<option value="${option.value}">${option.htmlText}</option>`
+    )
     .join("");
   return `
     <select id="user-input" class="form-control">
@@ -487,7 +561,7 @@ const createClickList = (options, questionId) => {
     $("<button>")
       .addClass("btn btn-outline-primary m-1")
       .text(option.text)
-      .on("click", async () => await submitAnswer(option.text, option.text))
+      .on("click", async () => await submitAnswer(option.value, option.text))
       .appendTo($wrapper);
   });
 

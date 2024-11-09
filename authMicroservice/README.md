@@ -190,14 +190,12 @@
 ```
 auth_service/
 ├── Dockerfile
-├── docker-compose.yml
 ├── requirements/
 │   ├── base.txt
 │   ├── dev.txt
 │   └── prod.txt
 ├── README.md
 ├── .env.example
-├── .gitignore
 ├── src/
 │   ├── __init__.py
 │   ├── main.py

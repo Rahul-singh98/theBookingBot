@@ -73,13 +73,6 @@ export const formConfigs = {
         placeholder: "Enter the image url",
       },
       {
-        name: "welcome_message",
-        label: "Welcome Message",
-        type: "text",
-        required: true,
-        placeholder: "Enter the first message",
-      },
-      {
         name: "primary_color",
         label: "Primary Color",
         type: "text",
@@ -93,34 +86,20 @@ export const formConfigs = {
       },
     ],
     createData: async (formData) => {
-      const {
-        name,
-        hero_img,
-        welcome_message,
-        primary_color,
-        secondary_color,
-      } = formData;
+      const { name, hero_img, primary_color, secondary_color } = formData;
       return create_chatbot_configs(
         name,
         hero_img,
-        welcome_message,
         primary_color,
         secondary_color
       );
     },
     updateData: async (chatbot_config_id, formData) => {
-      const {
-        name,
-        hero_img,
-        welcome_message,
-        primary_color,
-        secondary_color,
-      } = formData;
+      const { name, hero_img, primary_color, secondary_color } = formData;
       return update_chatbot_configs(
         chatbot_config_id,
         name,
         hero_img,
-        welcome_message,
         primary_color,
         secondary_color
       );
@@ -326,38 +305,50 @@ export const formConfigs = {
       },
       {
         name: "question",
-        label: "Question",
+        label: "Question to ask",
         type: "text",
-        required: true,
-        placeholder: "Write your question to ask",
+        placeholder: "Please enter your question",
       },
       {
-        name: "question_order",
-        label: "Question Order",
-        type: "number",
-        required: true,
-        placeholder: "Set priority of question",
-        validationRules: {
-          min: 0,
-          max: 100,
-          required: true,
-        },
-      },
-      {
-        name: "response_type",
-        label: "Response Type",
+        name: "question_type",
+        label: "Question Type",
         type: "select",
         required: true,
         options: [
-          { value: "dropdown", label: "DROPDOWN" },
-          { value: "datetime", label: "DATETIME" },
-          { value: "address", label: "ADDRESS" },
-          { value: "number", label: "NUMBER" },
-          { value: "clicklist", label: "CLICKLIST" },
-          { value: "input", label: "INPUT" },
-          { value: "phone", label: "PHONE" },
-          { value: "email", label: "EMAIL" },
+          { value: "Start", label: "START" },
+          { value: "Dropdown", label: "DROPDOWN" },
+          { value: "Date", label: "DATE" },
+          { value: "Time", label: "TIME" },
+          { value: "DateTime", label: "DATETIME" },
+          { value: "Number", label: "NUMBER" },
+          { value: "Input", label: "INPUT" },
+          { value: "Conditional", label: "CONDITIONAL" },
+          { value: "Email", label: "EMAIL" },
+          { value: "Phone", label: "PHONE" },
+          { value: "ClickList", label: "CLICKLIST" },
+          { value: "Address", label: "ADDRESS" },
+          { value: "Payment", label: "PAYMENT" },
+          { value: "End", label: "END" },
         ],
+      },
+      {
+        name: "data",
+        label: "Data",
+        type: "json",
+        required: true,
+        placeholder: "Plese provide json data to process",
+        validationRules: {
+          required: true,
+          custom: (value) => {
+            try {
+              console.log("json value", value);
+              const parsed = JSON.parse(value);
+            } catch {
+              return "Invalid JSON format";
+            }
+            return "";
+          },
+        },
       },
       {
         name: "variable",
@@ -365,28 +356,44 @@ export const formConfigs = {
         type: "text",
         placeholder: "Please provide variable name",
       },
+      {
+        name: "next_ques",
+        label: "Next Question",
+        type: "select",
+        options: async () => {
+          // Fetch chatbot configs
+          const response = await get_questions();
+
+          return response.items.map((ques) => ({
+            value: ques.id,
+            label: ques.question,
+          }));
+        },
+      },
     ],
     createData: async (formData) => {
-      const { bot_id, question, question_order, response_type, variable } =
+      const { bot_id, question, question_type, data, variable, next_ques } =
         formData;
       return create_questions(
         bot_id,
         question,
-        question_order,
-        response_type,
-        variable
+        question_type,
+        data,
+        variable,
+        next_ques
       );
     },
     updateData: async (question_id, formData) => {
-      const { bot_id, question, question_order, response_type, variable } =
+      const { bot_id, question, question_type, data, variable, next_ques } =
         formData;
       return update_questions(
         question_id,
         bot_id,
         question,
-        question_order,
-        response_type,
-        variable
+        question_type,
+        data,
+        variable,
+        next_ques
       );
     },
     deleteData: async (question_id) => {
