@@ -37,7 +37,7 @@ class Question(Base):
     question_type = Column(String(20), nullable=False)
     data = Column(JSON, nullable=False)
     variable = Column(String(255))
-    next_ques = Column(String(36), ForeignKey("questions.id"))
+    next_ques = Column(String(36))
 
     created_by = Column(String(36), nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
