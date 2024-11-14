@@ -68,7 +68,24 @@ const AdminModifyView = () => {
         type: 'hidden',  // Set type to hidden
         value: itemId,   // Set value to itemId
       });
-    } else {
+    } else if (field.id === "next_ques" || field.name === "next_ques") {
+      acc.push({
+        ...field,
+        options: async () => {
+          // Fetch chatbot configs
+          const response = await formConfigs['questions'].fetchData(itemId)
+
+          console.log("Response", response)
+
+          return response.map((ques) => ({
+            value: ques.id,
+            label: ques.question,
+          }));
+        },
+      })
+
+    }
+    else {
       acc.push(field);  // Add other fields as-is
     }
     return acc;
@@ -82,7 +99,7 @@ const AdminModifyView = () => {
         if (cell.name === 'bot_id') {
           return { ...cell, colSpan: 0 };
         } else if (cell.name === "question_type") {
-          return { ...cell, colSpan: 4}
+          return { ...cell, colSpan: 4 }
         }
         return cell;
       })
@@ -126,6 +143,7 @@ const AdminModifyView = () => {
             }}
             FormComponent={DynamicForm}
             formFields={modifiedFormFields}
+            initialData={{ bot_id: itemId }}
             createData={formConfigs['questions'].createData}
             updateData={formConfigs['questions'].updateData}
             deleteData={formConfigs['questions'].deleteData}

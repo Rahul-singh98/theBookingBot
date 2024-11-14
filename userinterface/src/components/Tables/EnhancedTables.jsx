@@ -67,6 +67,7 @@ const EnhancedTable = ({
   refreshInterval = 0,
   formLayout,
   disablePop,
+  initialData,
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -414,6 +415,7 @@ const EnhancedTable = ({
       >
         <FormComponent
           fields={formFields}
+          initialData={initialData}
           onSubmit={handleCreate}
           onCancel={() => setIsCreateModalOpen(false)}
           matrixLayout={formLayout}

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status, File, UploadFile
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.chatbot.schemas import (
@@ -10,6 +10,7 @@ from app.chatbot.schemas import (
 from app.chatbot import crud
 from app.utils.pagination import Pagination
 from app.dependencies import check_permission
+import os
 
 
 chatbot_router = APIRouter()
@@ -142,3 +143,13 @@ def delete_chatbot_submit_configs(config_id: str, db: Session = Depends(get_db))
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
     return db_bot
+
+
+@chatbot_router.post("/upload")
+async def upload_file(file: UploadFile):
+    file_path = os.path.join("app/static", file.filename)
+    with open(file_path, "wb") as f:
+        contents = await file.read()
+        f.write(contents)
+
+    return {"file_path": f""}

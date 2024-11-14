@@ -5,7 +5,7 @@ import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all question configurations
 export const get_questions = async (bot_id) => {
-  const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.QUESTIONS}${bot_id === null ? '' : '?bot_id=' + bot_id}`;
+  const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.QUESTIONS}${bot_id === null || bot_id === undefined ? '' : '?bot_id=' + bot_id}`;
   return getAllAPI(endpoint);
 };
 

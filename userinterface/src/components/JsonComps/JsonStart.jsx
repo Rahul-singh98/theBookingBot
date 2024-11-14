@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const JsonStart = () => {
+const JsonStart = ({ targetName, onDataChange, initialData }) => {
+    useEffect(() => {
+        onDataChange({
+            "target": {
+                "name": targetName,
+                "value": {}
+            }
+        })
+    }, [onDataChange])
+    
     return <></>
 };
 

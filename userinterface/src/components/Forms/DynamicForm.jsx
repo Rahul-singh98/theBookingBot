@@ -190,6 +190,7 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
     const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
     const errorClass = "text-sm text-red-500 mt-1";
     const inputClass = `${baseInputClass} ${className} ${errors[name] ? "border-red-500" : ""}`;
+
     switch (type) {
       case "select": return (
         <DynamicSelectField
@@ -225,12 +226,13 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
           className="mb-4 flex items-center gap-2">
           <input type="checkbox" name={name} checked={formData[name] || false} onChange={handleChange} className={`h-4 w-4 rounded border-stroke ${className}`} {...rest} /> <label className={labelClass}>{label}</label> {errors[name] && <div className={errorClass}>{errors[name]}</div>} </div>);
       case "hidden": return (
-        <input 
-          type={type} name={name} 
-          value={formData[name] || defValue || ""} 
-          onChange={handleChange} 
-          className={inputClass} 
-          placeholder={placeholder} 
+        <input
+          type={type} name={name}
+          value={formData[name] || defValue || ""}
+          onChange={handleChange}
+          className={inputClass}
+          placeholder={placeholder}
+          autoFocus={true}
           required={required} {...rest} />);
       default: return (
         <div
