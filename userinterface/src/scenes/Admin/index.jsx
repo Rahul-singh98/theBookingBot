@@ -5,6 +5,10 @@ import Loader from "@/components/Loader";
 import { useAuth } from "@/hooks/useAuth";
 import AdminTables from "@/components/Tables/AdminTables";
 import { useLocation } from "react-router-dom";
+import DynamicForm from "@/components/Forms/DynamicForm";
+import AdminCreateView from "@/components/Tables/CreateView";
+import AdminModifyView from "@/components/Tables/ModifyView";
+import OrgBot from "./OrgBot";
 
 const AdminApp = () => {
   const { user } = useAuth();
@@ -23,7 +27,10 @@ const AdminApp = () => {
   return user ? (
     <AdminLayout>
       <Routes>
+        <Route path="org-bot" element={<OrgBot />} />
         <Route path="tables/:tableName" element={<AdminTables />} />
+        <Route path="tables/:tableName/create" element={<AdminCreateView />} />
+        <Route path="tables/:tableName/:itemId/edit" element={<AdminModifyView />} />
       </Routes>
     </AdminLayout>
   ) : (

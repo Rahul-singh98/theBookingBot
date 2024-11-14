@@ -5,9 +5,6 @@ services:
       - "3000:3000"
     networks:
       - app_network
-    environment:
-      - VITE_AUTH_API_URL=http://auth:8000
-      - VITE_CHATBOT_API_URL=http://chatbot:8000
 
   auth:
     build: authMicroservice

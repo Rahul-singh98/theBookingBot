@@ -85,6 +85,19 @@ export const formConfigs = {
         placeholder: "Enter your secondary color",
       },
     ],
+    formLayout: {
+      columns: 4,
+      rows: [
+        [
+          { name: "name", colSpan: 2 },
+          { name: "hero_img", colSpan: 2 }
+        ],
+        [
+          { name: "primary_color", colSpan: 2 },
+          { name: "secondary_color", colSpan: 2 }
+        ]
+      ]
+    },
     createData: async (formData) => {
       const { name, hero_img, primary_color, secondary_color } = formData;
       return create_chatbot_configs(
@@ -114,6 +127,7 @@ export const formConfigs = {
       const response = await get_chatbots();
       return response.items;
     },
+    additionalTable: "questions"
   },
   users: {
     fields: [
@@ -164,6 +178,23 @@ export const formConfigs = {
         ],
       },
     ],
+    formLayout: {
+      columns: 4,
+      rows: [
+        [
+          { name: "first_name", colSpan: 2 },
+          { name: "last_name", colSpan: 2 }
+        ],
+        [
+          { name: "username", colSpan: 2 },
+          { name: "email", colSpan: 2 },
+        ],
+        [
+          { name: "password", colSpan: 2 },
+          { name: "status", colSpan: 2 },
+        ],
+      ]
+    },
     createData: async (formData) => {
       const { first_name, last_name, username, email, password, status } =
         formData;
@@ -217,6 +248,23 @@ export const formConfigs = {
         placeholder: "Enter the group description",
       },
     ],
+    formLayout: {
+      columns: 4,
+      rows: [
+        [
+          { name: "first_name", colSpan: 2 },
+          { name: "last_name", colSpan: 2 }
+        ],
+        [
+          { name: "username", colSpan: 2 },
+          { name: "email", colSpan: 2 },
+        ],
+        [
+          { name: "password", colSpan: 2 },
+          { name: "status", colSpan: 2 },
+        ],
+      ]
+    },
     createData: async (formData) => {
       const { name, description } = formData;
       return create_group(name, description);
@@ -267,6 +315,23 @@ export const formConfigs = {
         placeholder: "Enter the permission scope",
       },
     ],
+    formLayout: {
+      columns: 4,
+      rows: [
+        [
+          { name: "first_name", colSpan: 2 },
+          { name: "last_name", colSpan: 2 }
+        ],
+        [
+          { name: "username", colSpan: 2 },
+          { name: "email", colSpan: 2 },
+        ],
+        [
+          { name: "password", colSpan: 2 },
+          { name: "status", colSpan: 2 },
+        ],
+      ]
+    },
     createData: async (formData) => {
       const { name, description, scope } = formData;
       return create_permission(name, description, scope);
@@ -335,6 +400,7 @@ export const formConfigs = {
         name: "data",
         label: "Data",
         type: "json",
+        dependency: "question_type",
         required: true,
         placeholder: "Plese provide json data to process",
         validationRules: {
@@ -371,6 +437,26 @@ export const formConfigs = {
         },
       },
     ],
+    formLayout: {
+      columns: 4,
+      rows: [
+        [
+          { name: "bot_id", colSpan: 2 },
+          { name: "question_type", colSpan: 2 }
+        ],
+        [
+          { name: "question", colSpan: 4 },
+
+        ],
+        [
+          { name: "data", colSpan: 4 },
+        ],
+        [
+          { name: "variable", colSpan: 2 },
+          { name: "next_ques", colSpan: 2 },
+        ],
+      ],
+    },
     createData: async (formData) => {
       const { bot_id, question, question_type, data, variable, next_ques } =
         formData;
@@ -402,8 +488,8 @@ export const formConfigs = {
     getData: async (question_id) => {
       return get_questions(question_id);
     },
-    fetchData: async () => {
-      const response = await get_questions();
+    fetchData: async (bot_id = null) => {
+      const response = await get_questions(bot_id);
       return response.items;
     },
   },
@@ -445,6 +531,23 @@ export const formConfigs = {
         },
       },
     ],
+    formLayout: {
+      columns: 4,
+      rows: [
+        [
+          { name: "first_name", colSpan: 2 },
+          { name: "last_name", colSpan: 2 }
+        ],
+        [
+          { name: "username", colSpan: 2 },
+          { name: "email", colSpan: 2 },
+        ],
+        [
+          { name: "password", colSpan: 2 },
+          { name: "status", colSpan: 2 },
+        ],
+      ]
+    },
     createData: async (formData) => {
       const { question_id, option_text, option_order } = formData;
       return create_question_options(question_id, option_text, option_order);
@@ -513,6 +616,23 @@ export const formConfigs = {
         placeholder: "Enter the API Key",
       },
     ],
+    formLayout: {
+      columns: 4,
+      rows: [
+        [
+          { name: "first_name", colSpan: 2 },
+          { name: "last_name", colSpan: 2 }
+        ],
+        [
+          { name: "username", colSpan: 2 },
+          { name: "email", colSpan: 2 },
+        ],
+        [
+          { name: "password", colSpan: 2 },
+          { name: "status", colSpan: 2 },
+        ],
+      ]
+    },
     createData: async (formData) => {
       const { bot_id, url, auth_type, authentication_key } = formData;
       return create_submit_config(bot_id, url, auth_type, authentication_key);

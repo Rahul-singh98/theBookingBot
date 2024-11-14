@@ -82,12 +82,12 @@ export const tableConfigs = {
       },
       { key: "variable", header: "Variable Name" },
       { key: "next_ques", header: "Next" },
-      { key: "created_by", header: "Author" },
-      { key: "created_at", header: "Created On" },
-      { key: "updated_at", header: "Last Update On" },
+      // { key: "created_by", header: "Author" },
+      // { key: "created_at", header: "Created On" },
+      // { key: "updated_at", header: "Last Update On" },
     ],
     searchFields: ["question_type"],
-    defaultSort: { field: "created_at", direction: "desc" },
+    defaultSort: { field: "question", direction: "desc" },
   },
   "question-options": {
     columns: [

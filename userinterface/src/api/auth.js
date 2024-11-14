@@ -1,11 +1,11 @@
 import axios from "axios";
-import { AuthRoutes } from "./routes";
+import { AUTH_API_URL, AuthRoutes } from "./routes";
 import { getAllAPI } from "./shared";
 
 // Function to handle user login
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${AuthRoutes.LOGIN}`, {
+    const response = await axios.post(`${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.LOGIN}`, {
       username,
       password,
     });

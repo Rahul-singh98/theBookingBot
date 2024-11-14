@@ -21,12 +21,17 @@ options_router = APIRouter()
 @questions_router.get("", response_model=PaginatedQuestionsResponse)
 def list_questions(
     page: int = 1, size: int = 100,
+    bot_id: str = "",
     db: Session = Depends(get_db),
     _: dict = Depends(check_permission("questions:list"))
 ):
     offset = Pagination.get_offset(page, size)
 
-    items, total = crud.list_questions(db, offset, size)
+    if not bot_id:
+        items, total = crud.list_questions(db, offset, size)
+    else:
+        items, total = crud.filter_questions_by_bot_id(db, offset, size, bot_id)
+
     paginated_obj = Pagination.paginate(total, size, page)
 
     return PaginatedQuestionsResponse(items=items, pagination=paginated_obj)

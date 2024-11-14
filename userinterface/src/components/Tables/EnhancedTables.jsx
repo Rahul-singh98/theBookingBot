@@ -9,34 +9,11 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import SimpleModal from "../Modal/SimpleModal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
-// Modal component
-const Modal = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="fixed inset-0 bg-black bg-opacity-50"
-        onClick={onClose}
-      ></div>
-      <div className="relative z-50 bg-white dark:bg-boxdark rounded-lg shadow-lg w-full max-w-md">
-        <div className="flex items-center justify-between p-4 border-b dark:border-strokedark">
-          <h2 className="text-lg font-semibold dark:text-white">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-meta-4 rounded-full"
-          >
-            <X className="w-5 h-5 dark:text-white" />
-          </button>
-        </div>
-        <div className="p-4">{children}</div>
-      </div>
-    </div>
-  );
-};
 
 // Confirmation Dialog component
 const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
@@ -74,6 +51,7 @@ const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
 };
 
 const EnhancedTable = ({
+  tableName,
   fetchData,
   createData,
   updateData,
@@ -87,6 +65,8 @@ const EnhancedTable = ({
   searchFields = [],
   onRowClick,
   refreshInterval = 0,
+  formLayout,
+  disablePop,
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -198,7 +178,7 @@ const EnhancedTable = ({
     }
   };
 
-  const handleSelectAll = () => {};
+  const handleSelectAll = () => { };
 
   // Existing table logic...
   const filteredAndSortedData = useMemo(() => {
@@ -406,11 +386,10 @@ const EnhancedTable = ({
                   <span className="px-2 dark:text-white">...</span>
                 )}
                 <button
-                  className={`px-3 py-1 rounded border border-stroke dark:border-strokedark ${
-                    currentPage === page
-                      ? "bg-primary text-white"
-                      : "dark:text-white hover:bg-gray-100 dark:hover:bg-meta-4"
-                  }`}
+                  className={`px-3 py-1 rounded border border-stroke dark:border-strokedark ${currentPage === page
+                    ? "bg-primary text-white"
+                    : "dark:text-white hover:bg-gray-100 dark:hover:bg-meta-4"
+                    }`}
                   onClick={() => setCurrentPage(page)}
                 >
                   {page}
@@ -428,31 +407,36 @@ const EnhancedTable = ({
       </div>
 
       {/* Create Modal */}
-      <Modal
+      <SimpleModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        title="Create New Entry"
+        title="Create Entry"
       >
         <FormComponent
           fields={formFields}
           onSubmit={handleCreate}
           onCancel={() => setIsCreateModalOpen(false)}
+          matrixLayout={formLayout}
         />
-      </Modal>
+      </SimpleModal>
 
       {/* Edit Modal */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        title="Edit Entry"
-      >
-        <FormComponent
-          fields={formFields}
-          initialData={currentItem}
-          onSubmit={handleEdit}
-          onCancel={() => setIsEditModalOpen(false)}
-        />
-      </Modal>
+      {
+        disablePop && currentItem ? navigate(`/admin/tables/chatbots/${currentItem.id}/edit`) : <SimpleModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          title="Edit Entry"
+        >
+          <FormComponent
+            fields={formFields}
+            initialData={currentItem}
+            onSubmit={handleEdit}
+            onCancel={() => setIsEditModalOpen(false)}
+            matrixLayout={formLayout}
+          />
+        </SimpleModal>
+      }
+
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog

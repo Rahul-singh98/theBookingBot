@@ -12,6 +12,12 @@ def list_questions(db: Session, offset: int, size: int):
     return db.query(models.Question).offset(offset).limit(size).all(), total
 
 
+def filter_questions_by_bot_id(db: Session, offset: int, size: int, bot_id: str):
+    total = db.query(models.Question).filter(
+        models.Question.bot_id == bot_id).count()
+    return db.query(models.Question).filter(models.Question.bot_id == bot_id).offset(offset).limit(size).all(), total
+
+
 def get_start_question(db: Session, chatbot_id: str) -> Optional[models.Question]:
     return db.query(models.Question).filter(
         and_(
