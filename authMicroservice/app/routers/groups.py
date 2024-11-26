@@ -27,7 +27,7 @@ def read_groups(
     return PaginatedGroupResponse(items=items, pagination=pagination_obj)
 
 
-@groups_router.post("/", response_model=GroupInDB)
+@groups_router.post("", response_model=GroupInDB)
 def create_group(
     group: GroupCreate,
     db: Session = Depends(get_db),

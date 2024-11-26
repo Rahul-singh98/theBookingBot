@@ -9,6 +9,8 @@ import DynamicForm from "@/components/Forms/DynamicForm";
 import AdminCreateView from "@/components/Tables/CreateView";
 import AdminModifyView from "@/components/Tables/ModifyView";
 import OrgBot from "./OrgBot";
+import ChatbotList from "./ChatbotList";
+import Editor from "@/components/Editor";
 
 const AdminApp = () => {
   const { user } = useAuth();
@@ -28,6 +30,8 @@ const AdminApp = () => {
     <AdminLayout>
       <Routes>
         <Route path="org-bot" element={<OrgBot />} />
+        <Route path="/chatbots" element={<ChatbotList />} />
+        <Route path="/chatbot/:chatbotId/edit" element={<Editor />} />
         <Route path="tables/:tableName" element={<AdminTables />} />
         <Route path="tables/:tableName/create" element={<AdminCreateView />} />
         <Route path="tables/:tableName/:itemId/edit" element={<AdminModifyView />} />

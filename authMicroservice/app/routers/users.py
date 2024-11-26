@@ -31,7 +31,7 @@ def read_users(
 
 
 
-@user_router.post("/", response_model=UserInDB)
+@user_router.post("", response_model=UserInDB)
 def create_user(
     user: UserCreate,
     db: Session = Depends(get_db),

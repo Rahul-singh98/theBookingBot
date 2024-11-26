@@ -9,6 +9,7 @@ import {
   useReactFlow,
   Background,
 } from '@xyflow/react';
+import useColorMode from '@/hooks/useColorMode';
 
 import '@xyflow/react/dist/style.css'
 import '@/assets/css/editor.css';
@@ -40,6 +41,7 @@ let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = () => {
+  const [colorMode, setColorMode] = useColorMode();
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -65,9 +67,6 @@ const DnDFlow = () => {
         return;
       }
 
-      // project was renamed to screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -100,7 +99,7 @@ const DnDFlow = () => {
           onDragOver={onDragOver}
           fitView
           nodeTypes={nodeTypes}
-          style={{ backgroundColor: "#F7F9FB" }}
+          colorMode={colorMode}
         >
           <Controls showFitView={true} showInteractive={true} />
           <Background />

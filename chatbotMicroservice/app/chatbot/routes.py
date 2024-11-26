@@ -18,6 +18,7 @@ chatbot_router = APIRouter()
 
 @chatbot_router.get("", response_model=PaginatedChatbotConfigurationResponse)
 async def list_chatbots(
+    user_id: str = Query("", max_length=45),
     page: int = Query(1, ge=1, description="Page number"),
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     db: Session = Depends(get_db),
@@ -26,7 +27,8 @@ async def list_chatbots(
     # Calculate offset
     offset = Pagination.get_offset(page, size)
 
-    configurations, total = crud.list_chatbots(db, offset, size)
+    configurations, total = crud.list_chatbots_by_user_id(
+        db, offset, size, user_id) if user_id else crud.list_chatbots(db, offset, size)
 
     pagination_obj = Pagination.paginate(total, size, page)
 
@@ -56,7 +58,7 @@ def read_chatbot_history(
     if db_chatbot is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
-    
+
     db_chatbot.chat_sessions
     # return ChatbotConfigurationResponse.from_orm(db_chatbot)
     return db_chatbot

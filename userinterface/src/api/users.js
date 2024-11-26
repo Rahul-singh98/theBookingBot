@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { AuthRoutes } from "./routes";
+import { AUTH_API_URL, AuthRoutes } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all user
 export const get_users = async () => {
-  const endpoint = `${AuthRoutes.USERS}`;
+  const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.USERS}`;
   return getAllAPI(endpoint);
 };
 
@@ -15,7 +15,7 @@ export const get_user_by_id = async (user_id) => {
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.USERS}/${user_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.USERS}/${user_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -41,7 +41,7 @@ export const create_user = async (
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.USERS}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.USERS}`;
 
     const payload = {
       first_name,
@@ -81,7 +81,7 @@ export const update_user = async (
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.USERS}/${user_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.USERS}/${user_id}`;
 
     const payload = {
       first_name,
@@ -113,7 +113,7 @@ export const delete_user = async (user_id) => {
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.USERS}/${user_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.USERS}/${user_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

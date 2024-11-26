@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { AuthRoutes } from "./routes";
+import { AUTH_API_URL, AuthRoutes } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all permission
 export const get_permissions = async () => {
-  const endpoint = `${AuthRoutes.PERMISSIONS}`;
+  const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.PERMISSIONS}`;
   return getAllAPI(endpoint);
 };
 
@@ -15,7 +15,7 @@ export const get_permission_by_id = async (permission_id) => {
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.PERMISSIONS}/${permission_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.PERMISSIONS}/${permission_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -34,7 +34,7 @@ export const get_permission_by_id = async (permission_id) => {
 export const create_permission = async (name, description, scope) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.PERMISSIONS}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.PERMISSIONS}`;
 
     const payload = {
       name,
@@ -63,7 +63,7 @@ export const update_permission = async (permission_id, name, description) => {
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.PERMISSIONS}/${permission_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.PERMISSIONS}/${permission_id}`;
 
     const payload = {
       name,
@@ -91,7 +91,7 @@ export const delete_permission = async (permission_id) => {
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.PERMISSIONS}/${permission_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.PERMISSIONS}/${permission_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

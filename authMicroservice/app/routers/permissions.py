@@ -27,7 +27,7 @@ def read_permissions(
     return PaginatedPermissionResponse(items=items, pagination=pagination_obj)
 
 
-@permissions_router.post("/", response_model=PermissionInDB)
+@permissions_router.post("", response_model=PermissionInDB)
 def create_permission(
     permission: PermissionCreate,
     db: Session = Depends(get_db),

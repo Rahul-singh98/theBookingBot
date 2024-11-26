@@ -9,7 +9,7 @@ body {
 
 #app {
   width: 100%;
-  height: 100%;
+  height: calc(60vh - 500px);
 }
 
 .dndflow {
@@ -97,3 +97,13 @@ body {
     max-width: 250px;
   }
 }
+
+
+/* React flow custom nodes css */
+/* .react-flow__node-start {
+  background: blue;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  padding: 2px 5px;
+  font-weight: 700;
+} */

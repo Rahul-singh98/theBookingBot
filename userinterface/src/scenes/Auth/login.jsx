@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { login } from "@/api/auth";
 import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const { user, afterLogin } = useAuth();
@@ -19,7 +20,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const userData = await login(username, password);
-      console.log("User data:", userData);
+
+      const token = userData.access_token;
+      const decoded = jwtDecode(token);
+
+      userData.scopes = decoded.scopes
+      userData.user_id = decoded.sub
 
       afterLogin(userData);
       navigate(next);

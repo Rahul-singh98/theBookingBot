@@ -252,16 +252,8 @@ export const formConfigs = {
       columns: 4,
       rows: [
         [
-          { name: "first_name", colSpan: 2 },
-          { name: "last_name", colSpan: 2 }
-        ],
-        [
-          { name: "username", colSpan: 2 },
-          { name: "email", colSpan: 2 },
-        ],
-        [
-          { name: "password", colSpan: 2 },
-          { name: "status", colSpan: 2 },
+          { name: "name", colSpan: 2 },
+          { name: "description", colSpan: 2 }
         ],
       ]
     },
@@ -319,16 +311,13 @@ export const formConfigs = {
       columns: 4,
       rows: [
         [
-          { name: "first_name", colSpan: 2 },
-          { name: "last_name", colSpan: 2 }
+          { name: "name", colSpan: 4 },
         ],
         [
-          { name: "username", colSpan: 2 },
-          { name: "email", colSpan: 2 },
+          { name: "description", colSpan: 4 },
         ],
         [
-          { name: "password", colSpan: 2 },
-          { name: "status", colSpan: 2 },
+          { name: "scope", colSpan: 4 },
         ],
       ]
     },

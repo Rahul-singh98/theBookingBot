@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getAllAPI } from "./shared";
-import { AuthRoutes } from "./routes";
+import { AUTH_API_URL, AuthRoutes } from "./routes";
 import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all group
 export const get_groups = async () => {
-  const endpoint = `${AuthRoutes.GROUPS}`;
+  const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.GROUPS}`;
   return getAllAPI(endpoint);
 };
 
@@ -15,7 +15,7 @@ export const get_group_by_id = async (group_id) => {
   }
   try {
     headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.GROUPS}/${group_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.GROUPS}/${group_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -34,7 +34,7 @@ export const get_group_by_id = async (group_id) => {
 export const create_group = async (name, description) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.GROUPS}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.GROUPS}`;
 
     const payload = {
       name,
@@ -62,7 +62,7 @@ export const update_group = async (group_id, name, description) => {
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.GROUPS}/${group_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.GROUPS}/${group_id}`;
 
     const payload = {
       name,
@@ -90,7 +90,7 @@ export const delete_group = async (group_id) => {
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${AuthRoutes.GROUPS}/${group_id}`;
+    const endpoint = `${AUTH_API_URL === undefined ? '' : AUTH_API_URL}${AuthRoutes.GROUPS}/${group_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 import AdminHeader from "@/components/Header/AdminHeader";
 import AdminSidebar from "@/components/Sidebar/AdminSidebar";
+import OrganizationSidebar from "@/components/Sidebar/OrganizationSidebar";
+import { useAuth } from "@/hooks/useAuth";
 
 const AdminLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
         {/* <!-- ===== Sidebar Start ===== --> */}
-        <AdminSidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        {
+          user && user.scopes === "SuperAdmin" ? <AdminSidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+          /> : <OrganizationSidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen} />
+        }
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}

@@ -11,6 +11,15 @@ def list_chatbots(db: Session, offset: int, size: int):
     return db.query(models.ChatbotConfiguration).offset(offset).limit(size).all(), total
 
 
+def list_chatbots_by_user_id(db: Session, offset: int, size: int, user_id: str):
+    # Get total count of items
+    total = db.query(models.ChatbotConfiguration).filter(
+        models.ChatbotConfiguration.created_by == user_id).count()
+
+    # Get items for the current page
+    return db.query(models.ChatbotConfiguration).filter(models.ChatbotConfiguration.created_by == user_id).offset(offset).limit(size).all(), total
+
+
 def get_chatbot(db: Session, chatbot_id: str):
     return db.query(models.ChatbotConfiguration).filter(models.ChatbotConfiguration.id == chatbot_id).first()
 
