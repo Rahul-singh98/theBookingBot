@@ -6,6 +6,7 @@ import Signup from "@/scenes/Auth/signup";
 import ErrorPage from "@/errors/errorPage.jsx";
 import PageTitle from "./components/PageTitle";
 import { AuthProvider } from "@/hooks/useAuth";
+import Editor from "./components/Editor";
 
 const LayoutWithTitle = ({ children, title }) => (
   <>
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <ErrorPage />,
+  },
+  {
+    path: "/organizations/abc",
+    element: <Editor />,
   },
 ]);
 
