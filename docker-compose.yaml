@@ -26,6 +26,13 @@ services:
       - SUPER_ADMIN_PASSWORD=#Admin@1234
       - SUPER_ADMIN_FIRST_NAME=Super
       - SUPER_ADMIN_LAST_NAME=Admin
+      - CREATE_ORGANIZATION_ADMIN=true
+      - ORGANIZATION_ADMIN_EMAIL=orgadmin@authentication.com
+      - ORGANIZATION_ADMIN_USERNAME=organization_admin
+      - ORGANIZATION_ADMIN_PASSWORD='Admin@1234
+      - ORGANIZATION_ADMIN_FIRST_NAME=Organization
+      - ORGANIZATION_ADMIN_LAST_NAME=Admin
+
     networks:
       - app_network
 
