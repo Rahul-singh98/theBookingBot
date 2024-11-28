@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // ClickListNodeMenu component
-const ClickListNodeMenu = ({ data, targetName, onDataChange }) => {
+const ClickListNodeMenu = ({ data, targetName, onDataChange, setQuestionData }) => {
   const [dropdownData, setDropdownData] = useState({
     label: '',
     description: '',

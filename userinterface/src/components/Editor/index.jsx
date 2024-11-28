@@ -1,4 +1,5 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -12,6 +13,7 @@ import {
   Panel
 } from '@xyflow/react';
 import useColorMode from '@/hooks/useColorMode';
+import { useParams } from 'react-router-dom';
 
 import '@xyflow/react/dist/style.css'
 import '@/assets/css/editor.css';
@@ -28,6 +30,9 @@ import { DrowDownNode } from './nodes/dropDownNode';
 import { AddressNode } from './nodes/addressNode';
 import { ClickListNode } from './nodes/clickListNode';
 import { EndNode } from './nodes/endNode';
+
+import { get_questions, create_questions, update_questions } from '@/api/questions';
+import { useAuth } from '@/hooks/useAuth';
 
 const initialNodes = [
 ];
@@ -55,9 +60,74 @@ const DnDFlow = () => {
   const { screenToFlowPosition } = useReactFlow();
   const [selectedNode, setSelectedNode] = useState();
   const [type] = useDnD();
+  const { chatbotId } = useParams();
+  const { user, afterLogout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const result = await get_questions(chatbotId);
+        console.log("Result", result);
+
+        let xAxis = 100;
+        const newNodes = [];
+        const newEdges = [];
+
+        if (result.items && Array.isArray(result.items)) {
+          result.items.forEach((question_response) => {
+            const nodeType = question_response.question_type.toLowerCase();
+            const initialPosition = { x: xAxis, y: 100 };
+            xAxis += 100;
+
+            // Create the node
+            const newNode = {
+              id: question_response.id,
+              type: nodeType,
+              position: initialPosition,
+              data: {
+                label: `${nodeType} node`,
+                initial_data: question_response,
+                bot_id: question_response.bot_id,
+              },
+            };
+
+            newNodes.push(newNode);
+
+            // Create an edge if there's a "next_ques"
+            if (question_response.next_ques) {
+              const edge = {
+                id: `edge_${question_response.id}_${question_response.next_ques}`,
+                source: question_response.id,
+                target: question_response.next_ques,
+                animated: false,
+                // label: 'next',
+              };
+
+              newEdges.push(edge);
+            }
+          });
+
+          // Update nodes and edges
+          setNodes((nds) => nds.concat(newNodes));
+          setEdges((eds) => eds.concat(newEdges));
+        }
+      } catch (err) {
+        if (err.message === "Unauthorized") {
+          afterLogout();
+          navigate(`/login?next=${location.pathname}`);
+        } else {
+          console.error("Error loading questions:", err);
+        }
+      }
+    };
+
+    loadData();
+  }, [chatbotId, navigate, afterLogout]);
+
 
   const onChange = useCallback(({ nodes, edges }) => {
-    setSelectedNode(nodes.find((node) => node.id))
+    setSelectedNode(nodes.find((node) => node.id));
   }, []);
 
   useOnSelectionChange({
@@ -65,9 +135,34 @@ const DnDFlow = () => {
   });
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [],
+    async (params) => {
+      setEdges((eds) => addEdge(params, eds));
+
+      // Log the nodes to ensure you're getting the latest state
+      console.log('Current nodes:', nodes);
+
+      // Extract source and target node IDs
+      const { source, target } = params;
+
+      // Find the source node from the current nodes state
+      const sourceNode = nodes.find((node) => node.id === source);
+
+      try {
+        await update_questions(
+          source,
+          sourceNode.data?.initial_data?.bot_id,
+          sourceNode.data?.initial_data?.question,
+          sourceNode.data?.initial_data?.question_type,
+          sourceNode.data?.initial_data?.data,
+          sourceNode.data?.initial_data?.variable,
+          target);
+      } catch (err) {
+        console.error("Error updating next_ques:", err);
+      }
+    },
+    [setEdges, chatbotId, nodes] // Make sure to include nodes in the dependency array
   );
+
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -75,10 +170,9 @@ const DnDFlow = () => {
   }, []);
 
   const onDrop = useCallback(
-    (event) => {
+    async (event) => {
       event.preventDefault();
 
-      // check if the dropped element is valid
       if (!type) {
         return;
       }
@@ -88,18 +182,77 @@ const DnDFlow = () => {
         y: event.clientY,
       });
 
-      const newNode = {
-        id: getId(),
-        type,
-        position,
-        data: {
-          label: `${type} node`
-        },
-      };
+      try {
+        let question_type = "";
+        switch (type) {
+          case "start":
+            question_type = "Start";
+            break;
+          case "end":
+            question_type = "End";
+            break;
+          case "dropDown":
+            question_type = "Dropdown";
+            break;
+          case "date":
+            question_type = "Date";
+            break;
+          case "time":
+            question_type = "Time";
+            break;
+          case "dateTime":
+            question_type = "DateTime";
+            break;
+          case "number":
+            question_type = "Number";
+            break;
+          case "input":
+            question_type = "Input";
+            break;
+          case "number":
+            question_type = "Number";
+            break;
+          case "conditional":
+            question_type = "Conditional";
+            break;
+          case "email":
+            question_type = "Email";
+            break;
+          case "phone":
+            question_type = "Phone";
+            break;
+          case "clickList":
+            question_type = "ClickList";
+            break;
+          case "address":
+            question_type = "Address";
+            break;
+          case "payment":
+            question_type = "Payment";
+            break;
+          default:
+            question_type = "default";
+        }
 
-      setNodes((nds) => nds.concat(newNode));
+        const question_response = await create_questions(chatbotId, "", question_type, {}, "", null);
+
+        const newNode = {
+          id: question_response.id,
+          type,
+          position,
+          data: {
+            label: `${type} node`,
+            bot_id: chatbotId,
+          },
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+      } catch (err) {
+        console.error("Error creating question:", err);
+        return;
+      }
     },
-    [screenToFlowPosition, type],
+    [screenToFlowPosition, type, chatbotId, setNodes]
   );
 
   return (
@@ -138,7 +291,6 @@ const DnDFlow = () => {
           <Background />
         </ReactFlow>
       </div>
-
     </div>
   );
 };

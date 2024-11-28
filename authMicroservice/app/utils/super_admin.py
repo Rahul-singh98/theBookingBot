@@ -167,25 +167,21 @@ def create_organization_admin():
         db.add(user_group)
 
         # Create all permissions and associate them with the Organization group
-        all_permissions = [
-            "chatbots:*:*",
-        ]
+        # all_permissions = [
+        #     "*:*:*",
+        # ]
 
-        for perm_name in all_permissions:
-            permission = Permission(
-                id=str(uuid.uuid4()),
-                name=perm_name,
-                scope="self",
-                description=f"Permission to {perm_name.split(':')[1]} {perm_name.split(':')[0]} {perm_name.split(':')[2]}"
-            )
-            db.add(permission)
-            db.flush()
+        # for perm_name in all_permissions:
+        perm_name = "*:*:*"
 
-            group_permission = GroupPermission(
-                group_id=org_admin_group.id,
-                permission_id=permission.id
-            )
-            db.add(group_permission)
+        permission = db.query(Permission).filter(
+            Permission.name == perm_name).first()
+
+        group_permission = GroupPermission(
+            group_id=org_admin_group.id,
+            permission_id=permission.id
+        )
+        db.add(group_permission)
 
         db.commit()
         logger.info("Organization admin user created successfully.")
@@ -196,6 +192,7 @@ def create_organization_admin():
         logger.error("Organization admin user already exists.")
     except Exception as e:
         db.rollback()
-        logger.error(f"An error occurred while creating Organization admin: {str(e)}")
+        logger.error(
+            f"An error occurred while creating Organization admin: {str(e)}")
     finally:
         db.close()

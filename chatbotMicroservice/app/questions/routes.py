@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.questions.schemas import (
@@ -11,6 +11,7 @@ from app.questions import crud
 from app.chatbot import crud as chatbot_crud
 from app.utils.pagination import Pagination
 from app.dependencies import check_permission
+import os
 
 
 questions_router = APIRouter()
@@ -183,3 +184,20 @@ def delete_question_option(
             status_code=status.HTTP_404_NOT_FOUND, detail="Option not found")
 
     return db_option
+
+
+@questions_router.post("/upload")
+async def upload_file(file: UploadFile = File(...)):
+    # Corrected from file.name to file.filename
+    location = f"imgs/{file.filename}"
+    file_location = os.path.join("app/static", location)
+
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(file_location), exist_ok=True)
+
+    # Save the uploaded file
+    with open(file_location, "wb") as buffer:  # Fixed from file_location.open()
+        buffer.write(await file.read())
+
+    # Return the link to the uploaded file
+    return {"file_url": f"/static/{location}"}

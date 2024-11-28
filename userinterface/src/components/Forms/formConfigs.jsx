@@ -68,7 +68,7 @@ export const formConfigs = {
       {
         name: "hero_img",
         label: "Image URL",
-        type: "text",
+        type: "image",
         required: true,
         placeholder: "Enter the image url",
       },

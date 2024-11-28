@@ -47,7 +47,7 @@ class Permission(Base):
     __tablename__ = "permissions"
 
     id = Column(String(36), primary_key=True, index=True)
-    name = Column(String(50), unique=True, nullable=False, index=True)
+    name = Column(String(50), nullable=False)
     scope = Column(Text, nullable=False)
     description = Column(String(255))
     created_at = Column(DateTime, default=datetime.now(timezone.utc))

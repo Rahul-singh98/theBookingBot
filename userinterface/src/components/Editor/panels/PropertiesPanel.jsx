@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DropDownNodeMenu from './DropDownNodeMenu';
 import StartNodeMenu from './StartNodeMenu';
 import TimeNodeMenu from './TimeNodeMenu';
@@ -8,33 +8,55 @@ import NumberNodeMenu from './NumberNodeMenu';
 import AddressNodeMenu from './AddressNodeMenu';
 import ClickListNodeMenu from './ClickListNodeMenu';
 import EndNodeMenu from './EndNodeMenu';
+import { update_questions } from '@/api/questions';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
-
-const PropertiesBase = ({ title, onCollapse, onSave, children }) => {
-  // Capitalizing the first letter of the title and making the rest lowercase
+const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestionData }) => {
   const formattedTitle = title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
+  const { afterLogout } = useAuth();
+  const navigate = useNavigate()
 
-  const [question, setQuestion] = useState('');
-  const [nextStep, setNextStep] = useState('');
+  // Initialize states based on `data.initial_data`
+  const [nextStep, setNextStep] = useState(data.initial_data?.next_ques || '');
+  const [variableName, setVariableName] = useState(data.initial_data?.variable || '');
+  const [questionType, setQuestionType] = useState(data.initial_data?.question_type || '');
+  const [question, setQuestion] = useState(data.initial_data?.question || ''); // Initialize question state
 
-  const handleQuestionChange = (e) => setQuestion(e.target.value);
-  const handleNextStepChange = (e) => setNextStep(e.target.value);
+  // Handle changes to the inputs and propagate to `setQuestionData`
+  const handleQuestionChange = (e) => {
+    const newQuestion = e.target.value;
+    setQuestion(newQuestion);
+    setQuestionData((prev) => ({ ...prev, question: newQuestion }));
+  };
+
+  const handleNextStepChange = (e) => {
+    const newNextStep = e.target.value;
+    setNextStep(newNextStep);
+    setQuestionData((prev) => ({ ...prev, next_ques: newNextStep }));
+  };
+
+  const handleVariableNameChange = (e) => {
+    const newVariableName = e.target.value;
+    setVariableName(newVariableName);
+    setQuestionData((prev) => ({ ...prev, variable: newVariableName }));
+  };
+
+  const handleQuestionTypeChange = (e) => {
+    const newQuestionType = e.target.value;
+    setQuestionType(newQuestionType);
+    setQuestionData((prev) => ({ ...prev, question_type: newQuestionType }));
+  };
 
   return (
     <div className="rounded-lg border-[0.5px] border-gray-200 bg-white shadow-sm !min-w-[256px] max-w-[300px] p-3">
-      {/* Header with title and close button */}
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-base font-semibold">{formattedTitle}</h3>
-        <button
-          onClick={onCollapse}
-          className="text-gray-500 hover:text-gray-700 text-sm"
-          aria-label="Close"
-        >
+        <button onClick={onCollapse} className="text-gray-500 hover:text-gray-700 text-sm" aria-label="Close">
           ✖
         </button>
       </div>
 
-      {/* Dynamic content for Question and Next Step */}
       <div className="mb-3">
         {/* Question Input */}
         <div className="mb-3">
@@ -53,14 +75,16 @@ const PropertiesBase = ({ title, onCollapse, onSave, children }) => {
           <label className="block text-sm font-medium mb-1">Variable Name:</label>
           <input
             type="text"
-            value={question}
-            onChange={handleQuestionChange}
+            value={variableName}
+            onChange={handleVariableNameChange}
             placeholder="Enter variable"
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
           />
         </div>
 
-        {/* Render any additional children */}
+        {/* Hidden Question Type Input */}
+        <input type="text" value={questionType} hidden />
+
         {children}
 
         {/* Next Step Dropdown */}
@@ -92,7 +116,6 @@ const PropertiesBase = ({ title, onCollapse, onSave, children }) => {
   );
 };
 
-
 const DefaultNodeProperties = ({ data }) => (
   <div>
     <p>Label: {data.label}</p>
@@ -102,43 +125,65 @@ const DefaultNodeProperties = ({ data }) => (
 export default function PropertiesPanel({ selectedNode, onCollapse }) {
   if (!selectedNode) return null;
 
-  // Function to handle save action
-  const handleSave = () => {
-    console.log("Saved data:", selectedNode);
+  console.log("SelectedNode", selectedNode)
+  const [questionData, setQuestionData] = useState(selectedNode.data.initial_data || {});
+
+  const handleSave = async () => {
+    try {
+      const response = await update_questions(
+        selectedNode.id,
+        selectedNode.bot_id,
+        questionData.question,
+        questionData.question_type,
+        questionData.data,
+        questionData.variable,
+        questionData.next_ques
+      )
+
+    } catch (err) {
+      if (err.message === "Unauthorized") {
+        afterLogout();
+        navigate(`/login?next=${location.pathname}`);
+      } else {
+        console.error("Error loading questions:", err);
+      }
+    }
+
     onCollapse();
   };
 
-  // Render based on the node type
   const renderProperties = () => {
     switch (selectedNode.type) {
       case 'start':
-        return <StartNodeMenu data={selectedNode.data} />;
+        return <StartNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'end':
-        return <EndNodeMenu data={selectedNode.data} />;
+        return <EndNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'time':
-        return <TimeNodeMenu data={selectedNode.data} />;
+        return <TimeNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'date':
-        return <DateNodeMenu data={selectedNode.data} />;
+        return <DateNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'dateTime':
-        return <DateTimeNodeMenu data={selectedNode.data} />;
+        return <DateTimeNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'dropDown':
-        return <DropDownNodeMenu data={selectedNode.data} />;
+        return <DropDownNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'number':
-        return <NumberNodeMenu data={selectedNode.data} />;
+        return <NumberNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'address':
-        return <AddressNodeMenu data={selectedNode.data} />;
+        return <AddressNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'clickList':
-        return <ClickListNodeMenu data={selectedNode.data} />;
+        return <ClickListNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       default:
-        return <DefaultNodeProperties data={selectedNode.data} />;
+        return <DefaultNodeProperties data={selectedNode.data} setQuestionData={setQuestionData} />;
     }
   };
 
   return (
     <PropertiesBase
+      data={selectedNode.data}
       title={`${selectedNode.type}`}
       onCollapse={onCollapse}
       onSave={handleSave}
+      setQuestionData={setQuestionData}
     >
       {renderProperties()}
     </PropertiesBase>

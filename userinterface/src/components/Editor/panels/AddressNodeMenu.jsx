@@ -1,5 +1,5 @@
 
-const AddressNodeMenu = ({ data }) => (
+const AddressNodeMenu = ({ data, setQuestionData }) => (
     <div className="mb-3">
         <label className="block text-sm font-medium mb-1">Description:</label>
         <textarea

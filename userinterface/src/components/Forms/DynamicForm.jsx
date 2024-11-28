@@ -13,6 +13,7 @@ import JsonPassword from "../JsonComps/JsonPassword";
 import JsonInput from "../JsonComps/JsonInput";
 import JsonEnd from "../JsonComps/JsonEnd";
 import JsonCondition from "../JsonComps/JsonCondition";
+import { uploadImage } from "@/api/upload";
 
 const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "Submit", cancelLabel = "Cancel", matrixLayout = [], }) => {
   const [formData, setFormData] = useState({});
@@ -185,61 +186,98 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
   };
 
   const renderField = (field) => {
-    const { type = "text", name, label, options, required = false, dependency = null, defValue = "", placeholder, className = "", ...rest } = field;
-    const baseInputClass = "w-full rounded-md border border-stroke bg-transparent px-5 py-3 dark:border-strokedark dark:bg-meta-4 dark:text-white";
+    const {
+      type = "text",
+      name,
+      label,
+      required = false,
+      placeholder,
+      className = "",
+      ...rest
+    } = field;
+
+    const baseInputClass =
+      "w-full rounded-md border border-stroke bg-transparent px-5 py-3 dark:border-strokedark dark:bg-meta-4 dark:text-white";
     const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
     const errorClass = "text-sm text-red-500 mt-1";
     const inputClass = `${baseInputClass} ${className} ${errors[name] ? "border-red-500" : ""}`;
 
     switch (type) {
-      case "select": return (
-        <DynamicSelectField
-          name={name}
-          label={label}
-          options={options}
-          required={required}
-          formData={formData}
-          handleChange={handleChange}
-          errors={errors}
-          labelClass={labelClass}
-          inputClass={inputClass}
-          errorClass={errorClass}
-        />);
-      case "json": return (
-        <div
-          key={name}
-          className="mb-4">
-          <label className={labelClass}> {label} {required && <span className="text-red-500 ml-1">*</span>} </label>
-          {renderJson(jsonDependencyKey, name, placeholder, required, rest, inputClass, formData[name])}
+      case "image":
+        return (
+          <div key={name} className="mb-4">
+            <label className={labelClass}>
+              {label} {required && <span className="text-red-500 ml-1">*</span>}
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              name={name}
+              onChange={(e) => handleImageChange(e, name)}
+              className={inputClass}
+              required={required}
+              {...rest}
+            />
+            {formData[name] && (
+              <div className="mt-2">
+                <img
+                  src={formData[name]}
+                  alt="Uploaded Preview"
+                  style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                />
+              </div>
+            )}
+            {errors[name] && <div className={errorClass}>{errors[name]}</div>}
+          </div>
+        );
+      default:
+        // Existing field rendering logic...
+        return (
+          <div key={name} className="mb-4">
+            <label className={labelClass}>
+              {label} {required && <span className="text-red-500 ml-1">*</span>}
+            </label>
+            <input
+              type={type}
+              name={name}
+              value={formData[name] || ""}
+              onChange={handleChange}
+              className={inputClass}
+              placeholder={placeholder}
+              required={required}
+              {...rest}
+            />
+            {errors[name] && <div className={errorClass}>{errors[name]}</div>}
+          </div>
+        );
+    }
+  };
 
-          {errors[name] && <div className={errorClass}>{errors[name]}</div>}
-        </div>);
-      case "textarea": return (
-        <div
-          key={name}
-          className="mb-4">
-          <label className={labelClass}> {label} {required && <span className="text-red-500 ml-1">*</span>} </label>
-          <textarea name={name} value={formData[name] || ""} onChange={handleChange} className={`${inputClass} min-h-[100px]`} placeholder={placeholder} required={required} {...rest} /> {errors[name] && <div className={errorClass}>{errors[name]}</div>} </div>);
-      case "checkbox": return (
-        <div
-          key={name}
-          className="mb-4 flex items-center gap-2">
-          <input type="checkbox" name={name} checked={formData[name] || false} onChange={handleChange} className={`h-4 w-4 rounded border-stroke ${className}`} {...rest} /> <label className={labelClass}>{label}</label> {errors[name] && <div className={errorClass}>{errors[name]}</div>} </div>);
-      case "hidden": return (
-        <input
-          type={type} name={name}
-          value={formData[name] || defValue || ""}
-          onChange={handleChange}
-          className={inputClass}
-          placeholder={placeholder}
-          autoFocus={true}
-          required={required} {...rest} />);
-      default: return (
-        <div
-          key={name}
-          className="mb-4">
-          <label
-            className={labelClass}> {label} {required && <span className="text-red-500 ml-1">*</span>} </label> <input type={type} name={name} value={formData[name] || ""} onChange={handleChange} className={inputClass} placeholder={placeholder} required={required} {...rest} /> {errors[name] && <div className={errorClass}>{errors[name]}</div>} </div>);
+  // Add this helper function to handle image file changes
+  const handleImageChange = async (e, name) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file); // Ensure the key matches the backend
+
+      try {
+        // Upload the image to the backend
+        const data = await uploadImage(formData);
+        const fileUrl = data.file_url;
+
+        // Update form data with the file URL
+        setFormData((prev) => ({
+          ...prev,
+          [name]: fileUrl,
+        }));
+      } catch (err) {
+        console.error("Error uploading image:", err);
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
     }
   };
 

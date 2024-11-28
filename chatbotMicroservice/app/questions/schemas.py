@@ -19,7 +19,7 @@ class ClickListAction(BaseModel):
 
 
 class StartQuestion(BaseModel):
-    pass
+    description: Optional[str]
 
 
 class EndQuestion(BaseModel):
@@ -155,6 +155,8 @@ class QuestionBase(BaseModel):
     @validator('data')
     def validate_question_data(cls, v, values):
         question_type = values.get('question_type')
+        if not v:
+            return v
 
         if question_type == QuestionTypes.START:
             StartQuestion(**v)
@@ -192,8 +194,48 @@ class QuestionCreate(QuestionBase):
     pass
 
 
-class QuestionUpdate(QuestionBase):
-    pass
+class QuestionUpdate(BaseModel):
+    bot_id: Optional[str]
+    question: Optional[str]
+    question_type: Optional[QuestionTypes]
+    data: Optional[Dict[str, Any]]
+    variable: Optional[str]
+    next_ques: Optional[str]
+
+    @validator('data')
+    def validate_question_data(cls, v, values):
+        question_type = values.get('question_type')
+
+        if question_type == QuestionTypes.START:
+            StartQuestion(**v)
+        elif question_type == QuestionTypes.DROPDOWN:
+            DropDownQuestion(**v)
+        elif question_type == QuestionTypes.DATE:
+            DateQuestion(**v)
+        elif question_type == QuestionTypes.TIME:
+            TimeQuestion(**v)
+        elif question_type == QuestionTypes.DATETIME:
+            DateTimeQuestion(**v)
+        elif question_type == QuestionTypes.NUMBER:
+            NumberQuestion(**v)
+        elif question_type == QuestionTypes.INPUT:
+            InputQuestion(**v)
+        elif question_type == QuestionTypes.CONDITIONAL:
+            ConditionalQuestion(**v)
+        elif question_type == QuestionTypes.EMAIL:
+            EmailQuestion(**v)
+        elif question_type == QuestionTypes.PHONE:
+            PhoneQuestion(**v)
+        elif question_type == QuestionTypes.CLICKLIST:
+            ClickListQuestion(**v)
+        elif question_type == QuestionTypes.ADDRESS:
+            AddressQuestion(**v)
+        elif question_type == QuestionTypes.PAYMENT:
+            PaymentQuestion(**v)
+        else:
+            EndQuestion(**v)
+
+        return v
 
 
 class QuestionResponse(QuestionBase):
