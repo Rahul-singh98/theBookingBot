@@ -6,12 +6,8 @@ const handleStyle = { left: 10 };
 export function TimeNode({ data }) {
     return (
         <>
-            <div style={{ padding: "10px", background: "#fafafa", textAlign: "center" }}>
+            <div style={{ padding: "10px", textAlign: "center" }}>
                 <label>Time</label>
-                <select>
-                    <option value="HH:MM:SS">HH:MM:SS</option>
-                    <option value="HH:MM:AM">HH:MM:AM</option>
-                </select>
             </div>
             <Handle
                 type="source"

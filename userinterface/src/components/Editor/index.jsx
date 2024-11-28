@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -8,13 +8,16 @@ import {
   Controls,
   useReactFlow,
   Background,
+  useOnSelectionChange,
+  Panel
 } from '@xyflow/react';
 import useColorMode from '@/hooks/useColorMode';
 
 import '@xyflow/react/dist/style.css'
 import '@/assets/css/editor.css';
 
-import EditorSidebar from '@/components/Sidebar/EditorSidebar';
+import NodesPanel from '@/components/Editor/panels/NodesPanel';
+import PropertiesPanel from './panels/PropertiesPanel';
 import { DnDProvider, useDnD } from '@/hooks/DnDContext';
 import { StartNode } from './nodes/startNode';
 import { TimeNode } from './nodes/timeNode';
@@ -23,6 +26,8 @@ import { DateTimeNode } from './nodes/datetimeNode';
 import { NumberNode } from './nodes/numberNode';
 import { DrowDownNode } from './nodes/dropDownNode';
 import { AddressNode } from './nodes/addressNode';
+import { ClickListNode } from './nodes/clickListNode';
+import { EndNode } from './nodes/endNode';
 
 const initialNodes = [
 ];
@@ -35,6 +40,8 @@ const nodeTypes = {
   dateTime: DateTimeNode,
   address: AddressNode,
   number: NumberNode,
+  clickList: ClickListNode,
+  end: EndNode,
 };
 
 let id = 0;
@@ -46,7 +53,16 @@ const DnDFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
+  const [selectedNode, setSelectedNode] = useState();
   const [type] = useDnD();
+
+  const onChange = useCallback(({ nodes, edges }) => {
+    setSelectedNode(nodes.find((node) => node.id))
+  }, []);
+
+  useOnSelectionChange({
+    onChange,
+  });
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -102,10 +118,27 @@ const DnDFlow = () => {
           colorMode={colorMode}
         >
           <Controls showFitView={true} showInteractive={true} />
+          <Panel position="top-left">
+            <NodesPanel />
+          </Panel>
+
+          <Panel position='top-right'>
+            <PropertiesPanel
+              selectedNode={selectedNode}
+              onCollapse={() => {
+                setNodes(nodes.map((node) =>
+                  node.id === selectedNode.id
+                    ? { ...node, selected: false }
+                    : node
+                ));
+                setSelectedNode(null);
+              }}
+            />
+          </Panel>
           <Background />
         </ReactFlow>
       </div>
-      <EditorSidebar />
+
     </div>
   );
 };

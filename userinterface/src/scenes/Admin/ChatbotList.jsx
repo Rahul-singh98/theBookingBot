@@ -49,7 +49,7 @@ const ChatbotList = () => {
   // Handle "Create" button click
   const handleCreateOrUpdate = (id = null) => {
     if (id) {
-      setIsEditModalOpen(true)
+      navigate(`/admin/chatbot/${id}/edit`)
     } else {
       setIsCreateModalOpen(true)
     }
@@ -94,17 +94,45 @@ const ChatbotList = () => {
             {chatbots.map((bot) => (
               <div
                 key={bot.id}
-                className="border p-4 rounded shadow hover:shadow-md transition cursor-pointer"
+                className="relative group col-span-1 bg-white border-2 border-solid border-transparent rounded-xl shadow-sm flex flex-col transition-all duration-200 ease-in-out cursor-pointer hover:shadow-lg"
                 onClick={() => handleCreateOrUpdate(bot.id)}
               >
-                <h2 className="text-xl font-semibold">{bot.name}</h2>
-                <p className="text-gray-600">{bot.description}</p>
+                <div className="flex pt-4 px-4 pb-3 h-[66px] items-center gap-3">
+                  <div className="relative shrink-0">
+                    <img
+                      src={bot.hero_img}
+                      alt={bot.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                  </div>
+                  <div className="grow w-0">
+                    <div
+                      className="flex items-center text-sm leading-5 font-semibold text-gray-800 truncate"
+                      title={bot.name}
+                    >
+                      {bot.name}
+                    </div>
+                    <div className="flex items-center text-xs leading-5 text-gray-500 font-medium">
+                      {bot.category || "Category"}
+                    </div>
+                  </div>
+                </div>
+                <div className="title-wrapper px-4 text-xs leading-normal text-gray-500">
+                  <div
+                    className="line-clamp-4 group-hover:line-clamp-2"
+                    title={bot.description}
+                  >
+                    {bot.description}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         ) : (
           <div className="text-center text-gray-500">No chatbots found.</div>
         )}
+
+
       </div>
 
       {/* Create Modal */}
@@ -122,21 +150,20 @@ const ChatbotList = () => {
       </SimpleModal>
 
       {/* Edit Modal */}
-      {
+      {/* {
         <SimpleModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           title="Edit Entry"
         >
-          {/* <FormComponent
-            fields={formFields}
-            initialData={currentItem}
-            onSubmit={handleEdit}
-            onCancel={() => setIsEditModalOpen(false)}
-            matrixLayout={formLayout}
-          /> */}
+          <DynamicForm
+          fields={formConfig.fields}
+          onSubmit={onCreateSubmit}
+          onCancel={() => setIsCreateModalOpen(false)}
+          matrixLayout={formConfig.formLayout}
+        />
         </SimpleModal>
-      }
+      } */}
 
     </>
   );

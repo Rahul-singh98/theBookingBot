@@ -3,12 +3,13 @@ import { Handle, Position } from '@xyflow/react';
 
 const handleStyle = { left: 10 };
 
-export function DateNode({ data }) {
+export function ClickListNode({ data }) {
     return (
         <>
             <div style={{ padding: "10px", textAlign: "center" }}>
-                <label>Date</label>
+                <label>Click List</label>
             </div>
+
             <Handle
                 type="source"
                 position={Position.Right}
