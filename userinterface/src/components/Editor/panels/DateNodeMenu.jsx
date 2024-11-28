@@ -26,10 +26,15 @@ const DateNodeMenu = ({ data, setQuestionData }) => {
         <div className="mb-3">
             <label className="block text-sm font-medium mb-1">Format:</label>
             <select
-                value={format} // Set value to the state format
+                value={format}
                 onChange={handleFormatChange}
                 className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 dark:border-strokedark dark:bg-meta-4 dark:text-white"
             >
+                {/* Default "Select Node" option */}
+                {
+                    data.initial_data?.data?.format === '' && <option value="" disabled>Select Node</option>
+                }
+
                 {dateFormatOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}

@@ -8,20 +8,45 @@ import NumberNodeMenu from './NumberNodeMenu';
 import AddressNodeMenu from './AddressNodeMenu';
 import ClickListNodeMenu from './ClickListNodeMenu';
 import EndNodeMenu from './EndNodeMenu';
-import { update_questions } from '@/api/questions';
+import EmailNodeMenu from './EmailNodeMenu';
+import PhoneNodeMenu from './PhoneNodeMenu';
+import InputNodeMenu from './InputNodeMenu';
+import { update_questions, get_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import ConditionalNodeMenu from './ConditionalNodeMenu';
 
-const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestionData }) => {
+const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestionData, bot_id }) => {
   const formattedTitle = title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
   const { afterLogout } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Initialize states based on `data.initial_data`
   const [nextStep, setNextStep] = useState(data.initial_data?.next_ques || '');
   const [variableName, setVariableName] = useState(data.initial_data?.variable || '');
   const [questionType, setQuestionType] = useState(data.initial_data?.question_type || '');
   const [question, setQuestion] = useState(data.initial_data?.question || ''); // Initialize question state
+  const [questionsList, setQuestionsList] = useState([]); // New state for questions
+
+  // Fetch questions when the component mounts
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await get_questions(bot_id); // Fetch the questions using the bot_id
+        if (response && response.items) {
+          const formattedQuestions = response.items.map((ques) => ({
+            value: ques.id,
+            label: ques.question,
+          }));
+          setQuestionsList(formattedQuestions); // Store the formatted questions
+        }
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+
+    fetchQuestions();
+  }, [bot_id]); // Fetch questions whenever the bot_id changes
 
   // Handle changes to the inputs and propagate to `setQuestionData`
   const handleQuestionChange = (e) => {
@@ -37,7 +62,7 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
   };
 
   const handleVariableNameChange = (e) => {
-    const newVariableName = e.target.value;
+    const newVariableName = e.target.value.toLowerCase();
     setVariableName(newVariableName);
     setQuestionData((prev) => ({ ...prev, variable: newVariableName }));
   };
@@ -96,9 +121,11 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
           >
             <option value="">Select Next Step</option>
-            <option value="step1">Step 1</option>
-            <option value="step2">Step 2</option>
-            <option value="step3">Step 3</option>
+            {questionsList.map((ques) => (
+              <option key={ques.value} value={ques.value}>
+                {ques.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -125,7 +152,6 @@ const DefaultNodeProperties = ({ data }) => (
 export default function PropertiesPanel({ selectedNode, onCollapse }) {
   if (!selectedNode) return null;
 
-  console.log("SelectedNode", selectedNode)
   const [questionData, setQuestionData] = useState(selectedNode.data.initial_data || {});
 
   const handleSave = async () => {
@@ -172,6 +198,14 @@ export default function PropertiesPanel({ selectedNode, onCollapse }) {
         return <AddressNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'clickList':
         return <ClickListNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
+      case 'email':
+        return <EmailNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
+      case 'phone':
+        return <PhoneNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
+      case 'input':
+        return <InputNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
+      case 'conditional':
+        return <ConditionalNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       default:
         return <DefaultNodeProperties data={selectedNode.data} setQuestionData={setQuestionData} />;
     }

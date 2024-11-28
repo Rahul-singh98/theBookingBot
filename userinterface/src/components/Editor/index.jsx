@@ -30,6 +30,10 @@ import { DrowDownNode } from './nodes/dropDownNode';
 import { AddressNode } from './nodes/addressNode';
 import { ClickListNode } from './nodes/clickListNode';
 import { EndNode } from './nodes/endNode';
+import { EmailNode } from './nodes/emailNode';
+import { PhoneNode } from './nodes/phoneNode';
+import { InputNode } from './nodes/inputNode';
+import { ConditionalNode } from './nodes/conditionalNode';
 
 import { get_questions, create_questions, update_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
@@ -47,6 +51,10 @@ const nodeTypes = {
   number: NumberNode,
   clickList: ClickListNode,
   end: EndNode,
+  email: EmailNode,
+  phone: PhoneNode,
+  input: InputNode,
+  conditional: ConditionalNode,
 };
 
 let id = 0;
@@ -68,7 +76,6 @@ const DnDFlow = () => {
     const loadData = async () => {
       try {
         const result = await get_questions(chatbotId);
-        console.log("Result", result);
 
         let xAxis = 100;
         const newNodes = [];
@@ -76,17 +83,67 @@ const DnDFlow = () => {
 
         if (result.items && Array.isArray(result.items)) {
           result.items.forEach((question_response) => {
-            const nodeType = question_response.question_type.toLowerCase();
+            const nodeType = question_response.question_type;
             const initialPosition = { x: xAxis, y: 100 };
             xAxis += 100;
+
+            console.log("NodeType", nodeType)
+
+            let question_type = "";
+            switch (nodeType) {
+              case "Start":
+                question_type = "start";
+                break;
+              case "End":
+                question_type = "end";
+                break;
+              case "Dropdown":
+                question_type = "dropDown";
+                break;
+              case "Date":
+                question_type = "date";
+                break;
+              case "Time":
+                question_type = "time";
+                break;
+              case "DateTime":
+                question_type = "dateTime";
+                break;
+              case "Number":
+                question_type = "number";
+                break;
+              case "Input":
+                question_type = "input";
+                break;
+              case "Conditional":
+                question_type = "conditional";
+                break;
+              case "Email":
+                question_type = "email";
+                break;
+              case "Phone":
+                question_type = "phone";
+                break;
+              case "ClickList":
+                question_type = "clickList";
+                break;
+              case "Address":
+                question_type = "address";
+                break;
+              case "Payment":
+                question_type = "payment";
+                break;
+              default:
+                question_type = "default";
+            }
 
             // Create the node
             const newNode = {
               id: question_response.id,
-              type: nodeType,
+              type: question_type,
               position: initialPosition,
               data: {
-                label: `${nodeType} node`,
+                label: `${question_type} node`,
                 initial_data: question_response,
                 bot_id: question_response.bot_id,
               },
@@ -138,13 +195,10 @@ const DnDFlow = () => {
     async (params) => {
       setEdges((eds) => addEdge(params, eds));
 
-      // Log the nodes to ensure you're getting the latest state
-      console.log('Current nodes:', nodes);
-
       // Extract source and target node IDs
       const { source, target } = params;
 
-      // Find the source node from the current nodes state
+
       const sourceNode = nodes.find((node) => node.id === source);
 
       try {
@@ -208,9 +262,6 @@ const DnDFlow = () => {
             break;
           case "input":
             question_type = "Input";
-            break;
-          case "number":
-            question_type = "Number";
             break;
           case "conditional":
             question_type = "Conditional";

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const NumberNodeMenu = ({ data, onDataChange }) => {
+const NumberNodeMenu = ({ data, setQuestionData }) => {
     const [rangeData, setRangeData] = useState({
         default: data?.default || 0,
         min: data?.min || 0,
@@ -15,17 +15,15 @@ const NumberNodeMenu = ({ data, onDataChange }) => {
         const updatedRangeData = { ...rangeData, [name]: value };
         setRangeData(updatedRangeData);
 
-        // Call onDataChange to notify the parent component
-        onDataChange({
-            target: {
-                name: 'numberNode',
-                value: updatedRangeData,
-            },
-        });
+        // Call setQuestionData to notify the parent component
+        setQuestionData((prev) => ({
+            ...prev,
+            data: { ...prev.data, ...updatedRangeData },
+        }));
     };
 
     return (
-        <div className="space-y-4">
+        <div className="max-h-[400px] overflow-y-auto space-y-4">
             {/* Default Value */}
             <div>
                 <label className="block text-sm font-medium text-gray-700">Default Value</label>

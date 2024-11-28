@@ -1,36 +1,29 @@
 import React, { useState, useEffect } from 'react';
 
 // ClickListNodeMenu component
-const ClickListNodeMenu = ({ data, targetName, onDataChange, setQuestionData }) => {
+const ClickListNodeMenu = ({ data, setQuestionData }) => {
   const [dropdownData, setDropdownData] = useState({
-    label: '',
-    description: '',
-    id: '',
-    name: '',
-    options: [],
+    description: data.initial_data?.data?.description || '',
+    options: data.initial_data?.data?.options || [],
   });
-  const [newOption, setNewOption] = useState({ value: '', htmlText: '' });
-
-  useEffect(() => {
-    if (data && data !== '{}') {
-      setDropdownData(data);
-    }
-  }, [data]);
+  const [newOption, setNewOption] = useState({ id: '', value: '', text: '' });
 
   // Handle input changes for label, description, id, name
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDropdownData((prevData) => {
       const updatedData = { ...prevData, [name]: value };
-      onDataChange({
-        target: {
-          name: targetName,
-          value: updatedData,
-        },
-      });
       return updatedData;
     });
   };
+
+  // Effect to update setQuestionData after state is set
+  useEffect(() => {
+    setQuestionData((prev) => ({
+      ...prev,
+      data: { ...prev.data, ...dropdownData },
+    }));
+  }, [dropdownData, setQuestionData]);
 
   // Handle changes for new option fields
   const handleOptionChange = (e) => {
@@ -40,17 +33,13 @@ const ClickListNodeMenu = ({ data, targetName, onDataChange, setQuestionData }) 
 
   // Add new option to options list
   const addOption = () => {
-    if (newOption.value && newOption.htmlText) {
-      const updatedOptions = [...dropdownData.options, newOption];
+    if (newOption.value && newOption.id) {
+      const updatedOptions = Array.isArray(dropdownData.options)
+        ? [...dropdownData.options, newOption]
+        : [newOption];
       const updatedData = { ...dropdownData, options: updatedOptions };
       setDropdownData(updatedData);
-      onDataChange({
-        target: {
-          name: targetName,
-          value: updatedData,
-        },
-      });
-      setNewOption({ value: '', htmlText: '' }); // Reset new option fields
+      setNewOption({ id: '', value: '', text: '' });
     }
   };
 
@@ -59,12 +48,6 @@ const ClickListNodeMenu = ({ data, targetName, onDataChange, setQuestionData }) 
     const updatedOptions = dropdownData.options.filter((_, i) => i !== index);
     const updatedData = { ...dropdownData, options: updatedOptions };
     setDropdownData(updatedData);
-    onDataChange({
-      target: {
-        name: targetName,
-        value: updatedData,
-      },
-    });
   };
 
   return (
@@ -87,7 +70,7 @@ const ClickListNodeMenu = ({ data, targetName, onDataChange, setQuestionData }) 
         {dropdownData.options?.map((option, index) => (
           <li key={index} className="flex items-center gap-1 mb-1">
             <span className="flex-1 text-sm">
-              <strong>Value:</strong> {option.value} | <strong>Text:</strong> {option.htmlText}
+              <strong>Value:</strong> {option.value} | <strong>Text:</strong> {option.text}
             </span>
             <button
               type="button"

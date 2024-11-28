@@ -1,33 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
 // DropDownNodeMenu component
-const DropDownNodeMenu = ({ data, targetName, onDataChange }) => {
+const DropDownNodeMenu = ({ data, setQuestionData }) => {
   const [dropdownData, setDropdownData] = useState({
-    label: '',
-    description: '',
-    id: '',
-    name: '',
-    options: [],
+    description: data.initial_data?.data?.description || '',
+    id: data.initial_data?.data?.id || '',
+    name: data.initial_data?.data?.name || '',
+    options: data.initial_data?.data?.options || [],
   });
   const [newOption, setNewOption] = useState({ value: '', htmlText: '' });
-
-  useEffect(() => {
-    if (data && data !== '{}') {
-      setDropdownData(data);
-    }
-  }, [data]);
 
   // Handle input changes for label, description, id, name
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDropdownData((prevData) => {
       const updatedData = { ...prevData, [name]: value };
-      onDataChange({
-        target: {
-          name: targetName,
-          value: updatedData,
-        },
-      });
+      setQuestionData((prev) => ({
+        ...prev,
+        data: { ...prev.data, [name]: value },
+      }));
       return updatedData;
     });
   };
@@ -41,15 +32,13 @@ const DropDownNodeMenu = ({ data, targetName, onDataChange }) => {
   // Add new option to options list
   const addOption = () => {
     if (newOption.value && newOption.htmlText) {
-      const updatedOptions = [...dropdownData.options, newOption];
+      const updatedOptions = Array.isArray(dropdownData.options) ? [...dropdownData.options, newOption] : [newOption];
       const updatedData = { ...dropdownData, options: updatedOptions };
       setDropdownData(updatedData);
-      onDataChange({
-        target: {
-          name: targetName,
-          value: updatedData,
-        },
-      });
+      setQuestionData((prev) => ({
+        ...prev,
+        data: { ...prev.data, ...updatedData },
+      }));
       setNewOption({ value: '', htmlText: '' }); // Reset new option fields
     }
   };
@@ -59,12 +48,10 @@ const DropDownNodeMenu = ({ data, targetName, onDataChange }) => {
     const updatedOptions = dropdownData.options.filter((_, i) => i !== index);
     const updatedData = { ...dropdownData, options: updatedOptions };
     setDropdownData(updatedData);
-    onDataChange({
-      target: {
-        name: targetName,
-        value: updatedData,
-      },
-    });
+    setQuestionData((prev) => ({
+      ...prev,
+      data: { ...prev.data, ...updatedData },
+    }));
   };
 
   return (

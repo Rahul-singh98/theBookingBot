@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { dateTimeFormatOptions } from '@/utils/datetime_formats';
 
-const DateTimeNodeMenu = ({ data }) => {
-    // Initialize format from data or default to an empty string
+const DateTimeNodeMenu = ({ data, setQuestionData }) => {
+    // Initialize format from data or default to empty string
     const [format, setFormat] = useState(data.initial_data?.data?.format || '');
 
     // Sync state when initial_data changes
@@ -25,13 +25,26 @@ const DateTimeNodeMenu = ({ data }) => {
     return (
         <div className="mb-3">
             <label className="block text-sm font-medium mb-1">Format:</label>
-            <select value={{ format: "%m/%d/%Y" }}
+            <select
+                value={format}
                 onChange={handleFormatChange}
-                className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 dark:border-strokedark dark:bg-meta-4 dark:text-white" >
-                {dateTimeFormatOptions.map((option) => (<option key={option.value} value={option.value}> {option.label} </option>))}
+                className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 dark:border-strokedark dark:bg-meta-4 dark:text-white"
+                required // Make the select required
+            >
+                {/* Default "Select Node" option */}
+                {
+                    data.initial_data?.data?.format === '' && <option value="" disabled>Select Node</option>
+                }
+
+                {/* Map through the dateTimeFormatOptions */}
+                {dateTimeFormatOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
             </select>
         </div>
-    )
+    );
 };
 
 export default DateTimeNodeMenu;
