@@ -37,6 +37,7 @@ import { ConditionalNode } from './nodes/conditionalNode';
 
 import { get_questions, create_questions, update_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
+import ModalWithScript from './panels/ModalWithScript';
 
 const initialNodes = [
 ];
@@ -324,6 +325,10 @@ const DnDFlow = () => {
           <Controls showFitView={true} showInteractive={true} />
           <Panel position="top-left">
             <NodesPanel />
+          </Panel>
+
+          <Panel position='bottom-left'>
+            <ModalWithScript chatbotId={chatbotId} />
           </Panel>
 
           <Panel position='top-right'>
