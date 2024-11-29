@@ -217,17 +217,48 @@ const DnDFlow = () => {
 
   const handleDeleteNode = useCallback(async (nodeId) => {
     try {
-      // const response = await delete_questions(nodeId)
+      // Delete the target node
+      await delete_questions(nodeId);
 
+      // Update nodes and edges in state
       setNodes((nds) => nds.filter((node) => node.id !== nodeId));
       setEdges((eds) => {
         const filteredEdges = eds.filter((edge) => {
           console.log(edge);
           return edge.source !== nodeId && edge.target !== nodeId;
         });
+
+        // Find edges where target is the nodeId to be deleted
+        const targetEdges = eds.filter((edge) => edge.target === nodeId);
+        console.log("Target Edge", targetEdges)
+        console.log("Nodes", nodes)
+
+        // Update next_ques of source nodes
+        targetEdges.forEach(async (edge) => {
+          console.log("EachEdge", edge)
+          const sourceNode = nodes.find((node) => node.id === edge.source);
+          console.log("SourceNode", sourceNode)
+          if (sourceNode) {
+            try {
+              // Call API to update the next_ques of the source node
+              await update_questions(sourceNode.id,
+                sourceNode.data?.initial_data?.bot_id,
+                sourceNode.data?.initial_data?.question,
+                sourceNode.data?.initial_data?.question_type,
+                sourceNode.data?.initial_data?.data,
+                sourceNode.data?.initial_data?.variable,
+                null);
+            } catch (updateError) {
+              console.error(
+                `Error updating node ${sourceNode.id} next_ques:`,
+                updateError
+              );
+            }
+          }
+        });
+
         return filteredEdges;
       });
-      
     } catch (err) {
       if (err.message === "Unauthorized") {
         afterLogout();
@@ -237,6 +268,7 @@ const DnDFlow = () => {
       }
     }
   }, [setNodes, setEdges]);
+
 
 
   const onDragOver = useCallback((event) => {

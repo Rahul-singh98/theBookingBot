@@ -27,7 +27,7 @@ const StartNodeMenu = ({ data, setQuestionData }) => {
                 onChange={handleDescriptionChange}  // Update on change
                 placeholder="Enter description"
                 rows="3"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:bg-boxdark"
             />
         </div>
     );
