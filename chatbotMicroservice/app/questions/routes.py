@@ -31,7 +31,8 @@ def list_questions(
     if not bot_id:
         items, total = crud.list_questions(db, offset, size)
     else:
-        items, total = crud.filter_questions_by_bot_id(db, offset, size, bot_id)
+        items, total = crud.filter_questions_by_bot_id(
+            db, offset, size, bot_id)
 
     paginated_obj = Pagination.paginate(total, size, page)
 
@@ -102,6 +103,23 @@ def delete_question(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
     return None
+
+
+@questions_router.post("/upload")
+async def upload_file(file: UploadFile = File(...)):
+    # Corrected from file.name to file.filename
+    location = f"imgs/{file.filename}"
+    file_location = os.path.join("app/static", location)
+
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(file_location), exist_ok=True)
+
+    # Save the uploaded file
+    with open(file_location, "wb") as buffer:  # Fixed from file_location.open()
+        buffer.write(await file.read())
+
+    # Return the link to the uploaded file
+    return {"file_url": f"/static/{location}"}
 
 
 # Options CRUD Operations
@@ -184,20 +202,3 @@ def delete_question_option(
             status_code=status.HTTP_404_NOT_FOUND, detail="Option not found")
 
     return db_option
-
-
-@questions_router.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
-    # Corrected from file.name to file.filename
-    location = f"imgs/{file.filename}"
-    file_location = os.path.join("app/static", location)
-
-    # Ensure the directory exists
-    os.makedirs(os.path.dirname(file_location), exist_ok=True)
-
-    # Save the uploaded file
-    with open(file_location, "wb") as buffer:  # Fixed from file_location.open()
-        buffer.write(await file.read())
-
-    # Return the link to the uploaded file
-    return {"file_url": f"/static/{location}"}

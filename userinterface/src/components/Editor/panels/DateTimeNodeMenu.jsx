@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react';
 import { dateTimeFormatOptions } from '@/utils/datetime_formats';
 
 const DateTimeNodeMenu = ({ data, setQuestionData }) => {
-    // Initialize format from data or default to empty string
-    const [format, setFormat] = useState(data.initial_data?.data?.format || '');
+    const [format, setFormat] = useState('');
 
     // Sync state when initial_data changes
     useEffect(() => {
         if (data.initial_data?.data?.format !== format) {
             setFormat(data.initial_data?.data?.format || '');
         }
-    }, [data.initial_data?.data?.format, format]);
+    }, []);
 
     // Handle format change
     const handleFormatChange = (e) => {
@@ -29,14 +28,12 @@ const DateTimeNodeMenu = ({ data, setQuestionData }) => {
                 value={format}
                 onChange={handleFormatChange}
                 className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 dark:border-strokedark dark:bg-meta-4 dark:text-white"
-                required // Make the select required
+                required
             >
-                {/* Default "Select Node" option */}
                 {
-                    data.initial_data?.data?.format === '' && <option value="" disabled>Select Node</option>
+                    data.initial_data?.data?.format === '' && <option value="" disabled>Select Option</option>
                 }
 
-                {/* Map through the dateTimeFormatOptions */}
                 {dateTimeFormatOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}

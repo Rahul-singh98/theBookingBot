@@ -295,6 +295,10 @@ const DnDFlow = () => {
           data: {
             label: `${type} node`,
             bot_id: chatbotId,
+            initial_data: {
+              bot_id: chatbotId,
+              question_type: question_type
+            }
           },
         };
 
@@ -342,6 +346,9 @@ const DnDFlow = () => {
                 ));
                 setSelectedNode(null);
               }}
+              nodes={nodes}
+              setNodes={setNodes}
+              setSelectedNode={setSelectedNode}
             />
           </Panel>
           <Background />

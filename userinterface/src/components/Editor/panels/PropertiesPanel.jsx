@@ -21,44 +21,38 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
   const { afterLogout } = useAuth();
   const navigate = useNavigate();
 
-  // Initialize states based on `data.initial_data`
-  const [nextStep, setNextStep] = useState(data.initial_data?.next_ques || '');
   const [variableName, setVariableName] = useState(data.initial_data?.variable || '');
-  const [questionType, setQuestionType] = useState(data.initial_data?.question_type || '');
-  const [question, setQuestion] = useState(data.initial_data?.question || ''); // Initialize question state
-  const [questionsList, setQuestionsList] = useState([]); // New state for questions
+  const [question, setQuestion] = useState(data.initial_data?.question || '');
+  const [questionsList, setQuestionsList] = useState([]);
 
-  // Fetch questions when the component mounts
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await get_questions(bot_id); // Fetch the questions using the bot_id
+        const response = await get_questions(bot_id);
         if (response && response.items) {
           const formattedQuestions = response.items.map((ques) => ({
             value: ques.id,
             label: ques.question,
           }));
-          setQuestionsList(formattedQuestions); // Store the formatted questions
+          setQuestionsList(formattedQuestions);
         }
       } catch (error) {
-        console.error('Error fetching questions:', error);
+        if (err.message === "Unauthorized") {
+          afterLogout();
+          navigate(`/login?next=${location.pathname}`);
+        } else {
+          console.error("Error loading questions:", err);
+        }
       }
     };
 
     fetchQuestions();
-  }, [bot_id]); // Fetch questions whenever the bot_id changes
+  }, [bot_id]);
 
-  // Handle changes to the inputs and propagate to `setQuestionData`
   const handleQuestionChange = (e) => {
     const newQuestion = e.target.value;
     setQuestion(newQuestion);
     setQuestionData((prev) => ({ ...prev, question: newQuestion }));
-  };
-
-  const handleNextStepChange = (e) => {
-    const newNextStep = e.target.value;
-    setNextStep(newNextStep);
-    setQuestionData((prev) => ({ ...prev, next_ques: newNextStep }));
   };
 
   const handleVariableNameChange = (e) => {
@@ -67,20 +61,15 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
     setQuestionData((prev) => ({ ...prev, variable: newVariableName }));
   };
 
-  const handleQuestionTypeChange = (e) => {
-    const newQuestionType = e.target.value;
-    setQuestionType(newQuestionType);
-    setQuestionData((prev) => ({ ...prev, question_type: newQuestionType }));
-  };
-
   return (
     <div className="rounded-lg border-[0.5px] border-gray-200 bg-white shadow-sm !min-w-[256px] max-w-[300px] p-3">
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center">
         <h3 className="text-base font-semibold">{formattedTitle}</h3>
         <button onClick={onCollapse} className="text-gray-500 hover:text-gray-700 text-sm" aria-label="Close">
           ✖
         </button>
       </div>
+      <hr className="mb-3"/>
 
       <div className="mb-3">
         {/* Question Input */}
@@ -107,27 +96,7 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
           />
         </div>
 
-        {/* Hidden Question Type Input */}
-        <input type="text" value={questionType} hidden />
-
         {children}
-
-        {/* Next Step Dropdown */}
-        <div className="mb-3">
-          <label className="block text-sm font-medium mb-1">Next Step:</label>
-          <select
-            value={nextStep}
-            onChange={handleNextStepChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          >
-            <option value="">Select Next Step</option>
-            {questionsList.map((ques) => (
-              <option key={ques.value} value={ques.value}>
-                {ques.label}
-              </option>
-            ))}
-          </select>
-        </div>
       </div>
 
       {/* Save button */}
@@ -149,7 +118,7 @@ const DefaultNodeProperties = ({ data }) => (
   </div>
 );
 
-export default function PropertiesPanel({ selectedNode, onCollapse }) {
+export default function PropertiesPanel({ selectedNode, onCollapse, nodes, setNodes, setSelectedNode }) {
   if (!selectedNode) return null;
 
   const [questionData, setQuestionData] = useState(selectedNode.data.initial_data || {});
@@ -166,6 +135,26 @@ export default function PropertiesPanel({ selectedNode, onCollapse }) {
         questionData.next_ques
       )
 
+      setSelectedNode(null)
+      setNodes(nodes.map((node) =>
+        node.id === selectedNode.id
+          ? {
+            ...node, selected: false, data: {
+              ...node.data, initial_data: {
+                id: selectedNode.id,
+                bot_id: selectedNode.bot_id,
+                question: questionData.question,
+                question_type: questionData.question_type,
+                data: questionData.data,
+                variable: questionData.variable,
+                next_ques: questionData.next_ques
+              }
+            }
+          }
+          : node
+      ));
+      setSelectedNode(null);
+
     } catch (err) {
       if (err.message === "Unauthorized") {
         afterLogout();
@@ -175,7 +164,6 @@ export default function PropertiesPanel({ selectedNode, onCollapse }) {
       }
     }
 
-    onCollapse();
   };
 
   const renderProperties = () => {
