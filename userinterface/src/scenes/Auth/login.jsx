@@ -20,6 +20,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      setError(null)
       const userData = await login(username, password);
 
       const token = userData.access_token;
@@ -31,7 +32,7 @@ const Login = () => {
       afterLogin(userData);
       navigate(next);
     } catch (err) {
-      setError(`Login failed. ${error}`);
+      setError(`${err.message}`);
     }
   };
 
@@ -85,6 +86,7 @@ const Login = () => {
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
                   required
                 />
               </div>
@@ -113,6 +115,7 @@ const Login = () => {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                 />
 

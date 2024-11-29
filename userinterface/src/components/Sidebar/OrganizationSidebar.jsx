@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import Logo from "@/images/logo/logo.svg";
 
-const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
+const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const availableDbTables = [
         { name: "Users", url: "/admin/tables/users" },
         { name: "Groups", url: "/admin/tables/groups" },
@@ -25,6 +25,8 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const [sidebarExpanded, setSidebarExpanded] = useState(
         storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
     );
+
+    const commonListItemsClasses = 'group relative flex items-center gap-2.5 text-sm rounded-sm py-2 px-4 text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4'
 
     // close on click outside
     useEffect(() => {
@@ -64,11 +66,11 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
     return (
         <aside
             ref={sidebar}
-            className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            className={`absolute left-0 top-0 z-9999 flex h-screen w-50 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
         >
             {/* <!-- SIDEBAR HEADER --> */}
-            <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+            <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-5">
                 <NavLink to="/admin">
                     <img src={Logo} alt="Logo" />
                 </NavLink>
@@ -99,10 +101,10 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
             <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
                 {/* <!-- Sidebar Menu --> */}
-                <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
+                <nav>
                     {/* <!-- Menu Group --> */}
                     <div>
-                        <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
+                        <h3 className="mb-3 ml-4 text-xs font-semibold text-bodydark2">
                             MENU
                         </h3>
 
@@ -111,7 +113,7 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             <li>
                                 <NavLink
                                     to="/admin"
-                                    className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === "/admin" || pathname.includes("dashboard")) &&
+                                    className={`${commonListItemsClasses} ${(pathname === "/admin" || pathname.includes("dashboard")) &&
                                         "bg-graydark dark:bg-meta-4"
                                         }`}
                                 >
@@ -148,7 +150,7 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             <li>
                                 <NavLink
                                     to="/admin/chatbots"
-                                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
+                                    className={`${commonListItemsClasses} ${pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
                                         }`}
                                 >
                                     <svg
@@ -188,7 +190,7 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             <li>
                                 <NavLink
                                     to="/auth/profile"
-                                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
+                                    className={`${commonListItemsClasses} ${pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
                                         }`}
                                 >
                                     <svg
@@ -216,7 +218,7 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             <li>
                                 <NavLink
                                     to="/settings"
-                                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("settings") &&
+                                    className={`${commonListItemsClasses} ${pathname.includes("settings") &&
                                         "bg-graydark dark:bg-meta-4"
                                         }`}
                                 >
@@ -256,10 +258,9 @@ const OrganizationSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     </div>
 
                 </nav>
-                {/* <!-- Sidebar Menu --> */}
             </div>
         </aside>
     );
 };
 
-export default OrganizationSidebar;
+export default AdminSidebar;

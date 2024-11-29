@@ -24,7 +24,7 @@ const SimpleModal = ({ isOpen, onClose, title, children }) => {
             <X className="w-5 h-5 dark:text-white" />
           </button>
         </div>
-        <div className="p-4 overflow-y-auto max-h-[calc(100vh-15rem)]">{children}</div>
+        <div className="p-4 overflow-y-auto max-h-50vh">{children}</div>
       </div>
     </div>
   );

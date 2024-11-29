@@ -90,7 +90,7 @@ const ClickListNodeMenu = ({ data, setQuestionData }) => {
           name="id"
           value={newOption.id}
           onChange={handleOptionChange}
-          placeholder="Option ID"
+          placeholder="ID"
           className="w-full rounded-md border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark dark:bg-meta-4 dark:text-white"
         />
         <input
@@ -98,7 +98,7 @@ const ClickListNodeMenu = ({ data, setQuestionData }) => {
           name="text"
           value={newOption.text}
           onChange={handleOptionChange}
-          placeholder="Option Text"
+          placeholder="Text"
           className="w-full rounded-md border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark dark:bg-meta-4 dark:text-white"
         />
         <input
@@ -106,7 +106,7 @@ const ClickListNodeMenu = ({ data, setQuestionData }) => {
           name="value"
           value={newOption.value}
           onChange={handleOptionChange}
-          placeholder="Option Value"
+          placeholder="Value"
           className="w-full rounded-md border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark dark:bg-meta-4 dark:text-white"
         />
 

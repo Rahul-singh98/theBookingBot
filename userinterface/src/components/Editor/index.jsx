@@ -35,9 +35,9 @@ import { PhoneNode } from './nodes/phoneNode';
 import { InputNode } from './nodes/inputNode';
 import { ConditionalNode } from './nodes/conditionalNode';
 
-import { get_questions, create_questions, update_questions } from '@/api/questions';
+import { get_questions, create_questions, update_questions, delete_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
-import ModalWithScript from './panels/ModalWithScript';
+import PublishChatbotNode from './panels/PublishChatbotNode';
 
 const initialNodes = [
 ];
@@ -87,8 +87,6 @@ const DnDFlow = () => {
             const nodeType = question_response.question_type;
             const initialPosition = { x: xAxis, y: 100 };
             xAxis += 100;
-
-            console.log("NodeType", nodeType)
 
             let question_type = "";
             switch (nodeType) {
@@ -159,7 +157,6 @@ const DnDFlow = () => {
                 source: question_response.id,
                 target: question_response.next_ques,
                 animated: false,
-                // label: 'next',
               };
 
               newEdges.push(edge);
@@ -217,6 +214,29 @@ const DnDFlow = () => {
     },
     [setEdges, chatbotId, nodes] // Make sure to include nodes in the dependency array
   );
+
+  const handleDeleteNode = useCallback(async (nodeId) => {
+    try {
+      // const response = await delete_questions(nodeId)
+
+      setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+      setEdges((eds) => {
+        const filteredEdges = eds.filter((edge) => {
+          console.log(edge);
+          return edge.source !== nodeId && edge.target !== nodeId;
+        });
+        return filteredEdges;
+      });
+      
+    } catch (err) {
+      if (err.message === "Unauthorized") {
+        afterLogout();
+        navigate(`/login?next=${location.pathname}`);
+      } else {
+        console.error("Error loading questions:", err);
+      }
+    }
+  }, [setNodes, setEdges]);
 
 
   const onDragOver = useCallback((event) => {
@@ -331,8 +351,8 @@ const DnDFlow = () => {
             <NodesPanel />
           </Panel>
 
-          <Panel position='bottom-left'>
-            <ModalWithScript chatbotId={chatbotId} />
+          <Panel position='top-center'>
+            <PublishChatbotNode chatbotId={chatbotId} />
           </Panel>
 
           <Panel position='top-right'>
@@ -346,6 +366,7 @@ const DnDFlow = () => {
                 ));
                 setSelectedNode(null);
               }}
+              handleDeleteNode={() => { handleDeleteNode(selectedNode.id) }}
               nodes={nodes}
               setNodes={setNodes}
               setSelectedNode={setSelectedNode}

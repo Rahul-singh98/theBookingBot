@@ -27,10 +27,8 @@ export const get_chatbot_configs = async (chatbot_config_id) => {
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      console.error("Unauthorized: Please check your credentials or token.");
       throw new Error("Unauthorized");
     } else {
-      console.error("Error in API request:", error);
       throw error;
     }
   }
@@ -53,16 +51,13 @@ export const create_chatbot_configs = async (
       secondary_color,
     };
 
-    console.log("Creating chatbot with", payload);
     const response = await axios.post(endpoint, payload, { headers });
 
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      console.error("Unauthorized: Please check your credentials or token.");
       throw new Error("Unauthorized");
     } else {
-      console.error("Error in API request:", error);
       throw error;
     }
   }
@@ -94,10 +89,8 @@ export const update_chatbot_configs = async (
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      console.error("Unauthorized: Please check your credentials or token.");
       throw new Error("Unauthorized");
     } else {
-      console.error("Error in API request:", error);
       throw error;
     }
   }
@@ -117,10 +110,8 @@ export const delete_chatbot_configs = async (chatbot_config_id) => {
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      console.error("Unauthorized: Please check your credentials or token.");
       throw new Error("Unauthorized");
     } else {
-      console.error("Error in API request:", error);
       throw error;
     }
   }

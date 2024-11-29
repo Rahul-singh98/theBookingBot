@@ -16,7 +16,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import ConditionalNodeMenu from './ConditionalNodeMenu';
 
-const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestionData, bot_id }) => {
+const PropertiesBase = ({ data, title, onCollapse, onSave, onDelete, children, setQuestionData, bot_id }) => {
   const formattedTitle = title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
   const { afterLogout } = useAuth();
   const navigate = useNavigate();
@@ -62,14 +62,14 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
   };
 
   return (
-    <div className="rounded-lg border-[0.5px] border-gray-200 bg-white shadow-sm !min-w-[256px] max-w-[300px] p-3">
+    <div className="rounded-lg border-[0.5px] border-gray-200 bg-white dark:bg-boxdark shadow-sm !min-w-[256px] max-w-[300px] p-3">
       <div className="flex justify-between items-center">
         <h3 className="text-base font-semibold">{formattedTitle}</h3>
         <button onClick={onCollapse} className="text-gray-500 hover:text-gray-700 text-sm" aria-label="Close">
           ✖
         </button>
       </div>
-      <hr className="mb-3"/>
+      <hr className="mb-3" />
 
       <div className="mb-3">
         {/* Question Input */}
@@ -80,7 +80,7 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
             value={question}
             onChange={handleQuestionChange}
             placeholder="Enter Question"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark dark:bg-meta-4 dark:text-white"
           />
         </div>
 
@@ -92,7 +92,7 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
             value={variableName}
             onChange={handleVariableNameChange}
             placeholder="Enter variable"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark dark:bg-meta-4 dark:text-white"
           />
         </div>
 
@@ -101,6 +101,13 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, children, setQuestion
 
       {/* Save button */}
       <div className="text-right">
+        <button
+          onClick={onDelete}
+          className="px-3 py-1.5 bg-red-500 text-white rounded hover:bg-red-600 text-sm mr-2"
+        >
+          Delete
+        </button>
+
         <button
           onClick={onSave}
           className="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
@@ -118,7 +125,7 @@ const DefaultNodeProperties = ({ data }) => (
   </div>
 );
 
-export default function PropertiesPanel({ selectedNode, onCollapse, nodes, setNodes, setSelectedNode }) {
+export default function PropertiesPanel({ selectedNode, onCollapse, nodes, setNodes, setSelectedNode, handleDeleteNode }) {
   if (!selectedNode) return null;
 
   const [questionData, setQuestionData] = useState(selectedNode.data.initial_data || {});
@@ -205,6 +212,7 @@ export default function PropertiesPanel({ selectedNode, onCollapse, nodes, setNo
       title={`${selectedNode.type}`}
       onCollapse={onCollapse}
       onSave={handleSave}
+      onDelete={handleDeleteNode}
       setQuestionData={setQuestionData}
     >
       {renderProperties()}

@@ -80,10 +80,10 @@ const ChatbotList = () => {
     <>
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Chatbots</h1>
+          <h1 className="text-xl font-bold">Chatbots</h1>
           <button
             onClick={() => handleCreateOrUpdate()}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            className="px-2 py-1.5 bg-blue-700 text-white rounded-lg hover:bg-blue-500 transition"
           >
             Create Chatbot
           </button>
@@ -94,7 +94,7 @@ const ChatbotList = () => {
             {chatbots.map((bot) => (
               <div
                 key={bot.id}
-                className="relative group col-span-1 bg-white border-2 border-solid border-transparent rounded-xl shadow-sm flex flex-col transition-all duration-200 ease-in-out cursor-pointer hover:shadow-lg"
+                className="relative group col-span-1 bg-zinc-100 dark:bg-boxdark border-2 border-solid border-transparent rounded-xl shadow-sm flex flex-col transition-all duration-200 ease-in-out cursor-pointer hover:shadow-lg"
                 onClick={() => handleCreateOrUpdate(bot.id)}
               >
                 <div className="flex pt-4 px-4 pb-3 h-[66px] items-center gap-3">
@@ -107,14 +107,14 @@ const ChatbotList = () => {
                   </div>
                   <div className="grow w-0">
                     <div
-                      className="flex items-center text-sm leading-5 font-semibold text-gray-800 truncate"
+                      className="flex items-center text-ms mb-2 leading-5 font-semibold text-gray-800 truncate"
                       title={bot.name}
                     >
                       {bot.name}
                     </div>
-                    <div className="flex items-center text-xs leading-5 text-gray-500 font-medium">
-                      {bot.category || "Category"}
-                    </div>
+                    {/* <div className="flex items-center text-xs leading-5 text-gray-500 font-medium">
+                      {bot.category || "Chatbot"}
+                    </div> */}
                   </div>
                 </div>
                 <div className="title-wrapper px-4 text-xs leading-normal text-gray-500">
@@ -148,22 +148,6 @@ const ChatbotList = () => {
           matrixLayout={formConfig.formLayout}
         />
       </SimpleModal>
-
-      {/* Edit Modal */}
-      {/* {
-        <SimpleModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          title="Edit Entry"
-        >
-          <DynamicForm
-          fields={formConfig.fields}
-          onSubmit={onCreateSubmit}
-          onCancel={() => setIsCreateModalOpen(false)}
-          matrixLayout={formConfig.formLayout}
-        />
-        </SimpleModal>
-      } */}
 
     </>
   );

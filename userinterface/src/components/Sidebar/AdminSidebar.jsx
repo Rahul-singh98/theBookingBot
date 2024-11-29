@@ -26,6 +26,8 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
 
+  const commonListItemsClasses = 'group relative flex items-center gap-2.5 text-sm rounded-sm py-2 px-4 text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4'
+
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -64,11 +66,11 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      className={`absolute left-0 top-0 z-9999 flex h-screen w-50 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
-      <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+      <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-5">
         <NavLink to="/admin">
           <img src={Logo} alt="Logo" />
         </NavLink>
@@ -99,19 +101,19 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
         {/* <!-- Sidebar Menu --> */}
-        <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
+        <nav>
           {/* <!-- Menu Group --> */}
           <div>
-            <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
+            <h3 className="mb-3 ml-4 text-xs font-semibold text-bodydark2">
               MENU
             </h3>
 
-            <ul className="mb-6 flex flex-col gap-1.5">
+            <ul className="mb-3 flex flex-col gap-1.5">
               {/* <!-- Menu Item Dashboard --> */}
               <li>
                 <NavLink
                   to="/admin"
-                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === "/admin" || pathname.includes("dashboard")) &&
+                  className={`${commonListItemsClasses} ${(pathname === "/admin" || pathname.includes("dashboard")) &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
                 >
@@ -148,7 +150,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <li>
                 <NavLink
                   to="/admin/org-bot"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
+                  className={`${commonListItemsClasses} ${pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
                     }`}
                 >
                   <svg
@@ -188,7 +190,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <li>
                 <NavLink
                   to="/auth/profile"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
+                  className={`${commonListItemsClasses} ${pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
                     }`}
                 >
                   <svg
@@ -222,7 +224,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <React.Fragment>
                       <NavLink
                         to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === "/ui" || pathname.includes("ui")) &&
+                        className={`${commonListItemsClasses} ${(pathname === "/ui" || pathname.includes("ui")) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
                         onClick={(e) => {
@@ -280,13 +282,13 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                         className={`translate transform overflow-hidden ${!open && "hidden"
                           }`}
                       >
-                        <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                        <ul className="mt-1 flex flex-col gap-2.5 pl-6">
                           {availableDbTables.map((item) => (
                             <li key={item.url}>
                               <NavLink
                                 to={item.url}
                                 className={({ isActive }) =>
-                                  `group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${isActive ? "!text-white" : ""
+                                  `group relative flex items-center text-xs gap-2.5 rounded-md px-4 font-thin text-bodydark2 duration-300 ease-in-out hover:text-white ${isActive ? "!text-white" : ""
                                   }`
                                 }
                               >
@@ -306,7 +308,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <li>
                 <NavLink
                   to="/settings"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("settings") &&
+                  className={`${commonListItemsClasses} ${pathname.includes("settings") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
                 >
@@ -346,7 +348,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
 
         </nav>
-        {/* <!-- Sidebar Menu --> */}
       </div>
     </aside>
   );
