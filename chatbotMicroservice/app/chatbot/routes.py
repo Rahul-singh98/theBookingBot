@@ -9,7 +9,7 @@ from app.chatbot.schemas import (
 )
 from app.chatbot import crud
 from app.utils.pagination import Pagination
-from app.dependencies import check_permission
+from app.dependencies import check_permission, get_visitor_id
 import os
 
 
@@ -22,6 +22,7 @@ async def list_chatbots(
     page: int = Query(1, ge=1, description="Page number"),
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     db: Session = Depends(get_db),
+    visitor: str = Depends(get_visitor_id),
     _: dict = Depends(check_permission("chatbots:list"))
 ):
     # Calculate offset

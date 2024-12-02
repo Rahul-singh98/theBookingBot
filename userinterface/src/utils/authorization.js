@@ -1,3 +1,5 @@
+import { getVisitorId } from "./cookieUtils";
+
 export const getAccessToken = () => {
   const tokenData = localStorage.getItem("user");
 
@@ -12,7 +14,9 @@ export const getAccessToken = () => {
 
 export const getAuthorizationHeader = () => {
   const token = getAccessToken();
+  const visitorId = getVisitorId();
   return {
     Authorization: `${token.token_type} ${token.access_token}`,
+    Visitor: visitorId,
   };
 };

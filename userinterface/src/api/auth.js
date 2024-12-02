@@ -1,13 +1,19 @@
 import axios from "axios";
 import { AUTH_API_URL, AuthRoutes } from "./routes";
 import { getAllAPI } from "./shared";
+import { getVisitorId } from "@/utils/cookieUtils";
 
 // Function to handle user login
 export const login = async (username, password) => {
+  const visitorId = getVisitorId();
   try {
     const response = await axios.post(`${AUTH_API_URL || ''}${AuthRoutes.LOGIN}`, {
       username,
       password,
+    }, {
+      headers: {
+        "Visitor": visitorId,
+      }
     });
     return response.data;
   } catch (error) {

@@ -43,6 +43,16 @@ services:
     environment:
       - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
       - AUTH_SERVICE_URL=http://auth:8000
+      - ANALYTICS_SERVER_URL=http://analytics:8000
+    networks:
+      - app_network
+
+  analytics:
+    build: analyticsMicroservice
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
     networks:
       - app_network
 
@@ -57,6 +67,7 @@ services:
     depends_on:
       - userinterface
       - chatbot
+      - analytics
       - auth
 
 networks:

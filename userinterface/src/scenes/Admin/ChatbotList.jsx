@@ -28,7 +28,7 @@ const ChatbotList = () => {
   const formConfig = formConfigs[tableName];
 
   const navigate = useNavigate();
-  const { user } = useAuth()
+  const { user, afterLogout } = useAuth()
 
   // Fetch chatbots from API
   useEffect(() => {
@@ -37,7 +37,12 @@ const ChatbotList = () => {
         const response = await get_org_chatbots(user.user_id);
         setChatbots(response.items);
       } catch (error) {
-        console.error("Error fetching chatbots:", error);
+        if (err.message === "Unauthorized") {
+          afterLogout();
+          navigate(`/login?next=${location.pathname}`);
+        } else {
+          console.error("Error loading questions:", err);
+        }
       } finally {
         setLoading(false);
       }
@@ -60,7 +65,13 @@ const ChatbotList = () => {
       const response = await formConfig.createData(data)
       navigate(`/admin/chatbot/${response.id}/edit`)
     } catch (err) {
-      navigate("/admin/chatbots")
+      if (err.message === "Unauthorized") {
+        afterLogout();
+        navigate(`/login?next=/admin/chatbots`);
+      } else {
+        console.error("Error loading questions:", err);
+        navigate("/admin/chatbots")
+      }
     }
   }
 

@@ -21,8 +21,23 @@ async def get_token(
             }
         )
     token = authorization.split(" ")[1]
-    print("Extracted token:", token)
     return token
+
+async def get_visitor_id(
+    visitor: Optional[str] = Header(None)
+) -> str:
+    """Extract and validate the Bearer token from the Authorization header."""
+    if not visitor:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error": "Invalid or missing token",
+                "received_header": visitor,
+                "message": "Please provide 'Bearer {token}'"
+            }
+        )
+    return visitor
+
 
 
 async def check_permission_logic(

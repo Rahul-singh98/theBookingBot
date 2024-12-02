@@ -68,6 +68,7 @@ const DnDFlow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
   const [selectedNode, setSelectedNode] = useState();
+  const [errors, setErrors] = useState("")
   const [type] = useDnD();
   const { chatbotId } = useParams();
   const { user, afterLogout } = useAuth();
@@ -195,8 +196,6 @@ const DnDFlow = () => {
 
       // Extract source and target node IDs
       const { source, target } = params;
-
-
       const sourceNode = nodes.find((node) => node.id === source);
 
       try {
@@ -363,9 +362,30 @@ const DnDFlow = () => {
     [screenToFlowPosition, type, chatbotId, setNodes]
   );
 
+  const checkStartAndEndNode = () => {
+    setErrors("")
+
+    const startNode = nodes.find((node) => node.type === 'start');
+    const endNode = nodes.find((node) => node.type === 'end');
+    console.log(startNode, endNode)
+    if (startNode === undefined && endNode === undefined) {
+      setErrors("Start and End Nodes are required.")
+      return false
+    } else if (startNode === undefined) {
+      setErrors("Start Node is required.")
+      return false
+    } else if (endNode === undefined) {
+      setErrors("End Node is required.")
+      return false
+    }
+
+    return true
+  }
+
   return (
     <div className="dndflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+        {errors && <p className='text-red-500'>{errors}</p>}
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -384,7 +404,7 @@ const DnDFlow = () => {
           </Panel>
 
           <Panel position='top-center'>
-            <PublishChatbotNode chatbotId={chatbotId} />
+            <PublishChatbotNode chatbotId={chatbotId} readyToPublish={checkStartAndEndNode} />
           </Panel>
 
           <Panel position='top-right'>

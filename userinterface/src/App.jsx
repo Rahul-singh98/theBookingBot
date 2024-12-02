@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminApp from "@/scenes/Admin";
 import UserApp from "@/scenes/Main";
@@ -7,6 +8,7 @@ import ErrorPage from "@/errors/errorPage.jsx";
 import PageTitle from "./components/PageTitle";
 import { AuthProvider } from "@/hooks/useAuth";
 import Editor from "./components/Editor";
+import { getOrCreateVisitorId } from "@/utils/cookieUtils"; // Import cookie utility
 
 const LayoutWithTitle = ({ children, title }) => (
   <>
@@ -59,6 +61,10 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  useEffect(() => {
+    const visitorId = getOrCreateVisitorId();
+  }, []);
+
   return (
     <AuthProvider>
       <RouterProvider router={router} />

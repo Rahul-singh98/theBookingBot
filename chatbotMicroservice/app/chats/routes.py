@@ -8,7 +8,7 @@ from app.chats.schemas import (
     ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse,
 )
 import json
-from app.dependencies import check_permission
+from app.dependencies import check_permission, get_visitor_id
 from app.chats import crud
 from app.chatbot import crud as chatbot_services
 from app.questions import crud as question_services
@@ -17,6 +17,7 @@ from app.utils.pagination import Pagination
 from app.utils.constants import QuestionTypes
 from app.utils import dt_utils
 from app.utils import cb_utils
+from app.utils.analyticsHelper import ingest_chat_session
 
 chats_router = APIRouter(prefix="/sessions")
 
@@ -38,7 +39,10 @@ def read_chat_session(session_id: str, db: Session = Depends(get_db)):
 
 
 @chats_router.post("/{chatbot_id}", response_model=ChatSessionResponse)
-def start_chat_session(chatbot_id: str, db: Session = Depends(get_db)):
+async def start_chat_session(
+    chatbot_id: str, 
+    visitor: str = Depends(get_visitor_id),
+    db: Session = Depends(get_db)):
     db_chatbot = chatbot_services.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:
         raise HTTPException(
@@ -48,6 +52,8 @@ def start_chat_session(chatbot_id: str, db: Session = Depends(get_db)):
 
     history_create = ChatHistoryCreate(session_id=db_session.id, response=None)
     _ = crud.create_chat_history(db, history_create)
+
+    await ingest_chat_session(db_session.id, visitor, "System")
 
     return db_session
 
@@ -127,7 +133,10 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
 
 
 @chats_router.get("/{session_id}/next-question", response_model=Dict)
-def get_next_question(session_id: str, db: Session = Depends(get_db)):
+async def get_next_question(
+    session_id: str, 
+    visitor: str = Depends(get_visitor_id),
+    db: Session = Depends(get_db)):
     db_session = crud.get_chat_session(db, session_id=session_id)
     if db_session is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -185,6 +194,9 @@ def get_next_question(session_id: str, db: Session = Depends(get_db)):
             next_question = question_services.get_question(db, nq_id)
 
     is_completed = next_question is None or next_question.question_type == QuestionTypes.END
+
+    if is_completed:
+        await ingest_chat_session(session_id, visitor, "System", "completed")
 
     return {
         "question_id": next_question.id if next_question else None,
