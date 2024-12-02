@@ -31,7 +31,7 @@ async def get_visitor_id(
         raise HTTPException(
             status_code=422,
             detail={
-                "error": "Invalid or missing token",
+                "error": "Invalid or missing visitor id",
                 "received_header": visitor,
                 "message": "Please provide 'Bearer {token}'"
             }
