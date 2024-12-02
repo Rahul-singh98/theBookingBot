@@ -23,9 +23,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Define environment variable for the app's module
-ENV MODULE_NAME=src.main
+ENV MODULE_NAME=app.main
 ENV VARIABLE_NAME=app
 ENV PORT=8000
 
 # Run the Uvicorn server
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
