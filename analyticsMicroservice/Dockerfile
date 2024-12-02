@@ -10,11 +10,11 @@ RUN apt-get update && \
 RUN pip install --upgrade pip
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /src
 
-# Copy the current directory contents into the container at /app
-COPY ./src /app/app
-COPY requirements.txt /app/
+# Copy the current directory contents into the container at /src
+COPY ./src /src/src
+COPY requirements.txt /src/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -22,10 +22,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
-# Define environment variable for the app's module
-ENV MODULE_NAME=app.main
+# Define environment variable for the src's module
+ENV MODULE_NAME=src.main
 ENV VARIABLE_NAME=app
 ENV PORT=8000
 
 # Run the Uvicorn server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
