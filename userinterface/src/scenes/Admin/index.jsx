@@ -11,6 +11,8 @@ import AdminModifyView from "@/components/Tables/ModifyView";
 import OrgBot from "./OrgBot";
 import ChatbotList from "./ChatbotList";
 import Editor from "@/components/Editor";
+import Dashboard from "./Dashboard";
+import Profile from "@/components/Profile";
 
 const AdminApp = () => {
   const { user } = useAuth();
@@ -29,9 +31,11 @@ const AdminApp = () => {
   return user ? (
     <AdminLayout>
       <Routes>
+        <Route path="" element={<Dashboard />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="org-bot" element={<OrgBot />} />
-        <Route path="/chatbots" element={<ChatbotList />} />
-        <Route path="/chatbot/:chatbotId/edit" element={<Editor />} />
+        <Route path="chatbots" element={<ChatbotList />} />
+        <Route path="chatbot/:chatbotId/edit" element={<Editor />} />
         <Route path="tables/:tableName" element={<AdminTables />} />
         <Route path="tables/:tableName/create" element={<AdminCreateView />} />
         <Route path="tables/:tableName/:itemId/edit" element={<AdminModifyView />} />

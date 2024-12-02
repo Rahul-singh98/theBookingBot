@@ -189,7 +189,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             {/* <!-- Menu Item Profile --> */}
                             <li>
                                 <NavLink
-                                    to="/auth/profile"
+                                    to="/admin/profile"
                                     className={`${commonListItemsClasses} ${pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
                                         }`}
                                 >
