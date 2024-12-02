@@ -41,7 +41,7 @@ def read_chat_session(session_id: str, db: Session = Depends(get_db)):
 @chats_router.post("/{chatbot_id}", response_model=ChatSessionResponse)
 async def start_chat_session(
     chatbot_id: str, 
-    visitor: str = Depends(get_visitor_id),
+    # visitor: str = Depends(get_visitor_id),
     db: Session = Depends(get_db)):
     db_chatbot = chatbot_services.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:
@@ -53,7 +53,7 @@ async def start_chat_session(
     history_create = ChatHistoryCreate(session_id=db_session.id, response=None)
     _ = crud.create_chat_history(db, history_create)
 
-    await ingest_chat_session(db_session.id, visitor, "System")
+    # await ingest_chat_session(db_session.id, visitor, "System")
 
     return db_session
 
@@ -135,7 +135,7 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
 @chats_router.get("/{session_id}/next-question", response_model=Dict)
 async def get_next_question(
     session_id: str, 
-    visitor: str = Depends(get_visitor_id),
+    # visitor: str = Depends(get_visitor_id),
     db: Session = Depends(get_db)):
     db_session = crud.get_chat_session(db, session_id=session_id)
     if db_session is None:
@@ -195,8 +195,8 @@ async def get_next_question(
 
     is_completed = next_question is None or next_question.question_type == QuestionTypes.END
 
-    if is_completed:
-        await ingest_chat_session(session_id, visitor, "System", "completed")
+    # if is_completed:
+    #     await ingest_chat_session(session_id, visitor, "System", "completed")
 
     return {
         "question_id": next_question.id if next_question else None,
