@@ -19,6 +19,27 @@ const clientBotState = {
   },
 };
 
+function generateRandomId() {
+  return Date.now() + '-' + Math.random().toString(36).substring(2, 15);
+}
+
+function getOrCreateVisitorId() {
+  const localStorageKey = 'visitorId';
+
+  // Check if the visitor ID already exists in localStorage
+  let visitorId = localStorage.getItem(localStorageKey);
+
+  if (!visitorId) {
+    // Generate a new random ID if it doesn't exist
+    visitorId = generateRandomId();
+
+    // Save the new ID to localStorage
+    localStorage.setItem(localStorageKey, visitorId);
+  }
+
+  return visitorId;
+}
+
 // Initialize the chatbot
 const initChatbot = async (config) => {
   if (window.chatbotInstance) {
@@ -43,6 +64,7 @@ const initChatbot = async (config) => {
     createChatbotHTML();
     initializeElements();
     addEventListeners();
+    getOrCreateVisitorId();
 
     // Check visibility state in localStorage
     const isVisible = localStorage.getItem("chatbot_visible") === "true";
@@ -92,9 +114,19 @@ const loadDependencies = () => {
 // Configure chatbot settings
 const configureChatbot = async () => {
   try {
-    const config = await $.get(
-      `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}`
-    );
+    const visitorId = getOrCreateVisitorId()
+
+    // Set up the headers object
+    const headers = {
+      "Visitor": visitorId,
+    };
+
+    const config = await $.ajax({
+      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}`,
+      method: "GET",
+      headers: headers,
+    });
+
     clientBotState.botName = config.name || clientBotState.botName;
     clientBotState.primaryColor =
       config.primary_color || clientBotState.primaryColor;
@@ -220,12 +252,14 @@ const startChatSession = async () => {
   showTypingIndicator();
 
   try {
+    const visitorId = getOrCreateVisitorId()
+
     const response = await $.ajax({
       url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.token}`,
       method: "POST",
       contentType: "application/json",
       dataType: "json",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
+      headers: { "X-Requested-With": "XMLHttpRequest", "Visitor": visitorId },
     });
 
     if (!response || !response.id) {
@@ -255,9 +289,19 @@ const fetchNextQuestion = async () => {
   }
 
   try {
-    const response = await $.get(
-      `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/next-question`
-    );
+    const visitorId = getOrCreateVisitorId()
+
+    // Set up the headers object
+    const headers = {
+      "Visitor": visitorId,
+    };
+
+    const response = await $.ajax({
+      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/next-question`,
+      method: "GET",
+      headers: headers,
+    });
+
     hideTypingIndicator();
 
     // Handle different response scenarios
@@ -302,12 +346,14 @@ const submitAPIResponse = async () => {
   if (!clientBotState.sessionId) return;
 
   try {
+    const visitorId = getOrCreateVisitorId()
+
     const response = await $.ajax({
       url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/submit`,
       method: "POST",
       contentType: "application/json", // Ensures JSON format
       dataType: "json",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
+      headers: { "X-Requested-With": "XMLHttpRequest", "Visitor": visitorId },
     });
 
     if (response.redirect !== undefined) {
@@ -328,6 +374,8 @@ const submitAnswer = async (answer, answerText) => {
   showTypingIndicator();
 
   try {
+    const visitorId = getOrCreateVisitorId();
+
     const response = await $.ajax({
       url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/answer`,
       method: "POST",
@@ -340,7 +388,7 @@ const submitAnswer = async (answer, answerText) => {
         variable: clientBotState.current.variable,
         question_type: clientBotState.current.question_type,
       }), // Stringify the data
-      headers: { "X-Requested-With": "XMLHttpRequest" },
+      headers: { "X-Requested-With": "XMLHttpRequest", "Visitor": visitorId },
     });
 
     hideTypingIndicator();
