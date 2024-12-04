@@ -101,13 +101,12 @@ const loadDependencies = () => {
     script.onerror = () => reject(new Error("Failed to load jQuery"));
     document.head.appendChild(script);
 
-    // const googleScript = document.createElement("script");
-    // googleScript.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places`;
-    // googleScript.async = true;
-    // googleScript.onload = resolve;
-    // googleScript.onerror = () =>
-    //   reject(new Error("Failed to load Google Places API"));
-    // document.head.appendChild(googleScript);
+    const googleScript = document.createElement("script");
+    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk&libraries=places&callback=initAutocomplete`;
+    googleScript.defer = true;
+    googleScript.onerror = () =>
+      reject(new Error("Failed to load Google Places API"));
+    document.head.appendChild(googleScript);
   });
 };
 
@@ -538,6 +537,19 @@ const renderInput = (renderData) => {
 
   clientBotState.elements.userInput.replaceWith(inputHtml);
   clientBotState.elements.userInput = $("#user-input");
+
+  if (question_type === "Address") {
+    const autocomplete = new google.maps.places.Autocomplete(document.getElementById('user-input'));
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      if (!place.geometry || !place.geometry.location) {
+        alert("No details available for this location.");
+        return;
+      }
+    });
+
+  }
 };
 
 const createInput = (
