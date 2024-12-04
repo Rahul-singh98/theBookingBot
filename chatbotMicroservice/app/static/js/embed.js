@@ -17,6 +17,7 @@ const clientBotState = {
     questionId: null,
     question: null,
   },
+  mapsAutoComplete: null
 };
 
 function generateRandomId() {
@@ -538,17 +539,21 @@ const renderInput = (renderData) => {
   clientBotState.elements.userInput.replaceWith(inputHtml);
   clientBotState.elements.userInput = $("#user-input");
 
-  if (question_type === "Address") {
-    const autocomplete = new google.maps.places.Autocomplete(document.getElementById('user-input'));
+  // Remove the mapsAutoComplete object if it exists
+  if (clientBotState.mapsAutoComplete !== null) {
+    google.maps.event.clearInstanceListeners(clientBotState.mapsAutoComplete);
+    clientBotState.mapsAutoComplete = null;
+  }
 
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
+  if (question_type === "Address") {
+    clientBotState.mapsAutoComplete = new google.maps.places.Autocomplete(document.getElementById('user-input'));
+    clientBotState.mapsAutoComplete.addListener("place_changed", () => {
+      const place = clientBotState.mapsAutoComplete.getPlace();
       if (!place.geometry || !place.geometry.location) {
         alert("No details available for this location.");
         return;
       }
     });
-
   }
 };
 
