@@ -565,7 +565,7 @@ const renderInput = (renderData) => {
     const autocompleteContainer = document.querySelector('.pac-container');
      // Style to adjust the suggestion list to appear above the input
     if (autocompleteContainer) {
-      const rect = inputElement.getBoundingClientRect();
+      const rect = clientBotState.elements.userInput.getBoundingClientRect();
       autocompleteContainer.style.position = 'absolute';
       autocompleteContainer.style.top = `${rect.top - autocompleteContainer.offsetHeight - 10}px`;
       autocompleteContainer.style.left = `${rect.left}px`;
