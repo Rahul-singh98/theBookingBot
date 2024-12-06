@@ -11,6 +11,8 @@ import EndNodeMenu from './EndNodeMenu';
 import EmailNodeMenu from './EmailNodeMenu';
 import PhoneNodeMenu from './PhoneNodeMenu';
 import InputNodeMenu from './InputNodeMenu';
+import MessageNodeMenu from './MessageNodeMenu';
+import ButtonNodeMenu from './ButtonNodeMenu';
 import { update_questions, get_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -56,7 +58,8 @@ const PropertiesBase = ({ data, title, onCollapse, onSave, onDelete, children, s
   };
 
   const handleVariableNameChange = (e) => {
-    const newVariableName = e.target.value.toLowerCase();
+    // const newVariableName = e.target.value.toLowerCase();
+    const newVariableName = e.target.value;
     setVariableName(newVariableName);
     setQuestionData((prev) => ({ ...prev, variable: newVariableName }));
   };
@@ -201,6 +204,10 @@ export default function PropertiesPanel({ selectedNode, onCollapse, nodes, setNo
         return <InputNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'conditional':
         return <ConditionalNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
+      case 'message':
+        return <MessageNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
+      case 'button':
+        return <ButtonNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       default:
         return <DefaultNodeProperties data={selectedNode.data} setQuestionData={setQuestionData} />;
     }

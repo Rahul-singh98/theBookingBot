@@ -141,6 +141,27 @@ export default function NodesPanel() {
                   Input
                 </div>
               </div>
+
+              <div onDragStart={(event) => onDragStart(event, 'message')} draggable className={`${commonNodeClassNames}`} data-state="closed">
+                <div className={`${commonNodeCenterClassNames}`}></div>
+                <div className="text-sm text-gray-900">
+                  Message
+                </div>
+              </div>
+
+              <div onDragStart={(event) => onDragStart(event, 'radio')} draggable className={`${commonNodeClassNames}`} data-state="closed">
+                <div className={`${commonNodeCenterClassNames}`}></div>
+                <div className="text-sm text-gray-900">
+                  Radio
+                </div>
+              </div>
+
+              <div onDragStart={(event) => onDragStart(event, 'button')} draggable className={`${commonNodeClassNames}`} data-state="closed">
+                <div className={`${commonNodeCenterClassNames}`}></div>
+                <div className="text-sm text-gray-900">
+                  Button
+                </div>
+              </div>
             </div>
           </div>
         </div>

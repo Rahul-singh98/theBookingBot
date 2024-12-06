@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { ChatRoutes } from "@/api/routes";
+import { CHATBOT_API_URL } from "@/api/routes";
 
 const EmbeddedChatbot = ({ token }) => {
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = `/static/js/embed.min.js`;
+    script.src = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}/static/js/embed.min.js`;
     script.async = true;
     document.body.appendChild(script);
 

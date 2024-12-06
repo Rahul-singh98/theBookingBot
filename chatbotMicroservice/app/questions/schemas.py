@@ -1,10 +1,7 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, validator
 from typing import List, Optional, Dict, Any, Union
-from datetime import datetime
 from app.utils.constants import QuestionTypes, ComparisonOperator, LogicalOperator
 from app.utils.pagination import PaginationResponse
-
-# Special Validators
 
 
 class DropDownOption(BaseModel):
@@ -20,6 +17,24 @@ class ClickListAction(BaseModel):
 
 class StartQuestion(BaseModel):
     description: Optional[str]
+
+
+class MessageQuestion(BaseModel):
+    description: Optional[str]
+
+
+class ButtonQuestion(BaseModel):
+    button_id: Optional[str]
+    wait_after: Optional[float]
+
+
+class RadioButtonAction(BaseModel):
+    text: str
+
+
+class RadioButtonQuestion(BaseModel):
+    open_radio: Optional[RadioButtonAction]
+    open_close: Optional[RadioButtonAction]
 
 
 class EndQuestion(BaseModel):
@@ -182,6 +197,12 @@ class QuestionBase(BaseModel):
             ClickListQuestion(**v)
         elif question_type == QuestionTypes.ADDRESS:
             AddressQuestion(**v)
+        elif question_type == QuestionTypes.MESSAGE:
+            MessageQuestion(**v)
+        elif question_type == QuestionTypes.BUTTON:
+            ButtonQuestion(**v)
+        elif question_type == QuestionTypes.RADIO:
+            RadioButtonQuestion(**v)
         elif question_type == QuestionTypes.PAYMENT:
             PaymentQuestion(**v)
         else:
@@ -230,6 +251,12 @@ class QuestionUpdate(BaseModel):
             ClickListQuestion(**v)
         elif question_type == QuestionTypes.ADDRESS:
             AddressQuestion(**v)
+        elif question_type == QuestionTypes.MESSAGE:
+            MessageQuestion(**v)
+        elif question_type == QuestionTypes.BUTTON:
+            ButtonQuestion(**v)
+        elif question_type == QuestionTypes.RADIO:
+            RadioButtonQuestion(**v)
         elif question_type == QuestionTypes.PAYMENT:
             PaymentQuestion(**v)
         else:

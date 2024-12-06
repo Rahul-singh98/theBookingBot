@@ -15,6 +15,9 @@ class QuestionTypes(str, Enum):
     CLICKLIST = "ClickList"
     ADDRESS = "Address"
     PAYMENT = "Payment"
+    RADIO = "Radio"
+    BUTTON = "Button"
+    MESSAGE = "Message"
     END = "End"
 
 

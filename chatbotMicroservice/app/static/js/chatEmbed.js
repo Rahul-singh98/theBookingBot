@@ -14,7 +14,6 @@ async function getChatHistory(config) {
   const BACKEND_CHATBOT_API_URL = config.backendUrl || "http://localhost:8001";
 
   try {
-    // Replace with your actual API endpoint
     const response = await fetch(
       `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${sessionId}/history`,
       {
@@ -25,28 +24,30 @@ async function getChatHistory(config) {
       }
     );
 
-    // Check if the response is ok
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
 
-    // Check if data and data.response exist
     if (!data || !data.response) {
       console.error("Invalid response format");
       return;
     }
 
-    // Update form elements
-    data.response.forEach((item) => {
+    for (const item of data.response) {
       const element = document.getElementById(item.variable);
-      if (element) {
+
+      if (item.question_type === "Button" && element) {
+        // Simulate button click and wait for 2 seconds
+        element.click();
+        await new Promise((resolve) => setTimeout(resolve, item.data.wait_after || 2));
+      } else if (element) {
         element.value = item.answer;
       } else {
         console.warn(`Element with ID '${item.variable}' not found`);
       }
-    });
+    }
   } catch (error) {
     console.error("Error fetching data:", error);
   }

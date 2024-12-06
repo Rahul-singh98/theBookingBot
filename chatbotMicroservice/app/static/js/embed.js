@@ -1,4 +1,5 @@
 // Configuration constants
+// var BACKEND_CHATBOT_API_URL = "http://ec2-13-201-2-185.ap-south-1.compute.amazonaws.com";
 var BACKEND_CHATBOT_API_URL = "http://localhost:8001";
 const BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT = "/api/chats";
 const BACKEND_CHATBOT_CHATBOT_API_ENDPOINT = "/api/chatbots";
@@ -52,7 +53,7 @@ const initChatbot = async (config) => {
     throw new Error("Token is required to initialize the chatbot");
   }
 
-  BACKEND_CHATBOT_API_URL = config.backendUrl;
+  // BACKEND_CHATBOT_API_URL = config.backendUrl;
   clientBotState.backendUrl = config.backendUrl;
   clientBotState.botImage = `${config.backendUrl}/static/images/bot.svg`;
   clientBotState.token = config.token;
@@ -94,6 +95,13 @@ const loadDependencies = () => {
       return;
     }
 
+    const googleScript = document.createElement("script");
+    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk&libraries=places&callback=initAutocomplete`;
+    googleScript.defer = true;
+    googleScript.onerror = () =>
+      reject(new Error("Failed to load Google Places API"));
+    document.head.appendChild(googleScript);
+
     const script = document.createElement("script");
     script.src =
       "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js";
@@ -102,12 +110,6 @@ const loadDependencies = () => {
     script.onerror = () => reject(new Error("Failed to load jQuery"));
     document.head.appendChild(script);
 
-    const googleScript = document.createElement("script");
-    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk&libraries=places&callback=initAutocomplete`;
-    googleScript.defer = true;
-    googleScript.onerror = () =>
-      reject(new Error("Failed to load Google Places API"));
-    document.head.appendChild(googleScript);
   });
 };
 
@@ -325,7 +327,12 @@ const fetchNextQuestion = async () => {
         // Add delay before fetching next question to prevent rapid succession
         await new Promise((resolve) => setTimeout(resolve, 1000));
         return await fetchNextQuestion();
-
+      case "message":
+        addMessage(response.question, "bot");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return await fetchNextQuestion();
+      case "button":
+        return await fetchNextQuestion();
       case undefined:
       case null:
         throw new Error("Question type not specified");
@@ -554,6 +561,16 @@ const renderInput = (renderData) => {
         return;
       }
     });
+
+    const autocompleteContainer = document.querySelector('.pac-container');
+     // Style to adjust the suggestion list to appear above the input
+    if (autocompleteContainer) {
+      const rect = inputElement.getBoundingClientRect();
+      autocompleteContainer.style.position = 'absolute';
+      autocompleteContainer.style.top = `${rect.top - autocompleteContainer.offsetHeight - 10}px`;
+      autocompleteContainer.style.left = `${rect.left}px`;
+      autocompleteContainer.style.width = `${rect.width}px`;
+    }
   }
 };
 

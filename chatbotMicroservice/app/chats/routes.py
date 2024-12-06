@@ -193,6 +193,9 @@ async def get_next_question(
 
             next_question = question_services.get_question(db, nq_id)
 
+        elif next_question.question_type == QuestionTypes.BUTTON:
+            next_question = question_services.get_question(db, next_question.next_ques)
+
     is_completed = next_question is None or next_question.question_type == QuestionTypes.END
 
     # if is_completed:
@@ -224,14 +227,15 @@ async def submit_chat_responses(session_id: str, db: Session = Depends(get_db)):
     session_variables["sId"] = session_id
 
     redirect_link = end_question.data.get("redirect_to")
-    if end_question.data.get("queryParams"):
-        redirect_link += "?"
-        params = []
+    query_parameters = end_question.data.get("queryParams", [])
+    query_parameters.extend(['sId', 'cId'])
+    redirect_link += "?"
+    params = []
 
-        for key in end_question.data.get("queryParams"):
-            params.append(f"{key}={session_variables.get(key, '')}")
+    for key in query_parameters:
+        params.append(f"{key}={session_variables.get(key, '')}")
 
-        redirect_link += "&".join(params)
+    redirect_link += "&".join(params)
 
     return {"status": "submitted", "redirect": redirect_link}
 

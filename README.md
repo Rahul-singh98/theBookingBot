@@ -72,3 +72,25 @@ Questions:
     - created_at
     - updated_at
 ```
+
+
+ServiceTypeId
+    From Airpot 223490
+    To Airpot 223491
+    Point to Point 223492
+    Hourly  223493
+
+PickUpDate
+
+PickUpTime
+
+PickupLocation
+
+DropoffLocation
+
+PassengerNumber
+
+LuggageCount
+
+showRatesBtn
+

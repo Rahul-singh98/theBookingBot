@@ -34,6 +34,9 @@ import { EmailNode } from './nodes/emailNode';
 import { PhoneNode } from './nodes/phoneNode';
 import { InputNode } from './nodes/inputNode';
 import { ConditionalNode } from './nodes/conditionalNode';
+import { ButtonNode } from './nodes/buttonNode'
+import { MessageNode } from './nodes/messageNode'
+import { RadioNode } from './nodes/radioNode'
 
 import { get_questions, create_questions, update_questions, delete_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
@@ -56,6 +59,9 @@ const nodeTypes = {
   phone: PhoneNode,
   input: InputNode,
   conditional: ConditionalNode,
+  radio: RadioNode,
+  button: ButtonNode,
+  message: MessageNode
 };
 
 let id = 0;
@@ -132,6 +138,15 @@ const DnDFlow = () => {
                 break;
               case "Payment":
                 question_type = "payment";
+                break;
+              case "Radio":
+                question_type = "radio";
+                break;
+              case "Button":
+                question_type = "button";
+                break;
+              case "Message":
+                question_type = "message";
                 break;
               default:
                 question_type = "default";
@@ -332,6 +347,15 @@ const DnDFlow = () => {
             break;
           case "payment":
             question_type = "Payment";
+            break;
+          case "message":
+            question_type = "Message";
+            break;
+          case "radio":
+            question_type = "Radio";
+            break;
+          case "button":
+            question_type = "Button";
             break;
           default:
             question_type = "default";
