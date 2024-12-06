@@ -1,6 +1,6 @@
 // Configuration constants
-// var BACKEND_CHATBOT_API_URL = "http://ec2-13-201-2-185.ap-south-1.compute.amazonaws.com";
-var BACKEND_CHATBOT_API_URL = "http://localhost:8001";
+var BACKEND_CHATBOT_API_URL = "http://ec2-13-201-2-185.ap-south-1.compute.amazonaws.com";
+// var BACKEND_CHATBOT_API_URL = "http://localhost:8001";
 const BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT = "/api/chats";
 const BACKEND_CHATBOT_CHATBOT_API_ENDPOINT = "/api/chatbots";
 
