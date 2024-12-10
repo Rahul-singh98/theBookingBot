@@ -221,3 +221,12 @@ body {
 .m-1 {
   margin: 0.25rem !important;
 }
+
+
+.pac-container {
+  position: absolute !important;
+  top: auto !important;
+  bottom: 100% !important;
+  width: 100% !important;
+  transform: translateY(0) !important;
+}

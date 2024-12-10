@@ -96,7 +96,7 @@ const loadDependencies = () => {
     }
 
     const googleScript = document.createElement("script");
-    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk&libraries=places&callback=initAutocomplete`;
+    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk&libraries=places`;
     googleScript.defer = true;
     googleScript.onerror = () =>
       reject(new Error("Failed to load Google Places API"));
