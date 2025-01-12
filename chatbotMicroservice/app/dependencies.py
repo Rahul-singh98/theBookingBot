@@ -2,6 +2,7 @@ from typing import Optional
 from fastapi import Header, HTTPException, Depends
 import httpx
 import os
+from prometheus_client import Counter, Gauge, Histogram
 
 AUTH_SERVICE_URL = os.environ.get("AUTH_SERVICE_URL", "http://localhost:8000")
 
@@ -38,8 +39,6 @@ async def get_visitor_id(
         )
     return visitor
 
-
-
 async def check_permission_logic(
     required_permission: str,
     token: str
@@ -67,7 +66,6 @@ async def check_permission_logic(
     print("Response", response.content)
     return response.json()
 
-
 def check_permission(required_permission: str):
     """Create a dependency that checks for a specific permission."""
     async def check_permission_dependency(
@@ -75,3 +73,39 @@ def check_permission(required_permission: str):
     ) -> dict:
         return await check_permission_logic(required_permission, token)
     return check_permission_dependency
+
+# Prometheus metrics
+# Metric to track the number of chatbots that are up and running
+ACTIVE_CHATBOTS_GAUGE = Gauge(
+    'chatbots_active_count', 
+    'Number of chatbots up and running',
+    ['id', 'name', 'created_by']
+)
+
+# Metric to track traffic analysis
+TRAFFIC_COUNTER = Counter(
+    'chatbot_traffic_total', 
+    'Total number of requests/messages processed by chatbots',
+    ['chatbot_id', "session_id", 'visitor_id']
+)
+
+# Metric to track the number of questions answered by chatbots
+QUESTIONS_ANSWERED_COUNTER = Counter(
+    'chatbot_questions_answered_total', 
+    'Total number of questions answered by chatbots, tracked by chatbot ID and session ID', 
+    ['chatbot_id', "session_id", 'visitor_id']
+)
+
+# Metric to track completed payments
+PAYMENT_COMPLETED_COUNTER = Counter(
+    'payment_completed_total', 
+    'Total number of completed payments by user', 
+    ['visitor_id', 'session_id']
+)
+
+# Metric to track booking amount
+BOOKING_AMOUNT_HISTOGRAM = Histogram(
+    'booking_amount', 
+    'Distribution of booking amounts', 
+    ['visitor_id', 'session_id']
+)

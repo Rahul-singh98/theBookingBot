@@ -10,28 +10,28 @@ services:
     build: authMicroservice
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
-      - SECRET_KEY=rcGxdzPSCGSGnmlfkjydATFgVqehWBRNkQnmdJbUQTYxRxrlZG
-      - ALGORITHM=HS256
-      - ACCESS_TOKEN_EXPIRE_MINUTES=30
-      - ADMIN_GROUP_NAME=admin
-      - STAFF_GROUP_NAME=staff
-      - ALLOWED_ORIGINS=*
-      - ALLOWED_METHODS=*
-      - ALLOWED_HEADERS=*
-      - CREATE_SUPER_ADMIN=true
-      - SUPER_ADMIN_EMAIL=admin@authentication.com
-      - SUPER_ADMIN_USERNAME=super_admin
-      - SUPER_ADMIN_PASSWORD=#Admin@1234
-      - SUPER_ADMIN_FIRST_NAME=Super
-      - SUPER_ADMIN_LAST_NAME=Admin
-      - CREATE_ORGANIZATION_ADMIN=true
-      - ORGANIZATION_ADMIN_EMAIL=orgadmin@authentication.com
-      - ORGANIZATION_ADMIN_USERNAME=organization_admin
-      - ORGANIZATION_ADMIN_PASSWORD='Admin@1234
-      - ORGANIZATION_ADMIN_FIRST_NAME=Organization
-      - ORGANIZATION_ADMIN_LAST_NAME=Admin
+    # environment:
+    #   - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
+    #   - SECRET_KEY=rcGxdzPSCGSGnmlfkjydATFgVqehWBRNkQnmdJbUQTYxRxrlZG
+    #   - ALGORITHM=HS256
+    #   - ACCESS_TOKEN_EXPIRE_MINUTES=30
+    #   - ADMIN_GROUP_NAME=admin
+    #   - STAFF_GROUP_NAME=staff
+    #   - ALLOWED_ORIGINS=*
+    #   - ALLOWED_METHODS=*
+    #   - ALLOWED_HEADERS=*
+    #   - CREATE_SUPER_ADMIN=true
+    #   - SUPER_ADMIN_EMAIL=admin@authentication.com
+    #   - SUPER_ADMIN_USERNAME=super_admin
+    #   - SUPER_ADMIN_PASSWORD=#Admin@1234
+    #   - SUPER_ADMIN_FIRST_NAME=Super
+    #   - SUPER_ADMIN_LAST_NAME=Admin
+    #   - CREATE_ORGANIZATION_ADMIN=true
+    #   - ORGANIZATION_ADMIN_EMAIL=orgadmin@authentication.com
+    #   - ORGANIZATION_ADMIN_USERNAME=organization_admin
+    #   - ORGANIZATION_ADMIN_PASSWORD='Admin@1234
+    #   - ORGANIZATION_ADMIN_FIRST_NAME=Organization
+    #   - ORGANIZATION_ADMIN_LAST_NAME=Admin
 
     networks:
       - app_network
@@ -40,19 +40,19 @@ services:
     build: chatbotMicroservice
     ports:
       - "8001:8000"
-    environment:
-      - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
-      - AUTH_SERVICE_URL=http://auth:8000
-      - ANALYTICS_SERVER_URL=http://analytics:8000
+    # environment:
+    #   - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
+    #   - AUTH_SERVICE_URL=http://auth:8000
+    #   - ANALYTICS_SERVER_URL=http://analytics:8000
     networks:
       - app_network
 
-  analytics:
-    build: analyticsMicroservice
+  prometheus:
+    image: prom/prometheus
     ports:
-      - "8002:8000"
-    environment:
-      - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
+      - "9090:9090"
+    volumes:
+      - "./prometheus/prometheus_prod.yml:/etc/prometheus/prometheus.yml"
     networks:
       - app_network
 
@@ -67,8 +67,8 @@ services:
     depends_on:
       - userinterface
       - chatbot
-      - analytics
       - auth
+      - prometheus
 
 networks:
   app_network:

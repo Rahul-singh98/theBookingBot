@@ -1,3 +1,14 @@
+import { ANALYTICS_API_URL, AnalyticsRoutes } from "./routes";
+
+
+export async function fetchMetrics(query) {
+    const response = await axios.get(`${PROMETHEUS_BASE_URL}/query`, {
+      params: { query },
+    });
+    return response.data.data.result;
+  }
+
+
 // Function to handle user login
 export const total_bookings = async (chatbot_id) => {
     return {

@@ -10,6 +10,7 @@ from app.chatbot.schemas import (
 from app.chatbot import crud
 from app.utils.pagination import Pagination
 from app.dependencies import check_permission, get_visitor_id
+from app.dependencies import ACTIVE_CHATBOTS_GAUGE
 import os
 
 
@@ -61,7 +62,6 @@ def read_chatbot_history(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
 
     db_chatbot.chat_sessions
-    # return ChatbotConfigurationResponse.from_orm(db_chatbot)
     return db_chatbot
 
 
@@ -71,11 +71,10 @@ def create_chatbot(
     db: Session = Depends(get_db),
     current_user: dict = Depends(check_permission("chatbots:write"))
 ):
-    print("CurrentUser", current_user)
-    # Assuming user_id 1 for now
+    
     out = crud.create_chatbot(db=db, chatbot=chatbot,
                               user_id=current_user.get("id"))
-    # return ChatbotConfigurationResponse.from_orm(out)
+    ACTIVE_CHATBOTS_GAUGE.labels(id=out.id, name=out.name, created_by=current_user.get("id")).inc()
     return out
 
 
@@ -92,6 +91,7 @@ def update_chatbot(chatbot_id: str, bot_update: ChatbotConfigurationUpdate, db: 
 @chatbot_router.delete("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
 def delete_chatbot(chatbot_id: str, db: Session = Depends(get_db)):
     db_bot = crud.delete_chatbot(db=db, chatbot_id=chatbot_id)
+    ACTIVE_CHATBOTS_GAUGE.labels(id=chatbot_id, name=db_bot.name, created_by=db_bot.created_by).dec()
     if db_bot is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
@@ -104,7 +104,6 @@ def list_chatbots_sumit_configs(
     page: int = Query(1, ge=1, description="Page number"),
     size: int = Query(10, ge=1, le=100, description="Items per page")
 ):
-    print("Executing", "list_chatbots_sumit_configs")
     # Calculate offset
     offset = Pagination.get_offset(page, size)
 

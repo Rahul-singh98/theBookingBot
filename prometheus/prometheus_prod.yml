@@ -1,0 +1,4 @@
+scrape_configs:
+  - job_name: "chatbot"
+    static_configs:
+      - targets: ["auth:8000"]

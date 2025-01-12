@@ -190,3 +190,6 @@ dist-ssr
 
 # Hide pem file which connect to the ec2 instance
 *pem
+
+# Hide auth service 
+auth_service

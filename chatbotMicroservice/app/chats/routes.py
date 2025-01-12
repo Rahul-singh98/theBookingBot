@@ -8,7 +8,7 @@ from app.chats.schemas import (
     ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse,
 )
 import json
-from app.dependencies import check_permission, get_visitor_id
+from app.dependencies import check_permission, get_visitor_id, TRAFFIC_COUNTER, QUESTIONS_ANSWERED_COUNTER
 from app.chats import crud
 from app.chatbot import crud as chatbot_services
 from app.questions import crud as question_services
@@ -17,7 +17,6 @@ from app.utils.pagination import Pagination
 from app.utils.constants import QuestionTypes
 from app.utils import dt_utils
 from app.utils import cb_utils
-from app.utils.analyticsHelper import ingest_chat_session
 
 chats_router = APIRouter(prefix="/sessions")
 
@@ -53,8 +52,7 @@ async def start_chat_session(
     history_create = ChatHistoryCreate(session_id=db_session.id, response=None)
     _ = crud.create_chat_history(db, history_create)
 
-    # await ingest_chat_session(db_session.id, visitor, "System")
-
+    TRAFFIC_COUNTER.labels(chatbot_id=chatbot_id, session_id=db_session.id, visitor_id='test').inc()
     return db_session
 
 
@@ -129,6 +127,7 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
     if isinstance(updated_history.response, str):
         updated_history.response = json.loads(updated_history.response)
 
+    QUESTIONS_ANSWERED_COUNTER.labels(chatbot_id=db_session.bot_id, session_id=db_session.id, visitor_id='abc').inc()
     return updated_history
 
 
