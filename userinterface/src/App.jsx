@@ -9,6 +9,7 @@ import PageTitle from "./components/PageTitle";
 import { AuthProvider } from "@/hooks/useAuth";
 import Editor from "./components/Editor";
 import { getOrCreateVisitorId } from "@/utils/cookieUtils"; // Import cookie utility
+import AdminDashboard from "@/scenes/Admin/Dashboard/AdminDashboard";
 
 const LayoutWithTitle = ({ children, title }) => (
   <>
@@ -47,6 +48,14 @@ const router = createBrowserRouter([
     element: (
       <LayoutWithTitle title="Admin | The Booking Bot">
         <AdminApp />
+      </LayoutWithTitle>
+    ),
+  },
+  {
+    path: "/admin_dashboard",
+    element: (
+      <LayoutWithTitle title="Admin | The Booking Bot">
+        <AdminDashboard />
       </LayoutWithTitle>
     ),
   },

@@ -11,7 +11,7 @@ import AdminModifyView from "@/components/Tables/ModifyView";
 import OrgBot from "./OrgBot";
 import ChatbotList from "./ChatbotList";
 import Editor from "@/components/Editor";
-import Dashboard from "./Dashboard";
+import Dashboard from "./Dashboard/Dashboard";
 import Profile from "@/components/Profile";
 
 const AdminApp = () => {

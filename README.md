@@ -1,3 +1,21 @@
+- ~~Chatbots Count which are up and running~~
+- ~~Traffic analysis~~
+- Chatbot's name uniqueness
+- Show, some data / Super Admin
+- Datewise filter / Super Admin
+- User management
+- Chatbot management - to create/ update chatbot
+- Filter chatbots based on dates like how much we have created
+
+- How many chatbots subscribed - weekly, monthly, yearly
+
+SubAdmin
+- Reservation, GetQuote's data
+- Finance reports
+
+Payment - Paypal or Stripe
+
+
 ```yaml
 ChatbotConfigs:
     - id

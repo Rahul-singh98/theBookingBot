@@ -45,6 +45,6 @@ app.include_router(submit_config_router, prefix='/api/submit-configs')
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-# Add prometheus asgi middleware to route /metrics requests
+# Add prometheus asgi middleware to route /api/metrics requests
 metrics_app = make_asgi_app()
-app.mount("/metrics", metrics_app)
+app.mount("/api/metrics", metrics_app)

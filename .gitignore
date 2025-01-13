@@ -193,3 +193,6 @@ dist-ssr
 
 # Hide auth service 
 auth_service
+
+# Hide static images
+*imgs*

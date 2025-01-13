@@ -10,7 +10,7 @@ class ChatbotConfiguration(Base):
     __tablename__ = "chatbot_configurations"
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
-    name = Column(String(100))
+    name = Column(String(100), unique=True)
     hero_img = Column(String(255), nullable=True)
     primary_color = Column(String(7), nullable=True)
     secondary_color = Column(String(7), nullable=True)
