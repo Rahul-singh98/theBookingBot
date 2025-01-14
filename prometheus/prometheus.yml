@@ -27,4 +27,4 @@ scrape_configs:
   enable_http2: true
   static_configs:
   - targets:
-    - host.docker.internal:8001
+    - chatbot:8001

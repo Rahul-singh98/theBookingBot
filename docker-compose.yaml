@@ -1,38 +1,47 @@
 services:
-  userinterface:
-    build: userinterface
+  main_db:
+    image: mysql:8.0.28
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
+      MYSQL_DATABASE: chatbot_db
+      MYSQL_USER: user
+    secrets:
+      - mysql_root_password
+      - mysql_password
     ports:
-      - "3000:3000"
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
 
   auth:
     build: authMicroservice
     ports:
       - "8000:8000"
-    # environment:
-    #   - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
-    #   - SECRET_KEY=rcGxdzPSCGSGnmlfkjydATFgVqehWBRNkQnmdJbUQTYxRxrlZG
-    #   - ALGORITHM=HS256
-    #   - ACCESS_TOKEN_EXPIRE_MINUTES=30
-    #   - ADMIN_GROUP_NAME=admin
-    #   - STAFF_GROUP_NAME=staff
-    #   - ALLOWED_ORIGINS=*
-    #   - ALLOWED_METHODS=*
-    #   - ALLOWED_HEADERS=*
-    #   - CREATE_SUPER_ADMIN=true
-    #   - SUPER_ADMIN_EMAIL=admin@authentication.com
-    #   - SUPER_ADMIN_USERNAME=super_admin
-    #   - SUPER_ADMIN_PASSWORD=#Admin@1234
-    #   - SUPER_ADMIN_FIRST_NAME=Super
-    #   - SUPER_ADMIN_LAST_NAME=Admin
-    #   - CREATE_ORGANIZATION_ADMIN=true
-    #   - ORGANIZATION_ADMIN_EMAIL=orgadmin@authentication.com
-    #   - ORGANIZATION_ADMIN_USERNAME=organization_admin
-    #   - ORGANIZATION_ADMIN_PASSWORD='Admin@1234
-    #   - ORGANIZATION_ADMIN_FIRST_NAME=Organization
-    #   - ORGANIZATION_ADMIN_LAST_NAME=Admin
-
+    depends_on:
+      main_db:
+        condition: service_healthy
+    read_only: true
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "128M"
+    env_file:
+      - secret/dev/auth.env
     networks:
       - app_network
 
@@ -40,21 +49,56 @@ services:
     build: chatbotMicroservice
     ports:
       - "8001:8000"
-    # environment:
-    #   - DATABASE_URL=mysql://admin:h{8KPhW+9U!kuAr@myrdsinstance.cz86wcowk1dd.ap-south-1.rds.amazonaws.com:3306/chatbot_db
-    #   - AUTH_SERVICE_URL=http://auth:8000
-    #   - ANALYTICS_SERVER_URL=http://analytics:8000
+    depends_on:
+      main_db:
+        condition: service_healthy
+    read_only: true
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "128M"
+    env_file:
+      - secret/dev/chatbot.env
     networks:
       - app_network
+
+  userinterface:
+    build: userinterface
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+    env_file:
+      - secret/userinterface.env
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "254M"
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ./web
+    #       target: /src/web
+    #       ignore:
+    #         - node_modules/
+    #     - action: rebuild
+    #       path: package.json
 
   prometheus:
     image: prom/prometheus
     ports:
       - "9090:9090"
     volumes:
-      - "./prometheus/prometheus_prod.yml:/etc/prometheus/prometheus.yml"
+      - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
     networks:
       - app_network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "128M"
 
   nginx:
     image: nginx
@@ -70,6 +114,15 @@ services:
       - auth
       - prometheus
 
+volumes:
+  mysql_data:
+
 networks:
   app_network:
     driver: bridge
+
+secrets:
+  mysql_root_password:
+    file: secret/mysql_root_password.txt
+  mysql_password:
+    file: secret/mysql_user_password.txt

@@ -34,7 +34,7 @@ export const PrometheusAPI = {
   },
 
   // Active Chatbots
-  async getActiveChatbots(range = TIME_RANGES.HOUR) {
+  async getActiveChatbots(range = TIME_RANGES.DAY) {
     const query = 'chatbots_active_count';
     const results = await this.fetchMetrics(query);
     
@@ -42,6 +42,7 @@ export const PrometheusAPI = {
       id: result.metric.id,
       name: result.metric.name,
       created_by: result.metric.created_by,
+      timestamp: parseFloat(result.value[0]),
       value: parseFloat(result.value[1])
     }));
   },

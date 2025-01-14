@@ -196,3 +196,7 @@ auth_service
 
 # Hide static images
 *imgs*
+
+# Hide secrets
+*secret
+*prometheus.prod.yml

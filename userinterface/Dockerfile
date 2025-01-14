@@ -1,4 +1,4 @@
-FROM node:16.3.0-alpine AS prod
+FROM node:22.3.0-alpine AS prod
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN npm install
 RUN npm install -g serve
 
 COPY . /app
-COPY .prod.env /app/.env
+# COPY .prod.env /app/.env
 
 RUN npm run build
 

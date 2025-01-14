@@ -4,10 +4,7 @@ import PieChart from "@/components/Charts/PieChart";
 import StackChart from "@/components/Charts/StackChart";
 import { useEffect, useState } from "react";
 import {
-    total_bookings,
-    total_chatbots,
-    bookings_through_chatbots,
-    average_number_of_question_in_chatbots
+    PrometheusAPI
 } from "@/api/analytics";
 import { get_pct } from "@/utils/analytics";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/UI/card';
@@ -15,13 +12,35 @@ import ReactApexChart from 'react-apexcharts';
 
 
 const AdminDashboard = () => {
-    // Sample data - in real app would come from Prometheus metrics
-    const [lineChartData, setLineChartData] = useState([]);
-    const [lineChartMeta, setLineChartMeta] = useState({});
     const [resolution, setResolution] = useState('D');
+    const [activeChatbotData, setActiveChatbotData] = useState([])
+    const [loading, setLoading] = useState(true);
     const commonResolutionClass = "rounded py-1 px-3 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark";
 
-    
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const results = await PrometheusAPI.getActiveChatbots(resolution);
+          
+          // Process and format the data
+          const formattedData = results.map(result => ({
+            x: new Date(result.timestamp * 1000),
+            y: result.value,
+            name: result.name,
+            id: result.id
+          })).sort((a, b) => a.x - b.x); // Sort by timestamp
+  
+          setActiveChatbotData(formattedData);
+        } catch (error) {
+          console.error('Error fetching active chatbots:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, [resolution]);
   
     // Active Chatbots Chart Options
     const activeChatbotsOptions = {
@@ -30,6 +49,10 @@ const AdminDashboard = () => {
         height: 350,
         toolbar: { show: false },
         fontFamily: 'Satoshi, sans-serif',
+        zoom: {
+          enabled: true,
+          type: 'x'
+        }
       },
       stroke: {
         curve: 'smooth',
@@ -45,11 +68,72 @@ const AdminDashboard = () => {
           stops: [0, 90, 100]
         }
       },
-      xaxis: {
-        categories: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00']
+      dataLabels: { 
+        enabled: false
       },
-      dataLabels: { enabled: false }
+      xaxis: {
+        type: 'datetime',
+        labels: {
+          datetimeFormatter: {
+            year: 'yyyy',
+            month: 'MMM yyyy',
+            day: 'dd MMM',
+            hour: 'HH:mm'
+          },
+          formatter: function(value, timestamp) {
+            return new Date(timestamp).toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+          }
+        },
+        tooltip: {
+          enabled: false
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Active Chatbots'
+        },
+        min: 0,
+        labels: {
+          formatter: function(value) {
+            return Math.round(value);
+          }
+        }
+      },
+      tooltip: {
+        x: {
+          format: 'dd MMM yyyy HH:mm'
+        },
+        y: {
+          formatter: function(value) {
+            return Math.round(value);
+          }
+        },
+        custom: function({ series, seriesIndex, dataPointIndex, w }) {
+          const data = activeChatbotData[dataPointIndex];
+          return (
+            '<div class="p-2">' +
+            '<div><strong>Time:</strong> ' + 
+            new Date(data.x).toLocaleString() + '</div>' +
+            '<div><strong>Count:</strong> ' + 
+            Math.round(data.y) + '</div>' +
+            (data.name ? '<div><strong>Name:</strong> ' + data.name + '</div>' : '') +
+            (data.id ? '<div><strong>ID:</strong> ' + data.id + '</div>' : '') +
+            '</div>'
+          );
+        }
+      }
     };
+
+    const chartSeries = [{
+      name: 'Active Chatbots',
+      data: activeChatbotData.map(item => ({
+        x: item.x,
+        y: item.y
+      }))
+    }];
   
     // Traffic Analysis Chart Options
     const trafficOptions = {
@@ -153,10 +237,7 @@ const AdminDashboard = () => {
           <CardContent>
             <ReactApexChart
               options={activeChatbotsOptions}
-              series={[{
-                name: 'Active Chatbots',
-                data: [5, 7, 10, 12, 8, 6]
-              }]}
+              series={chartSeries}
               type="area"
               height={350}
             />
