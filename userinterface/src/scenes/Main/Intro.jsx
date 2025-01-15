@@ -12,7 +12,7 @@ const Intro = () => {
         style={{ paddingLeft: "115px", height: "100%" }}
       >
         {/* Title */}
-        <div className="absolute w-[700px] h-[160px] top-32">
+        <div className="absolute w-[700px] h-[160px] top-32 mb-2">
           {" "}
           {/* Increased distance from top */}
           <h1 className="font-inter font-bold text-[70px] leading-[80px] text-white">

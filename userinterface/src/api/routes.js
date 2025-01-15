@@ -22,5 +22,6 @@ export const ChatRoutes = {
 };
 
 export const AnalyticsRoutes = {
+  BASE: "/api/v1",
   QUERY: "/query"
 }

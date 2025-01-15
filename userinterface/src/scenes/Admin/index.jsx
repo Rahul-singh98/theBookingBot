@@ -12,6 +12,7 @@ import OrgBot from "./OrgBot";
 import ChatbotList from "./ChatbotList";
 import Editor from "@/components/Editor";
 import Dashboard from "./Dashboard/Dashboard";
+import AdminDashboard from "./Dashboard/AdminDashboard";
 import Profile from "@/components/Profile";
 
 const AdminApp = () => {
@@ -31,7 +32,8 @@ const AdminApp = () => {
   return user ? (
     <AdminLayout>
       <Routes>
-        <Route path="" element={<Dashboard />} />
+        {/* <Route path="" element={<Dashboard />} /> */}
+        <Route path="" element={<AdminDashboard />} />
         <Route path="profile" element={<Profile />} />
         <Route path="org-bot" element={<OrgBot />} />
         <Route path="chatbots" element={<ChatbotList />} />

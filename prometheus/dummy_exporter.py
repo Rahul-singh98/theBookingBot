@@ -5,6 +5,8 @@ from uuid import uuid4
 import string
 import threading
 
+HTTP_PORT = 8002
+
 # Metric to track the number of chatbots that are up and running
 ACTIVE_CHATBOTS_GAUGE = Gauge(
     'chatbots_active_count', 
@@ -41,7 +43,7 @@ BOOKING_AMOUNT_HISTOGRAM = Histogram(
 )
 
 # Start up the server to expose the metrics.
-start_http_server(8000)
+start_http_server(HTTP_PORT)
 
 # Helper functions to generate random data
 def generate_uuid():
@@ -82,7 +84,7 @@ def simulate_chatbot_activity(user_id):
         time.sleep(random.uniform(2, 10))  # Simulate delay between actions
 
     # After processing, set the chatbot as inactive
-    ACTIVE_CHATBOTS_GAUGE.labels(id=chatbot_id, name=chatbot_name, created_by=created_by).dec()
+    # ACTIVE_CHATBOTS_GAUGE.labels(id=chatbot_id, name=chatbot_name, created_by=created_by).dec()
 
 # Create a list of users (simulating 10 unique visitors)
 users = [generate_uuid() for _ in range(10)]

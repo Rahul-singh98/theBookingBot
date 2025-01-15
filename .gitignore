@@ -200,3 +200,5 @@ auth_service
 # Hide secrets
 *secret
 *prometheus.prod.yml
+nginx.temp.conf
+*test.prometheus.yml
