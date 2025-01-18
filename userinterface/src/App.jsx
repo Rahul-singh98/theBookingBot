@@ -71,7 +71,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   useEffect(() => {
-    const visitorId = getOrCreateVisitorId();
+    const {visitorId, timestamp} = getOrCreateVisitorId();
   }, []);
 
   return (

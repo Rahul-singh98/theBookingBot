@@ -37,6 +37,7 @@ import { ConditionalNode } from './nodes/conditionalNode';
 import { ButtonNode } from './nodes/buttonNode'
 import { MessageNode } from './nodes/messageNode'
 import { RadioNode } from './nodes/radioNode'
+import { StripeNode } from './nodes/stripeNode';
 
 import { get_questions, create_questions, update_questions, delete_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
@@ -61,7 +62,8 @@ const nodeTypes = {
   conditional: ConditionalNode,
   radio: RadioNode,
   button: ButtonNode,
-  message: MessageNode
+  message: MessageNode,
+  payment: StripeNode,
 };
 
 let id = 0;

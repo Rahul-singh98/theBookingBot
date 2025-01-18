@@ -29,6 +29,46 @@ export const PrometheusAPI = {
     }
   },
 
+  async getCountUtils(query) {
+    // Construct the Prometheus query_range API URL
+    const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
+
+    try {
+      const response = await fetch(url);
+
+      // Check if the response is ok (status 200-299)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const json = await response.json();
+
+      // Extract and validate the result
+      const result = json.data?.result?.[0]?.value?.[1];
+      const count = result ? parseFloat(result) : 0;
+
+      // Return the mapped structure
+      return { count };
+    } catch (error) {
+      console.error("Error fetching active chatbots count:", error);
+      return { count: 0 };
+    }
+  },
+
+  // Number of Active Chatbots
+  async getNumberOfActiveChatbots(createdBy) {
+    // Construct the Prometheus query
+    const query = `sum(chatbots_active_count${createdBy ? `{created_by="${createdBy}"}` : ""})`;
+    return await this.getCountUtils(query);
+  },
+
+  // Total Traffic Processed
+  async getTotalTrafficProcessed(createdBy) {
+    // Construct the Prometheus query
+    const query = `sum(chatbot_traffic_total${createdBy ? `{created_by="${createdBy}"}` : ""})`;
+    return await this.getCountUtils(query);
+  },
+
   // Active Chatbots
   async getActiveChatbots(range = TIME_RANGES.HOUR) {
     const query = "sum(chatbots_active_count)"; // Aggregate active chatbots

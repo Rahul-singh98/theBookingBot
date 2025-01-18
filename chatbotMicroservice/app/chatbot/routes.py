@@ -1,19 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Query, status, UploadFile, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.chatbot.schemas import (
     ChatbotConfigurationResponse, PaginatedChatbotConfigurationResponse,
     ChatbotConfigurationCreate, ChatbotConfigurationUpdate,
     ChatbotSubmitConfigurationResponse, PaginatedChatbotSubmitConfigurationResponse,
-    ChatbotSubmitConfigurationUpdate, ChatbotSubmitConfigurationCreate
+    ChatbotSubmitConfigurationUpdate, ChatbotSubmitConfigurationCreate,
+    PaymentRequest
 )
 from app.chatbot import crud
 from app.utils.pagination import Pagination
 from app.dependencies import check_permission, get_visitor_id
-from app.dependencies import ACTIVE_CHATBOTS_GAUGE
+from app.dependencies import CHATBOTS_GAUGE
 import os
+import stripe
 
 
+stripe.api_key = os.environ.get("STRIPE_API_KEY")
 chatbot_router = APIRouter()
 
 
@@ -74,7 +78,7 @@ def create_chatbot(
     
     out = crud.create_chatbot(db=db, chatbot=chatbot,
                               user_id=current_user.get("id"))
-    ACTIVE_CHATBOTS_GAUGE.labels(id=out.id, name=out.name, created_by=current_user.get("id")).inc()
+    CHATBOTS_GAUGE.labels(bot_id=out.id, bot_name=out.name, bot_author=current_user.get("id")).inc()
     return out
 
 
@@ -91,7 +95,7 @@ def update_chatbot(chatbot_id: str, bot_update: ChatbotConfigurationUpdate, db: 
 @chatbot_router.delete("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
 def delete_chatbot(chatbot_id: str, db: Session = Depends(get_db)):
     db_bot = crud.delete_chatbot(db=db, chatbot_id=chatbot_id)
-    ACTIVE_CHATBOTS_GAUGE.labels(id=chatbot_id, name=db_bot.name, created_by=db_bot.created_by).dec()
+    CHATBOTS_GAUGE.labels(bot_id=chatbot_id, bot_name=db_bot.name, bot_author=db_bot.created_by).dec()
     if db_bot is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
@@ -155,3 +159,44 @@ async def upload_file(file: UploadFile):
         f.write(contents)
 
     return {"file_path": f""}
+
+# Create payment intent endpoint
+@chatbot_router.post("/create-payment-intent")
+async def create_payment_intent(payment_request: PaymentRequest):
+    try:
+        intent = stripe.PaymentIntent.create(
+            amount=payment_request.amount,
+            currency=payment_request.currency,
+            automatic_payment_methods= {
+                'enabled': True,
+            }
+        )
+        return {"clientSecret": intent["client_secret"]}
+    except stripe.error.StripeError as e:
+        # Handle errors from Stripe API
+        return HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        return HTTPException(status_code=500, detail="Internal server error")
+
+# Webhook endpoint to handle Stripe events (optional)
+@chatbot_router.post("/webhook")
+async def stripe_webhook(request: Request):
+    webhook_secret = "whsec_your_webhook_secret"  # Replace with your webhook secret
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature")
+
+    try:
+        # Verify the webhook signature
+        event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
+        # Handle the event (e.g., payment success)
+        if event["type"] == "payment_intent.succeeded":
+            payment_intent = event["data"]["object"]
+            print(f"Payment succeeded: {payment_intent}")
+        elif event["type"] == "payment_intent.payment_failed":
+            payment_intent = event["data"]["object"]
+            print(f"Payment failed: {payment_intent}")
+        return JSONResponse({"status": "success"})
+    except stripe.error.SignatureVerificationError as e:
+        return HTTPException(status_code=400, detail="Invalid signature")
+    except Exception as e:
+        return HTTPException(status_code=400, detail="Webhook error")

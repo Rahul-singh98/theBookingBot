@@ -202,3 +202,4 @@ auth_service
 *prometheus.prod.yml
 nginx.temp.conf
 *test.prometheus.yml
+example

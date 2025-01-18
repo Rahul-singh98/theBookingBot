@@ -76,36 +76,29 @@ def check_permission(required_permission: str):
 
 # Prometheus metrics
 # Metric to track the number of chatbots that are up and running
-ACTIVE_CHATBOTS_GAUGE = Gauge(
-    'chatbots_active_count', 
+CHATBOTS_GAUGE = Gauge(
+    'chatbots_gauge', 
     'Number of chatbots up and running',
-    ['id', 'name', 'created_by']
+    ['bot_id', 'bot_name', 'bot_author']
 )
 
 # Metric to track traffic analysis
-TRAFFIC_COUNTER = Counter(
-    'chatbot_traffic_total', 
-    'Total number of requests/messages processed by chatbots',
-    ['chatbot_id', "session_id", 'visitor_id']
+CHATBOTS_TRAFFIC = Counter(
+    'chatbots_traffic', 
+    'Total number of sessions processed by chatbots',
+    ['bot_id', 'bot_author', "s_id", 'v_id']
 )
 
-# Metric to track the number of questions answered by chatbots
-QUESTIONS_ANSWERED_COUNTER = Counter(
-    'chatbot_questions_answered_total', 
-    'Total number of questions answered by chatbots, tracked by chatbot ID and session ID', 
-    ['chatbot_id', "session_id", 'visitor_id']
-)
+# # Metric to track completed payments
+# PAYMENT_COMPLETED_COUNTER = Counter(
+#     'payment_completed_total', 
+#     'Total number of completed payments by user', 
+#     ['visitor_id', 'session_id']
+# )
 
-# Metric to track completed payments
-PAYMENT_COMPLETED_COUNTER = Counter(
-    'payment_completed_total', 
-    'Total number of completed payments by user', 
-    ['visitor_id', 'session_id']
-)
-
-# Metric to track booking amount
-BOOKING_AMOUNT_HISTOGRAM = Histogram(
-    'booking_amount', 
-    'Distribution of booking amounts', 
-    ['visitor_id', 'session_id']
-)
+# # Metric to track booking amount
+# BOOKING_AMOUNT_HISTOGRAM = Histogram(
+#     'booking_amount', 
+#     'Distribution of booking amounts', 
+#     ['visitor_id', 'session_id']
+# )

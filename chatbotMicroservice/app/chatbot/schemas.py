@@ -58,3 +58,8 @@ class ChatbotSubmitConfigurationResponse(ChatbotSubmitConfigurationBase):
 class PaginatedChatbotSubmitConfigurationResponse(BaseModel):
     items: List[ChatbotSubmitConfigurationResponse]
     pagination: PaginationResponse
+
+
+class PaymentRequest(BaseModel):
+    amount: int  # Amount in cents
+    currency: str  # Currency code, e.g., 'usd'

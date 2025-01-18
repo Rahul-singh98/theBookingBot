@@ -8,7 +8,7 @@ from app.chats.schemas import (
     ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse,
 )
 import json
-from app.dependencies import check_permission, get_visitor_id, TRAFFIC_COUNTER, QUESTIONS_ANSWERED_COUNTER
+from app.dependencies import check_permission, get_visitor_id, CHATBOTS_TRAFFIC
 from app.chats import crud
 from app.chatbot import crud as chatbot_services
 from app.questions import crud as question_services
@@ -40,7 +40,7 @@ def read_chat_session(session_id: str, db: Session = Depends(get_db)):
 @chats_router.post("/{chatbot_id}", response_model=ChatSessionResponse)
 async def start_chat_session(
     chatbot_id: str, 
-    # visitor: str = Depends(get_visitor_id),
+    visitor: str = Depends(get_visitor_id),
     db: Session = Depends(get_db)):
     db_chatbot = chatbot_services.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:
@@ -52,7 +52,7 @@ async def start_chat_session(
     history_create = ChatHistoryCreate(session_id=db_session.id, response=None)
     _ = crud.create_chat_history(db, history_create)
 
-    TRAFFIC_COUNTER.labels(chatbot_id=chatbot_id, session_id=db_session.id, visitor_id='test').inc()
+    CHATBOTS_TRAFFIC.labels(bot_id=chatbot_id, s_id=db_session.id, v_id=visitor, bot_author=db_chatbot.created_by).inc()
     return db_session
 
 
@@ -127,7 +127,7 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
     if isinstance(updated_history.response, str):
         updated_history.response = json.loads(updated_history.response)
 
-    QUESTIONS_ANSWERED_COUNTER.labels(chatbot_id=db_session.bot_id, session_id=db_session.id, visitor_id='abc').inc()
+    # QUESTIONS_ANSWERED_COUNTER.labels(chatbot_id=db_session.bot_id, session_id=db_session.id, visitor_id='abc').inc()
     return updated_history
 
 

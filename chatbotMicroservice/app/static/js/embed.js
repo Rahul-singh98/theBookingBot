@@ -1,6 +1,7 @@
-// Configuration constants
-var BACKEND_CHATBOT_API_URL = "http://ec2-13-201-2-185.ap-south-1.compute.amazonaws.com";
-// var BACKEND_CHATBOT_API_URL = "http://localhost:8001";
+// Configuration
+const GMKEY = "AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk";
+const SPKEY =
+  "pk_test_51QhaP4Rq3j0JuwMmggGo4IAKfG0UYBepjPVSA5HrR3r8rfBFPbLNcq9q8r8iZ7WzXeD5LkTGPpTCf8Jl50GQ32WN007amsWm9r";
 const BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT = "/api/chats";
 const BACKEND_CHATBOT_CHATBOT_API_ENDPOINT = "/api/chatbots";
 
@@ -12,32 +13,20 @@ const clientBotState = {
   botName: "Chatbot",
   primaryColor: "e06936",
   secondaryColor: "f0f4f8",
-  botImage: `${BACKEND_CHATBOT_API_URL}/static/images/bot.svg`,
+  // botImage: `${clientBotState.backendUrl}/static/images/bot.svg`,
   elements: {},
   current: {
     questionId: null,
     question: null,
   },
-  mapsAutoComplete: null
+  mapsAutoComplete: null,
 };
 
-function generateRandomId() {
-  return Date.now() + '-' + Math.random().toString(36).substring(2, 15);
-}
-
 function getOrCreateVisitorId() {
-  const localStorageKey = 'visitorId';
+  const localStorageKey = "vIdData";
 
   // Check if the visitor ID already exists in localStorage
-  let visitorId = localStorage.getItem(localStorageKey);
-
-  if (!visitorId) {
-    // Generate a new random ID if it doesn't exist
-    visitorId = generateRandomId();
-
-    // Save the new ID to localStorage
-    localStorage.setItem(localStorageKey, visitorId);
-  }
+  let { visitorId, timestamp } = localStorage.getItem(localStorageKey);
 
   return visitorId;
 }
@@ -53,11 +42,20 @@ const initChatbot = async (config) => {
     throw new Error("Token is required to initialize the chatbot");
   }
 
-  // BACKEND_CHATBOT_API_URL = config.backendUrl;
+  if (!config.visitorId) {
+    throw new Error("Visitor ID is required to initialize the chatbot");
+  }
+
+  if (!config.backendUrl) {
+    throw new Error("backendURL is required to initialize the chatbot");
+  }
+
+  // clientBotState.backendUrl = config.backendUrl;
   clientBotState.backendUrl = config.backendUrl;
   clientBotState.botImage = `${config.backendUrl}/static/images/bot.svg`;
   clientBotState.token = config.token;
   clientBotState.sessionId = localStorage.getItem("chatbot_session_id");
+  clientBotState.visitorId = config.visitorId;
 
   try {
     await loadDependencies();
@@ -66,7 +64,6 @@ const initChatbot = async (config) => {
     createChatbotHTML();
     initializeElements();
     addEventListeners();
-    getOrCreateVisitorId();
 
     // Check visibility state in localStorage
     const isVisible = localStorage.getItem("chatbot_visible") === "true";
@@ -96,11 +93,21 @@ const loadDependencies = () => {
     }
 
     const googleScript = document.createElement("script");
-    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk&libraries=places`;
+    googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${GMKEY}&libraries=places`;
     googleScript.defer = true;
     googleScript.onerror = () =>
       reject(new Error("Failed to load Google Places API"));
     document.head.appendChild(googleScript);
+
+    const stripeScript = document.createElement("script");
+    stripeScript.src = "https://js.stripe.com/v3/";
+    stripeScript.async = true;
+    stripeScript.onload = () => {
+      console.log("Stripe.js loaded successfully");
+      resolve();
+    };
+    stripeScript.onerror = () => reject(new Error("Failed to load Stripe.js"));
+    document.head.appendChild(stripeScript);
 
     const script = document.createElement("script");
     script.src =
@@ -109,22 +116,110 @@ const loadDependencies = () => {
     script.onload = resolve;
     script.onerror = () => reject(new Error("Failed to load jQuery"));
     document.head.appendChild(script);
+  });
+};
 
+// Add a Stripe payment button in renderInput or createChatbotHTML
+const renderPaymentButton = () => {
+  const paymentHtml = `
+      <div id="payment-element"></div>
+      <div id="payment-request-button"></div>
+      <button id="pay-button">Pay</button>
+  `;
+  clientBotState.elements.chatBody.append(paymentHtml);
+  $("#pay-button").on("click", handlePayment);
+};
+
+// Handle Stripe payment
+const handlePayment = async () => {
+  const response = await fetch(
+    `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/create-payment-intent`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: 5000,
+        currency: "usd",
+      }),
+    }
+  );
+
+  const { clientSecret } = await response.json();
+
+  const stripe = Stripe(SPKEY);
+
+  const appearance = {
+    theme: "flat",
+    variables: { colorPrimaryText: "#262626" },
+  };
+
+  const options = {
+    layout: {
+      type: "tabs",
+      defaultCollapsed: false,
+    },
+  };
+
+  const elements = stripe.elements({ clientSecret, appearance });
+  const paymentElement = elements.create("payment", options);
+  paymentElement.mount("#payment-element");
+
+  // Google Pay or Payment Request Button
+
+  const prButton = elements.create("paymentRequestButton", {
+    paymentRequest: stripe.paymentRequest({
+      country: "US",
+      currency: "usd",
+      total: {
+        label: "Total",
+        amount: 5000,
+      },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    }),
+  });
+
+  const paymentRequest = prButton.paymentRequest;
+
+  // Check availability of payment request
+  paymentRequest.canMakePayment().then((result) => {
+    if (result) {
+      prButton.mount("#payment-request-button");
+    } else {
+      document.querySelector("#payment-request-button").style.display = "none";
+    }
+  });
+
+  // Handle Payment Submission
+  document.querySelector("#pay-button").addEventListener("click", async () => {
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: "https://your-website.com/order-confirmation",
+      },
+    });
+
+    if (error) {
+      console.error(error.message);
+      alert("Payment failed: " + error.message);
+    }
   });
 };
 
 // Configure chatbot settings
 const configureChatbot = async () => {
   try {
-    const visitorId = getOrCreateVisitorId()
+    const visitorId = clientBotState.visitorId;
 
     // Set up the headers object
     const headers = {
-      "Visitor": visitorId,
+      Visitor: visitorId,
     };
 
     const config = await $.ajax({
-      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}`,
+      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}`,
       method: "GET",
       headers: headers,
     });
@@ -142,7 +237,7 @@ const configureChatbot = async () => {
 
 // Inject required styles
 const injectStyles = () => {
-  const cssUrl = `${BACKEND_CHATBOT_API_URL}/static/css/chatbot-styles.css`;
+  const cssUrl = `${clientBotState.backendUrl}/static/css/chatbot-styles.css`;
 
   if (!$("#chatbot-styles").length) {
     fetch(cssUrl)
@@ -161,28 +256,27 @@ const injectStyles = () => {
 };
 
 // Create chatbot HTML structure
-// Create chatbot HTML structure
 const createChatbotHTML = () => {
   const chatbotHTML = `
     <div class="boticonchat-cover">
       <div class="chat-box-fixicon" tabindex="0" role="button" aria-label="Open Chatbot">
-        <img class="chat-box" src="${BACKEND_CHATBOT_API_URL}/static/images/chat-bot.svg" />
+        <img class="chat-box" src="${clientBotState.backendUrl}/static/images/chat-bot.svg" />
       </div>
       <div class="chat-wrap boxHide">
         <div class="chat-head">
           <div class="ch-left">
             <span>${clientBotState.botName}</span>
             <div class="chat-active">
-              <img src="${BACKEND_CHATBOT_API_URL}/static/images/time.svg" />
+              <img src="${clientBotState.backendUrl}/static/images/time.svg" />
               <span>A few minutes</span>
             </div>
           </div>
           <div class="ch-right">
             <div class="refresh-chat-box" tabindex="0" role="button" aria-label="Refresh Chatbot">
-              <img src="${BACKEND_CHATBOT_API_URL}/static/images/refresh-23x23.svg" />
+              <img src="${clientBotState.backendUrl}/static/images/refresh-23x23.svg" />
             </div>
             <div class="close-chat-box" tabindex="0" role="button" aria-label="Close Chatbot">
-              <img src="${BACKEND_CHATBOT_API_URL}/static/images/cross.svg" />
+              <img src="${clientBotState.backendUrl}/static/images/cross.svg" />
             </div>
           </div>
         </div>
@@ -190,7 +284,7 @@ const createChatbotHTML = () => {
         <div class="chat-footer">
           <input type="text" placeholder="Type a reply..." />
           <div tabindex="0" role="button" aria-label="Send Message">
-            <img src="${BACKEND_CHATBOT_API_URL}/static/images/send.svg" />
+            <img src="${clientBotState.backendUrl}/static/images/send.svg" />
           </div>
         </div>
       </div>
@@ -254,14 +348,14 @@ const startChatSession = async () => {
   showTypingIndicator();
 
   try {
-    const visitorId = getOrCreateVisitorId()
+    const visitorId = clientBotState.visitorId;
 
     const response = await $.ajax({
-      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.token}`,
+      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.token}`,
       method: "POST",
       contentType: "application/json",
       dataType: "json",
-      headers: { "X-Requested-With": "XMLHttpRequest", "Visitor": visitorId },
+      headers: { "X-Requested-With": "XMLHttpRequest", Visitor: visitorId },
     });
 
     if (!response || !response.id) {
@@ -291,15 +385,15 @@ const fetchNextQuestion = async () => {
   }
 
   try {
-    const visitorId = getOrCreateVisitorId()
+    const visitorId = clientBotState.visitorId;
 
     // Set up the headers object
     const headers = {
-      "Visitor": visitorId,
+      Visitor: visitorId,
     };
 
     const response = await $.ajax({
-      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/next-question`,
+      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/next-question`,
       method: "GET",
       headers: headers,
     });
@@ -353,14 +447,14 @@ const submitAPIResponse = async () => {
   if (!clientBotState.sessionId) return;
 
   try {
-    const visitorId = getOrCreateVisitorId()
+    const visitorId = clientBotState.visitorId;
 
     const response = await $.ajax({
-      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/submit`,
+      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/submit`,
       method: "POST",
       contentType: "application/json", // Ensures JSON format
       dataType: "json",
-      headers: { "X-Requested-With": "XMLHttpRequest", "Visitor": visitorId },
+      headers: { "X-Requested-With": "XMLHttpRequest", Visitor: visitorId },
     });
 
     if (response.redirect !== undefined) {
@@ -381,10 +475,10 @@ const submitAnswer = async (answer, answerText) => {
   showTypingIndicator();
 
   try {
-    const visitorId = getOrCreateVisitorId();
+    const visitorId = clientBotState.visitorId;
 
     const response = await $.ajax({
-      url: `${BACKEND_CHATBOT_API_URL}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/answer`,
+      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/answer`,
       method: "POST",
       contentType: "application/json", // Ensures JSON format
       dataType: "json",
@@ -395,7 +489,7 @@ const submitAnswer = async (answer, answerText) => {
         variable: clientBotState.current.variable,
         question_type: clientBotState.current.question_type,
       }), // Stringify the data
-      headers: { "X-Requested-With": "XMLHttpRequest", "Visitor": visitorId },
+      headers: { "X-Requested-With": "XMLHttpRequest", Visitor: visitorId },
     });
 
     hideTypingIndicator();
@@ -539,6 +633,9 @@ const renderInput = (renderData) => {
     case "Email":
       inputHtml = createInput("email", "Enter your email...");
       break;
+    case "Payment":
+      renderPaymentButton();
+      inputHTML = createInput("text", "");
     default:
       inputHtml = createInput("text", "Type your response...");
   }
@@ -553,7 +650,9 @@ const renderInput = (renderData) => {
   }
 
   if (question_type === "Address") {
-    clientBotState.mapsAutoComplete = new google.maps.places.Autocomplete(document.getElementById('user-input'));
+    clientBotState.mapsAutoComplete = new google.maps.places.Autocomplete(
+      document.getElementById("user-input")
+    );
     clientBotState.mapsAutoComplete.addListener("place_changed", () => {
       const place = clientBotState.mapsAutoComplete.getPlace();
       if (!place.geometry || !place.geometry.location) {
@@ -561,7 +660,6 @@ const renderInput = (renderData) => {
         return;
       }
     });
-
   }
 };
 
