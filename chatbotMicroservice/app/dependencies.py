@@ -84,7 +84,7 @@ CHATBOTS_GAUGE = Gauge(
 
 # Metric to track traffic analysis
 CHATBOTS_TRAFFIC = Counter(
-    'chatbots_traffic', 
+    'chatbots_traffic_total', 
     'Total number of sessions processed by chatbots',
     ['bot_id', 'bot_author', "s_id", 'v_id']
 )

@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "../UI/card";
 import { TIME_RANGES } from "@/utils/time_ranges";
 import ReactApexChart from "react-apexcharts";
 
-const ChatbotsTraffic = () => {
+const ChatbotsTraffic = ({ createdBy = null }) => {
   const [resolution, setResolution] = useState(TIME_RANGES.HOUR);
   const [ChatbotTrafficData, setChatbotTrafficData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ const ChatbotsTraffic = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const results = await PrometheusAPI.getChatbotTraffic(resolution);
+        const results = await PrometheusAPI.getChatbotTraffic(resolution, createdBy);
 
         // Process and format the data
         const formattedData = results
@@ -86,9 +86,6 @@ const ChatbotsTraffic = () => {
       },
     },
     yaxis: {
-      // title: {
-      //   text: 'Active Chatbots'
-      // },
       min: 0,
       labels: {
         formatter: function (value) {
@@ -127,7 +124,6 @@ const ChatbotsTraffic = () => {
 
   const chartSeries = [
     {
-      // name: 'Active Chatbots',
       data: ChatbotTrafficData.map((item) => ({
         x: item.x,
         y: item.y,
@@ -139,25 +135,25 @@ const ChatbotsTraffic = () => {
     <>
       <Card>
         <CardHeader>
-          <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex flex-wrap items-start justify-between gap-3 ">
             <div>
-              <CardTitle>Active Chatbots</CardTitle>
+              <CardTitle>Total Traffic</CardTitle>
             </div>
-            <div className="inline-flex items-center rounded-md bg-whiter p-1.5">
+            <div className="inline-flex items-center rounded-md bg-whiter dark:bg-boxdark p-1.5">
               <button
-                className={`${commonResolutionClass} ${resolution === TIME_RANGES.HOUR ? "bg-white shadow-card" : ""}`}
+                className={`${commonResolutionClass} ${resolution === TIME_RANGES.HOUR ? "bg-white dark:bg-slate-900 shadow-card" : ""}`}
                 onClick={() => setResolution(TIME_RANGES.HOUR)}
               >
                 Hour
               </button>
               <button
-                className={`${commonResolutionClass} ${resolution === TIME_RANGES.DAY ? "bg-white shadow-card" : ""}`}
+                className={`${commonResolutionClass} ${resolution === TIME_RANGES.DAY ? "bg-white dark:bg-slate-900 shadow-card" : ""}`}
                 onClick={() => setResolution(TIME_RANGES.DAY)}
               >
                 Day
               </button>
               <button
-                className={`${commonResolutionClass} ${resolution === TIME_RANGES.WEEK ? "bg-white shadow-card" : ""}`}
+                className={`${commonResolutionClass} ${resolution === TIME_RANGES.WEEK ? "bg-white dark:bg-slate-900 shadow-card" : ""}`}
                 onClick={() => setResolution(TIME_RANGES.WEEK)}
               >
                 Week

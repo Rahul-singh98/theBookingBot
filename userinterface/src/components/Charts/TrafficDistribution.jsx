@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "../UI/card";
 import { PrometheusAPI } from "@/api/analytics";
 import ReactApexChart from "react-apexcharts";
 
-const TrafficDistribution = () => {
+const TrafficDistribution = ({ createdBy = null }) => {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState({
     series: [],
@@ -14,7 +14,7 @@ const TrafficDistribution = () => {
     const fetchTrafficDistribution = async () => {
       setLoading(true);
       try {
-        const response = await PrometheusAPI.getChatbotTrafficByBots();
+        const response = await PrometheusAPI.getChatbotTrafficByBots(createdBy);
 
         // Process the data into categories and series
         const categories = [];
