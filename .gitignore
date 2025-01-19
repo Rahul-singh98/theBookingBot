@@ -199,7 +199,9 @@ auth_service
 
 # Hide secrets
 *secret
-*prometheus.prod.yml
-nginx.temp.conf
+*prod.prometheus.yml
 *test.prometheus.yml
+
+nginx.temp.conf
+nginx.prod.conf
 example

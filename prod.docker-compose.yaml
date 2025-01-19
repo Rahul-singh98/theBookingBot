@@ -1,0 +1,72 @@
+services:
+  userinterface:
+    build: userinterface
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+    env_file:
+      - secret/prod/userinterface.env
+
+  auth:
+    build: authMicroservice
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - secret/prd/auth.prod.env
+    networks:
+      - app_network
+
+  chatbot:
+    build: chatbotMicroservice
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    env_file:
+      - secret/prod/chatbot.prod.env
+    networks:
+      - app_network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus/prod.prometheus.yml:/etc/prometheus/prometheus.yml"
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      # - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      # - ./certbot/conf:/etc/letsencrypt:ro
+      # - ./certbot/www:/var/www/certbot:ro
+    networks:
+      - app_network
+    depends_on:
+      - userinterface
+      - chatbot
+      - auth
+      - prometheus
+  # certbot:
+  #   image: certbot/certbot
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
