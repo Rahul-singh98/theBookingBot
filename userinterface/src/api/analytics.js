@@ -30,6 +30,14 @@ export const PrometheusAPI = {
   },
 
   async getCountUtils(query) {
+    // Helper function to format numbers
+    const formatNumber = (num) => {
+      if (num >= 1e9) return (num / 1e9).toFixed(1).replace(/\.0$/, "") + "B"; // Billions
+      if (num >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, "") + "M"; // Millions
+      if (num >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, "") + "K"; // Thousands
+      return num.toString(); // Less than 1,000
+    };
+
     // Construct the Prometheus query_range API URL
     const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
 
@@ -47,33 +55,46 @@ export const PrometheusAPI = {
       const result = json.data?.result?.[0]?.value?.[1];
       const count = result ? parseFloat(result) : 0;
 
+      // Format the count into human-readable form
+      const formattedCount = formatNumber(count);
+
       // Return the mapped structure
-      return { count };
+      return { count: formattedCount };
     } catch (error) {
       console.error("Error fetching active chatbots count:", error);
-      return { count: 0 };
+      return { count: "0" };
     }
   },
-
   // Number of Active Chatbots
   async getNumberOfActiveChatbots(createdBy) {
     // Construct the Prometheus query
-    const query = `sum(chatbots_active_count${createdBy ? `{created_by="${createdBy}"}` : ""})`;
+    const query = `sum(chatbots_gauge_total${createdBy ? `{bot_author="${createdBy}"}` : ""})`;
     return await this.getCountUtils(query);
   },
 
   // Total Traffic Processed
   async getTotalTrafficProcessed(createdBy) {
     // Construct the Prometheus query
-    const query = `sum(chatbot_traffic_total${createdBy ? `{created_by="${createdBy}"}` : ""})`;
+    const query = `sum(chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""})`;
+    return await this.getCountUtils(query);
+  },
+
+  // Total Traffic Processed
+  async getUniqueVisitors(createdBy) {
+    // Construct the Prometheus query
+    const query = `count(count by (v_id) (chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""}))`;
     return await this.getCountUtils(query);
   },
 
   // Active Chatbots
-  async getActiveChatbots(range = TIME_RANGES.HOUR) {
-    const query = "sum(chatbots_active_count)"; // Aggregate active chatbots
+  async getActiveChatbots(range = TIME_RANGES.HOUR, createdBy = null) {
+    let query = "increase(sum(chatbots_gauge_total)[5m:])"; // Aggregate active chatbots
     const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
     let start, step;
+
+    if (createdBy) {
+      query = `increase(sum(chatbots_gauge_total${createdBy ? `{bot_author="${createdBy}"}` : ""})[5m:])`;
+    }
 
     // Define the start and step based on the range
     switch (range) {
@@ -95,26 +116,32 @@ export const PrometheusAPI = {
 
     // Construct the Prometheus query_range API URL
     const url = `/api/v1/query_range?query=${encodeURIComponent(query)}&start=${start}&end=${now}&step=${step}`;
+    // const url = '/api/v1/query_range?query=increase%28sum%28chatbots_gauge_total%29%5B5m%3A%5D%29&step=60&start=1737199548.9865105&end=1737294444.384';
 
     // Fetch metrics from the Prometheus server
     const response = await fetch(url);
     const json = await response.json();
 
     // Map the results to the desired structure
-    return json.data.result.map((result) => ({
-      timestamp: result.values.map((value) => parseFloat(value[0])),
-      value: result.values.map((value) => parseFloat(value[1])),
+    // return json.data.result.map((result) => ({
+    //   timestamp: result.values.map((value) => parseFloat(value[0])),
+    //   value: result.values.map((value) => parseFloat(value[1])),
+    // }));
+
+    return json.data.result[0].values.map((value) => ({
+      timestamp: parseFloat(value[0]),
+      value: parseFloat(value[1]),
     }));
   },
 
   // Chatbot Traffic Analysis
   async getChatbotTraffic(range = TIME_RANGES.DAY, createdBy = null) {
     // Base query for traffic
-    let query = "sum(chatbot_traffic_total) by (chatbot_id)";
+    let query = "increase(sum(chatbots_traffic_total)[5m:])";
 
     // Filter by created_by if provided
     if (createdBy) {
-      query = `sum(chatbot_traffic_total{chatbot_id=~"${createdBy}.*"}) by (chatbot_id)`;
+      query = `increase(sum(chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""})[5m:])`;
     }
 
     const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
@@ -153,27 +180,59 @@ export const PrometheusAPI = {
     const response = await fetch(url);
     const json = await response.json();
 
-    // Map the results to the desired structure
-    const chatbotData = json.data.result.map((result) => ({
-      chatbot_id: result.metric.chatbot_id,
-      data: result.values.map((value) => ({
-        timestamp: parseFloat(value[0]),
-        traffic: parseFloat(value[1]),
-      })),
+    return json.data.result[0].values.map((value) => ({
+      timestamp: parseFloat(value[0]),
+      value: parseFloat(value[1]),
     }));
 
+    // Map the results to the desired structure
+    // const chatbotData = json.data.result.map((result) => ({
+    //   chatbot_id: result.metric.chatbot_id,
+    //   data: result.values.map((value) => ({
+    //     timestamp: parseFloat(value[0]),
+    //     traffic: parseFloat(value[1]),
+    //   })),
+    // }));
+
     // Sort chatbots by total traffic (sum of traffic over the period) and pick the top 3
-    const topChatbots = chatbotData
-      .map((bot) => ({
-        ...bot,
-        totalTraffic: bot.data.reduce((sum, point) => sum + point.traffic, 0), // Sum the traffic over the range
-      }))
-      .sort((a, b) => b.totalTraffic - a.totalTraffic) // Sort descending by total traffic
-      .slice(0, 3); // Get top 3
+    // const topChatbots = chatbotData
+    //   .map((bot) => ({
+    //     ...bot,
+    //     totalTraffic: bot.data.reduce((sum, point) => sum + point.traffic, 0), // Sum the traffic over the range
+    //   }))
+    //   .sort((a, b) => b.totalTraffic - a.totalTraffic) // Sort descending by total traffic
+    //   .slice(0, 3); // Get top 3
 
     // Return the top 3 chatbots' traffic data
-    return topChatbots;
+    // return topChatbots;
   },
+
+  // Chatbot Traffic Analysis by users
+  async getChatbotTrafficByBots(createdBy = null) {
+    // Base query for traffic
+    let query =
+      "topk(10, sum by (bot_id, bot_author) (chatbots_traffic_total))";
+
+    if (createdBy) {
+      query = `topk(10, sum by (bot_id, bot_author) (chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""}))`;
+      // query = `sum(chatbot_traffic_total{chatbot_id=~"${createdBy}.*"}) by (chatbot_id)`;
+    }
+
+    // Construct the Prometheus query_range API URL
+    const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
+
+    // Fetch metrics from the Prometheus server
+    const response = await fetch(url);
+    const json = await response.json();
+
+    return json.data.result.map((result) => ({
+      timestamp: parseFloat(result.value[0]),
+      value: parseFloat(result.value[1]),
+      bot_author: result.metric.bot_author,
+      bot_id: result.metric.bot_id,
+    }));
+  },
+
   // Questions Answered
   async getQuestionsAnswered(range = TIME_RANGES.DAY) {
     const query = buildRangeQuery("chatbot_questions_answered_total", range);

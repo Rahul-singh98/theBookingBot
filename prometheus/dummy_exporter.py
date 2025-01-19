@@ -8,39 +8,39 @@ import threading
 HTTP_PORT = 8002
 
 # Metric to track the number of chatbots that are up and running
-ACTIVE_CHATBOTS_GAUGE = Gauge(
-    'chatbots_active_count', 
+CHATBOTS_GAUGE = Gauge(
+    'chatbots_gauge_total', 
     'Number of chatbots up and running',
-    ['id', 'name', 'created_by']
+    ['bot_id', 'bot_name', 'bot_author']
 )
 
 # Metric to track traffic analysis
-TRAFFIC_COUNTER = Counter(
-    'chatbot_traffic_total', 
-    'Total number of requests/messages processed by chatbots',
-    ['chatbot_id', "session_id", 'visitor_id']
+CHATBOTS_TRAFFIC = Counter(
+    'chatbots_traffic_total', 
+    'Total number of sessions processed by chatbots',
+    ['bot_id', 'bot_author', "s_id", 'v_id']
 )
 
-# Metric to track the number of questions answered by chatbots
-QUESTIONS_ANSWERED_COUNTER = Counter(
-    'chatbot_questions_answered_total', 
-    'Total number of questions answered by chatbots, tracked by chatbot ID and session ID', 
-    ['chatbot_id', "session_id", 'visitor_id']
-)
+# # Metric to track the number of questions answered by chatbots
+# QUESTIONS_ANSWERED_COUNTER = Counter(
+#     'chatbot_questions_answered_total', 
+#     'Total number of questions answered by chatbots, tracked by chatbot ID and session ID', 
+#     ['chatbot_id', "session_id", 'visitor_id']
+# )
 
-# Metric to track completed payments
-PAYMENT_COMPLETED_COUNTER = Counter(
-    'payment_completed_total', 
-    'Total number of completed payments by user', 
-    ['visitor_id', 'session_id']
-)
+# # Metric to track completed payments
+# PAYMENT_COMPLETED_COUNTER = Counter(
+#     'payment_completed_total', 
+#     'Total number of completed payments by user', 
+#     ['visitor_id', 'session_id']
+# )
 
-# Metric to track booking amount
-BOOKING_AMOUNT_HISTOGRAM = Histogram(
-    'booking_amount', 
-    'Distribution of booking amounts', 
-    ['visitor_id', 'session_id']
-)
+# # Metric to track booking amount
+# BOOKING_AMOUNT_HISTOGRAM = Histogram(
+#     'booking_amount', 
+#     'Distribution of booking amounts', 
+#     ['visitor_id', 'session_id']
+# )
 
 # Start up the server to expose the metrics.
 start_http_server(HTTP_PORT)
@@ -62,24 +62,26 @@ def simulate_chatbot_activity(user_id):
     created_by = user_id
     
     # Set the active chatbot gauge
-    ACTIVE_CHATBOTS_GAUGE.labels(id=chatbot_id, name=chatbot_name, created_by=created_by).inc()
+    CHATBOTS_GAUGE.labels(bot_id=chatbot_id, bot_name=chatbot_name, bot_author=created_by).inc()
+    # print("Active Chatbots")
 
     # Simulate traffic and interaction
     for _ in range(random.randint(5, 20)):  # Simulate 5 to 20 messages
         session_id = generate_uuid()
         visitor_id = random.choice(users)  # Pick a random visitor
-        TRAFFIC_COUNTER.labels(chatbot_id=chatbot_id, session_id=session_id, visitor_id=visitor_id).inc()
+        CHATBOTS_TRAFFIC.labels(bot_id=chatbot_id, s_id=session_id, v_id=visitor_id, bot_author=created_by).inc()
+        # print("Incremented Traffic Counter")
 
         # Simulate question answering
-        QUESTIONS_ANSWERED_COUNTER.labels(chatbot_id=chatbot_id, session_id=session_id, visitor_id=visitor_id).inc()
+        # QUESTIONS_ANSWERED_COUNTER.labels(chatbot_id=chatbot_id, session_id=session_id, visitor_id=visitor_id).inc()
 
         # Simulate payments and booking
-        if random.random() > 0.8:  # 20% chance to simulate a payment
-            PAYMENT_COMPLETED_COUNTER.labels(visitor_id=visitor_id, session_id=session_id).inc()
+        # if random.random() > 0.8:  # 20% chance to simulate a payment
+        #     PAYMENT_COMPLETED_COUNTER.labels(visitor_id=visitor_id, session_id=session_id).inc()
 
-        if random.random() > 0.5:  # 50% chance to simulate booking
-            booking_amount = generate_random_amount()
-            BOOKING_AMOUNT_HISTOGRAM.labels(visitor_id=visitor_id, session_id=session_id).observe(booking_amount)
+        # if random.random() > 0.5:  # 50% chance to simulate booking
+        #     booking_amount = generate_random_amount()
+        #     BOOKING_AMOUNT_HISTOGRAM.labels(visitor_id=visitor_id, session_id=session_id).observe(booking_amount)
 
         time.sleep(random.uniform(2, 10))  # Simulate delay between actions
 

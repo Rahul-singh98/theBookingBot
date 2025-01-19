@@ -9,10 +9,12 @@ import { TIME_RANGES } from "@/utils/time_ranges";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/UI/card";
 import ReactApexChart from "react-apexcharts";
 import ActiveChatbotsCount from "@/components/Charts/ActiveChatbotsCount";
-import TrafficStackChart from "@/components/Charts/TrafficeLineChart";
+import TrafficStackChart from "@/components/Charts/TrafficeStackChart";
+import CardBar from "@/components/UI/CardBar";
+import ChatbotsTraffic from "@/components/Charts/ChatbotsTraffic";
+import TrafficDistribution from "@/components/Charts/TrafficDistribution";
 
 const AdminDashboard = () => {
-
   // Traffic Analysis Chart Options
   const trafficOptions = {
     chart: {
@@ -46,7 +48,7 @@ const AdminDashboard = () => {
       type: "donut",
       fontFamily: "Satoshi, sans-serif",
     },
-    colors: ["#3C50E0", "#80CAEE", "#6577F3", "#8FD0EF"],
+    // colors: ["#3C50E0", "#80CAEE", "#6577F3", "#8FD0EF"],
     labels: ["Product", "Shipping", "Returns", "Payment"],
     legend: {
       position: "bottom",
@@ -54,7 +56,7 @@ const AdminDashboard = () => {
     plotOptions: {
       pie: {
         donut: {
-          size: "65%",
+          size: "60%",
         },
       },
     },
@@ -83,11 +85,17 @@ const AdminDashboard = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      <CardBar />
+
       {/* Active Chatbots */}
       <ActiveChatbotsCount />
 
       {/* Traffic Analysis */}
-      <TrafficStackChart />
+      <ChatbotsTraffic />
+      {/* <TrafficStackChart /> */}
+
+      <TrafficDistribution />
+
       {/* <Card>
         <CardHeader>
           <CardTitle>Traffic by Chatbot</CardTitle>
@@ -118,7 +126,7 @@ const AdminDashboard = () => {
       {/* Questions Distribution */}
       <Card>
         <CardHeader>
-          <CardTitle>Questions Distribution</CardTitle>
+          <CardTitle>Traffic by users</CardTitle>
         </CardHeader>
         <CardContent>
           <ReactApexChart
@@ -131,7 +139,7 @@ const AdminDashboard = () => {
       </Card>
 
       {/* Booking Amount Distribution */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Booking Amount Distribution</CardTitle>
         </CardHeader>
@@ -148,7 +156,7 @@ const AdminDashboard = () => {
             height={350}
           />
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 };

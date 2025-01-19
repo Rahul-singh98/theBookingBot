@@ -108,6 +108,12 @@ export default function NodesPanel() {
                   Address
                 </div>
               </div>
+              <div onDragStart={(event) => onDragStart(event, 'payment')} draggable className={`${commonNodeClassNames}`} data-state="closed">
+                <div className={`${commonNodeCenterClassNames}`}></div>
+                <div className="text-sm text-gray-900">
+                  Payments
+                </div>
+              </div>
               <div onDragStart={(event) => onDragStart(event, 'number')} draggable className={`${commonNodeClassNames}`} data-state="closed">
                 <div className={`${commonNodeCenterClassNames}`}></div>
                 <div className="text-sm text-gray-900">

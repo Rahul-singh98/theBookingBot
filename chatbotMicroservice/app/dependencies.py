@@ -34,7 +34,7 @@ async def get_visitor_id(
             detail={
                 "error": "Invalid or missing visitor id",
                 "received_header": visitor,
-                "message": "Please provide 'Bearer {token}'"
+                "message": "Please provide valid visitor id"
             }
         )
     return visitor
@@ -77,7 +77,7 @@ def check_permission(required_permission: str):
 # Prometheus metrics
 # Metric to track the number of chatbots that are up and running
 CHATBOTS_GAUGE = Gauge(
-    'chatbots_gauge', 
+    'chatbots_gauge_total', 
     'Number of chatbots up and running',
     ['bot_id', 'bot_name', 'bot_author']
 )

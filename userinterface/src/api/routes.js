@@ -1,6 +1,7 @@
 export const AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL;
 export const CHATBOT_API_URL = import.meta.env.VITE_CHATBOT_API_URL;
 export const ANALYTICS_API_URL = import.meta.env.VITE_PROMETHEUS_BASE_URL;
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const AuthRoutes = {
   LOGIN: "/api/auth/login",

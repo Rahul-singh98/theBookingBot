@@ -22,11 +22,23 @@ const clientBotState = {
   mapsAutoComplete: null,
 };
 
-function getOrCreateVisitorId() {
+async function getOrCreateVisitorId() {
   const localStorageKey = "vIdData";
 
   // Check if the visitor ID already exists in localStorage
-  let { visitorId, timestamp } = localStorage.getItem(localStorageKey);
+  const storedData = localStorage.getItem(localStorageKey);
+
+  // Parse the stored data if it exists
+  let visitorId, timestamp;
+  if (storedData) {
+    try {
+      const parsedData = JSON.parse(storedData);
+      visitorId = parsedData.visitorId;
+      timestamp = parsedData.timestamp;
+    } catch (error) {
+      console.error("Error parsing stored data:", error);
+    }
+  }
 
   return visitorId;
 }
@@ -43,7 +55,8 @@ const initChatbot = async (config) => {
   }
 
   if (!config.visitorId) {
-    throw new Error("Visitor ID is required to initialize the chatbot");
+    config.visitorId = await getOrCreateVisitorId();
+    // throw new Error("Visitor ID is required to initialize the chatbot");
   }
 
   if (!config.backendUrl) {
@@ -56,6 +69,7 @@ const initChatbot = async (config) => {
   clientBotState.token = config.token;
   clientBotState.sessionId = localStorage.getItem("chatbot_session_id");
   clientBotState.visitorId = config.visitorId;
+  console.log("VisitorID", clientBotState.visitorId);
 
   try {
     await loadDependencies();
