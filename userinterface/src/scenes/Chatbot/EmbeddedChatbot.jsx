@@ -4,6 +4,7 @@ import { CHATBOT_API_URL, BACKEND_URL } from "@/api/routes";
 
 const EmbeddedChatbot = ({ token }) => {
   useEffect(() => {
+    console.log("BACKEND_URL", BACKEND_URL)
     const script = document.createElement("script");
     script.src = `${CHATBOT_API_URL === undefined ? "" : CHATBOT_API_URL}/static/js/embed.min.js`;
     script.async = true;
