@@ -6,8 +6,8 @@ services:
       - "3000:3000"
     networks:
       - app_network
-    env_file:
-      - secret/prod/userinterface.prod.env
+    # env_file:
+    #   - secret/prod/userinterface.prod.env
 
   auth:
     build: authMicroservice

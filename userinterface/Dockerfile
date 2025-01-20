@@ -8,7 +8,7 @@ RUN npm install
 RUN npm install -g serve
 
 COPY . /app
-COPY ../secret/prod/userinterface.prod.env /app/.env
+ENV VITE_BACKEND_URL=http://13.201.2.185
 
 RUN npm run build
 
