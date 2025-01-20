@@ -8,7 +8,7 @@ RUN npm install
 RUN npm install -g serve
 
 COPY . /app
-# COPY .prod.env /app/.env
+COPY ../secret/prod/userinterface.prod.env /app/.env
 
 RUN npm run build
 
