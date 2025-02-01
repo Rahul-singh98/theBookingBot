@@ -5,6 +5,7 @@ export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const AuthRoutes = {
   LOGIN: "/api/auth/login",
+  CONFIRM_RESET_PASSWORD: "/api/auth/password-reset-confirm",
   USERS: "/api/users",
   GROUPS: "/api/groups",
   PERMISSIONS: "/api/permissions",

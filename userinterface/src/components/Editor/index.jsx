@@ -82,6 +82,7 @@ const DnDFlow = () => {
   const { user, afterLogout } = useAuth();
   const navigate = useNavigate();
 
+  console.log("ChatbotId", chatbotId)
   useEffect(() => {
     const loadData = async () => {
       try {

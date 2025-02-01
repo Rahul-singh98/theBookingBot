@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status, UploadFile, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, status, UploadFile, Request, Header
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -11,8 +11,9 @@ from app.chatbot.schemas import (
 )
 from app.chatbot import crud
 from app.utils.pagination import Pagination
-from app.dependencies import check_permission, get_visitor_id
+from app.dependencies import check_permission, get_visitor_id, check_username_exists
 from app.dependencies import CHATBOTS_GAUGE
+from typing import Annotated
 import os
 import stripe
 
@@ -70,16 +71,28 @@ def read_chatbot_history(
 
 
 @chatbot_router.post("", response_model=ChatbotConfigurationResponse)
-def create_chatbot(
+async def create_chatbot(
     chatbot: ChatbotConfigurationCreate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(check_permission("chatbots:write"))
+    current_user: dict = Depends(check_permission("chatbots:write")),
+    authorization: str = Header(None)
 ):
-    
-    out = crud.create_chatbot(db=db, chatbot=chatbot,
-                              user_id=current_user.get("id"))
-    CHATBOTS_GAUGE.labels(bot_id=out.id, bot_name=out.name, bot_author=current_user.get("id")).inc()
-    return out
+    print("Checking username")
+    if await check_username_exists(chatbot.name):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail='User/Chatbot with same name already exists')
+
+    if authorization and authorization.lower().startswith('bearer'):
+        authorization = authorization.split(" ")[1]
+
+    print("username not found, creating new chatbot")
+    new_chatbot = await crud.create_chatbot(db=db, chatbot=chatbot,
+                                            user_id=current_user.get("id"), token=authorization)
+
+    CHATBOTS_GAUGE.labels(bot_id=new_chatbot.id, bot_name=new_chatbot.name,
+                          bot_author=current_user.get("id")).inc()
+
+    return new_chatbot
 
 
 @chatbot_router.put("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
@@ -95,7 +108,8 @@ def update_chatbot(chatbot_id: str, bot_update: ChatbotConfigurationUpdate, db: 
 @chatbot_router.delete("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
 def delete_chatbot(chatbot_id: str, db: Session = Depends(get_db)):
     db_bot = crud.delete_chatbot(db=db, chatbot_id=chatbot_id)
-    CHATBOTS_GAUGE.labels(bot_id=chatbot_id, bot_name=db_bot.name, bot_author=db_bot.created_by).dec()
+    CHATBOTS_GAUGE.labels(
+        bot_id=chatbot_id, bot_name=db_bot.name, bot_author=db_bot.created_by).dec()
     if db_bot is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
@@ -161,13 +175,15 @@ async def upload_file(file: UploadFile):
     return {"file_path": f""}
 
 # Create payment intent endpoint
+
+
 @chatbot_router.post("/create-payment-intent")
 async def create_payment_intent(payment_request: PaymentRequest):
     try:
         intent = stripe.PaymentIntent.create(
             amount=payment_request.amount,
             currency=payment_request.currency,
-            automatic_payment_methods= {
+            automatic_payment_methods={
                 'enabled': True,
             }
         )
@@ -179,6 +195,8 @@ async def create_payment_intent(payment_request: PaymentRequest):
         return HTTPException(status_code=500, detail="Internal server error")
 
 # Webhook endpoint to handle Stripe events (optional)
+
+
 @chatbot_router.post("/webhook")
 async def stripe_webhook(request: Request):
     webhook_secret = "whsec_your_webhook_secret"  # Replace with your webhook secret
@@ -187,7 +205,8 @@ async def stripe_webhook(request: Request):
 
     try:
         # Verify the webhook signature
-        event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret)
         # Handle the event (e.g., payment success)
         if event["type"] == "payment_intent.succeeded":
             payment_intent = event["data"]["object"]

@@ -13,6 +13,8 @@ class ChatbotConfigurationBase(BaseModel):
 
 
 class ChatbotConfigurationCreate(ChatbotConfigurationBase):
+    email: str
+    temp_password: str
     pass
 
 

@@ -284,7 +284,7 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 grid gap-4"
+      className="space-y-1 grid gap-2"
       style={{ gridTemplateColumns: `repeat(${matrixLayout.columns}, minmax(0, 1fr))`, }}>
       {matrixLayout.rows.map((row, rowIndex) => (
         <React.Fragment key={rowIndex}> {

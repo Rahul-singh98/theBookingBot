@@ -5,12 +5,12 @@ import { getAuthorizationHeader } from "@/utils/authorization";
 
 // Function to get all chatbot configurations
 export const get_chatbots = async () => {
-  const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}`;
+  const endpoint = `${CHATBOT_API_URL === undefined ? "" : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}`;
   return getAllAPI(endpoint);
 };
 
 export const get_org_chatbots = async (org_id) => {
-  const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}?user_id=${org_id}`;
+  const endpoint = `${CHATBOT_API_URL === undefined ? "" : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}?user_id=${org_id}`;
   return getAllAPI(endpoint);
 };
 
@@ -20,7 +20,7 @@ export const get_chatbot_configs = async (chatbot_config_id) => {
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${CHATBOT_API_URL === undefined ? "" : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
 
     const response = await axios.get(endpoint, { headers });
 
@@ -38,17 +38,21 @@ export const create_chatbot_configs = async (
   name,
   hero_img,
   primary_color,
-  secondary_color
+  secondary_color,
+  email,
+  temp_password
 ) => {
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}`;
+    const endpoint = `${CHATBOT_API_URL === undefined ? "" : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}`;
 
     const payload = {
       name,
       hero_img,
       primary_color,
       secondary_color,
+      email,
+      temp_password,
     };
 
     const response = await axios.post(endpoint, payload, { headers });
@@ -75,7 +79,7 @@ export const update_chatbot_configs = async (
   }
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${CHATBOT_API_URL === undefined ? "" : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
 
     const payload = {
       name,
@@ -103,7 +107,7 @@ export const delete_chatbot_configs = async (chatbot_config_id) => {
 
   try {
     const headers = getAuthorizationHeader();
-    const endpoint = `${CHATBOT_API_URL === undefined ? '' : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
+    const endpoint = `${CHATBOT_API_URL === undefined ? "" : CHATBOT_API_URL}${ChatRoutes.CHATBOT_CONFIGS}/${chatbot_config_id}`;
 
     const response = await axios.delete(endpoint, { headers });
 

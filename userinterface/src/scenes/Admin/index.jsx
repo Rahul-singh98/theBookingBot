@@ -40,7 +40,7 @@ const AdminApp = () => {
         <Route path="tables/:tableName" element={<AdminTables />} />
         <Route path="tables/:tableName/create" element={<AdminCreateView />} />
         <Route
-          path="tables/:tableName/:itemId/edit"
+          path="tables/:tableName/:chatbotId/edit"
           element={<AdminModifyView />}
         />
       </Routes>

@@ -84,27 +84,54 @@ export const formConfigs = {
         type: "text",
         placeholder: "Enter your secondary color",
       },
+      {
+        name: "email",
+        label: "Email",
+        type: "text",
+        placeholder: "Enter subadmin email",
+      },
+      {
+        name: "temp_password",
+        label: "Temporary Password",
+        type: "text",
+        placeholder: "Write temporary password",
+      },
     ],
     formLayout: {
       columns: 4,
       rows: [
         [
-          { name: "name", colSpan: 2 },
-          { name: "hero_img", colSpan: 2 }
+          { name: "hero_img", colSpan: 4 },
+        ],
+        [
+          { name: "name", colSpan: 4 },
         ],
         [
           { name: "primary_color", colSpan: 2 },
-          { name: "secondary_color", colSpan: 2 }
-        ]
-      ]
+          { name: "secondary_color", colSpan: 2 },
+        ],
+        [
+          { name: "email", colSpan: 2 },
+          { name: "temp_password", colSpan: 2 },
+        ],
+      ],
     },
     createData: async (formData) => {
-      const { name, hero_img, primary_color, secondary_color } = formData;
+      const {
+        name,
+        hero_img,
+        primary_color,
+        secondary_color,
+        email,
+        temp_password,
+      } = formData;
       return create_chatbot_configs(
         name,
         hero_img,
         primary_color,
-        secondary_color
+        secondary_color,
+        email,
+        temp_password
       );
     },
     updateData: async (chatbot_config_id, formData) => {
@@ -127,7 +154,7 @@ export const formConfigs = {
       const response = await get_chatbots();
       return response.items;
     },
-    additionalTable: "questions"
+    additionalTable: "questions",
   },
   users: {
     fields: [
@@ -173,8 +200,9 @@ export const formConfigs = {
         required: true,
         options: [
           { value: "active", label: "Active" },
-          { value: "inactive", label: "InActive" },
+          { value: "inactive", label: "In Active" },
           { value: "suspended", label: "Suspended" },
+          { value: "password_reset_required", label: "Not Logged In" },
         ],
       },
     ],
@@ -183,7 +211,7 @@ export const formConfigs = {
       rows: [
         [
           { name: "first_name", colSpan: 2 },
-          { name: "last_name", colSpan: 2 }
+          { name: "last_name", colSpan: 2 },
         ],
         [
           { name: "username", colSpan: 2 },
@@ -193,7 +221,7 @@ export const formConfigs = {
           { name: "password", colSpan: 2 },
           { name: "status", colSpan: 2 },
         ],
-      ]
+      ],
     },
     createData: async (formData) => {
       const { first_name, last_name, username, email, password, status } =
@@ -253,9 +281,9 @@ export const formConfigs = {
       rows: [
         [
           { name: "name", colSpan: 2 },
-          { name: "description", colSpan: 2 }
+          { name: "description", colSpan: 2 },
         ],
-      ]
+      ],
     },
     createData: async (formData) => {
       const { name, description } = formData;
@@ -310,16 +338,10 @@ export const formConfigs = {
     formLayout: {
       columns: 4,
       rows: [
-        [
-          { name: "name", colSpan: 4 },
-        ],
-        [
-          { name: "description", colSpan: 4 },
-        ],
-        [
-          { name: "scope", colSpan: 4 },
-        ],
-      ]
+        [{ name: "name", colSpan: 4 }],
+        [{ name: "description", colSpan: 4 }],
+        [{ name: "scope", colSpan: 4 }],
+      ],
     },
     createData: async (formData) => {
       const { name, description, scope } = formData;
@@ -431,15 +453,10 @@ export const formConfigs = {
       rows: [
         [
           { name: "bot_id", colSpan: 2 },
-          { name: "question_type", colSpan: 2 }
+          { name: "question_type", colSpan: 2 },
         ],
-        [
-          { name: "question", colSpan: 4 },
-
-        ],
-        [
-          { name: "data", colSpan: 4 },
-        ],
+        [{ name: "question", colSpan: 4 }],
+        [{ name: "data", colSpan: 4 }],
         [
           { name: "variable", colSpan: 2 },
           { name: "next_ques", colSpan: 2 },
@@ -525,7 +542,7 @@ export const formConfigs = {
       rows: [
         [
           { name: "first_name", colSpan: 2 },
-          { name: "last_name", colSpan: 2 }
+          { name: "last_name", colSpan: 2 },
         ],
         [
           { name: "username", colSpan: 2 },
@@ -535,7 +552,7 @@ export const formConfigs = {
           { name: "password", colSpan: 2 },
           { name: "status", colSpan: 2 },
         ],
-      ]
+      ],
     },
     createData: async (formData) => {
       const { question_id, option_text, option_order } = formData;
@@ -610,7 +627,7 @@ export const formConfigs = {
       rows: [
         [
           { name: "first_name", colSpan: 2 },
-          { name: "last_name", colSpan: 2 }
+          { name: "last_name", colSpan: 2 },
         ],
         [
           { name: "username", colSpan: 2 },
@@ -620,7 +637,7 @@ export const formConfigs = {
           { name: "password", colSpan: 2 },
           { name: "status", colSpan: 2 },
         ],
-      ]
+      ],
     },
     createData: async (formData) => {
       const { bot_id, url, auth_type, authentication_key } = formData;

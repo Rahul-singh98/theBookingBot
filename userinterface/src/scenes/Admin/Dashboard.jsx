@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  console.log(user)
   // Questions Distribution Donut Options
   const questionsOptions = {
     chart: {
@@ -39,9 +40,7 @@ const Dashboard = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      <CardBar
-        createdBy={user.scopes === "Organization" ? user.user_id : null}
-      />
+      {user.scopes === "SuperAdmin" ? <CardBar /> : <></>}
 
       {/* Active Chatbots */}
       <ActiveChatbotsCount
@@ -59,7 +58,7 @@ const Dashboard = () => {
       />
 
       {/* Questions Distribution */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Traffic by users</CardTitle>
         </CardHeader>
@@ -71,7 +70,7 @@ const Dashboard = () => {
             height={350}
           />
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 };

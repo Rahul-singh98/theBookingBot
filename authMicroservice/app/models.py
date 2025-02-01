@@ -1,11 +1,12 @@
 from datetime import datetime, timezone
 from sqlalchemy import (
-    Column, Integer, String,
+    Column, String,
     Boolean, DateTime, Enum,
     ForeignKey, Text
 )
 from sqlalchemy.orm import relationship
 from app.database import Base
+from app.utils.constants import UserStatus
 
 
 class User(Base):
@@ -17,9 +18,10 @@ class User(Base):
     first_name = Column(String(50))
     last_name = Column(String(50))
     hashed_password = Column(String(255))
-    status = Column(Enum("active", "inactive", "suspended",
-                    name="user_status"), default="active")
+    profile_photo = Column(String(255), nullable=True)
+    status = Column(Enum(UserStatus), default=UserStatus.ACTIVE)
 
+    # Define relation for the user class
     user_groups = relationship("UserGroup", back_populates="user")
     sessions = relationship("AuthSession", back_populates="user")
     password_reset_tokens = relationship(

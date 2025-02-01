@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.utils.hashing import get_password_hash, verify_password
+from app.utils.constants import UserStatus
 from app.database import get_db
 from app.models import User
 from app.dependencies import has_permission
@@ -54,6 +55,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     access_data = {
         "sub": db_user.id,
         # "iss": "https://auth.com",
+        "status": db_user.status,
         "token_use": "access",
         "scopes": scopes,
         "auth_time": auth_time,
@@ -107,14 +109,15 @@ def confirm_password_reset(data: PasswordResetConfirm, db: Session = Depends(get
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid token")
 
-    email = payload.get("sub")
-    user = db.query(User).filter(User.email == email).first()
+    sub = payload.get("sub")
+    user = db.query(User).filter(User.id == sub).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     # Update user's password
     user.hashed_password = get_password_hash(data.new_password)
+    user.status = UserStatus.ACTIVE
     db.commit()
 
     return JSONResponse({"msg": "Password has been reset successfully"}, status_code=status.HTTP_200_OK)

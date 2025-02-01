@@ -1,7 +1,7 @@
 export const tableConfigs = {
   users: {
     columns: [
-      { key: "id", header: "ID" },
+      { key: "id", header: "ID", hide: true },
       { key: "email", header: "Email" },
       { key: "username", header: "Username" },
       { key: "first_name", header: "First Name" },
@@ -16,7 +16,7 @@ export const tableConfigs = {
                 ? "bg-green-100 text-green-800"
                 : value === "inactive"
                   ? "bg-red-100 text-red-800"
-                  : "bg-gray-100 text-gray-800"
+                  : "bg-yellow-100 text-yellow-800"
             }`}
           >
             {value}

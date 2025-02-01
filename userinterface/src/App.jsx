@@ -8,6 +8,7 @@ import ErrorPage from "@/errors/errorPage.jsx";
 import PageTitle from "./components/PageTitle";
 import { AuthProvider } from "@/hooks/useAuth";
 import Editor from "./components/Editor";
+import ResetPassword from "./scenes/Auth/reset_password";
 import { getOrCreateVisitorId } from "@/utils/cookieUtils"; // Import cookie utility
 
 const LayoutWithTitle = ({ children, title }) => (
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
     element: (
       <LayoutWithTitle title="Signup | The Booking Bot">
         <Signup />
+      </LayoutWithTitle>
+    ),
+  },
+  {
+    path: "/reset_password",
+    element: (
+      <LayoutWithTitle title="Reset | The Booking Bot">
+        <ResetPassword />
       </LayoutWithTitle>
     ),
   },

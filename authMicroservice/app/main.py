@@ -9,7 +9,7 @@ from app.routers.groups import groups_router
 from app.routers.permissions import permissions_router
 from app.database import init_db
 from fastapi.middleware.cors import CORSMiddleware
-from app.utils.super_admin import create_super_admin, create_organization_admin
+from app.utils.super_admin import create_super_admin #, create_organization_admin
 import os
 
 
@@ -26,7 +26,7 @@ def on_startup():
     print("Creating Super Admin Completed")
 
     print("Creating Organization Admin Started")
-    create_organization_admin()
+    # create_organization_admin()
     print("Creating Organization Admin Completed")
 
 

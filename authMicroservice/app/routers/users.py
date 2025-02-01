@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
 from app.database import get_db
 from app.models import User
 from app.schemas.users import UserCreate, UserUpdate, UserInDB, PaginatedUserResponse
@@ -28,7 +27,6 @@ def read_users(
     items = [UserInDB.from_orm(user) for user in users]
 
     return PaginatedUserResponse(items=items, pagination=pagination_obj)
-
 
 
 @user_router.post("", response_model=UserInDB)
@@ -82,3 +80,9 @@ def delete_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return user_crud.delete_user(db=db, user_id=user_id)
+
+
+@user_router.get("/check/username")
+def check_username(username: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == username).first()
+    return {"exists": bool(user)}

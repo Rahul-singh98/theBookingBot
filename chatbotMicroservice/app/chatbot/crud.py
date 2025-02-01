@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app import models
 from app.chatbot import schemas
+from app.dependencies import create_subadmin
 
 
 def list_chatbots(db: Session, offset: int, size: int):
@@ -24,12 +25,33 @@ def get_chatbot(db: Session, chatbot_id: str):
     return db.query(models.ChatbotConfiguration).filter(models.ChatbotConfiguration.id == chatbot_id).first()
 
 
-def create_chatbot(db: Session, chatbot: schemas.ChatbotConfigurationCreate, user_id: str):
+async def create_chatbot(db: Session, chatbot: schemas.ChatbotConfigurationCreate, user_id: str, token=None):
     db_chatbot = models.ChatbotConfiguration(
-        **chatbot.dict(), created_by=user_id)
+        **chatbot.dict(exclude={'email', 'temp_password'}), created_by=user_id)
     db.add(db_chatbot)
     db.commit()
     db.refresh(db_chatbot)
+    print("Created chatbot")
+
+    if chatbot.temp_password and chatbot.email:
+        print("Creating subadmin")
+        subadmin_response = await create_subadmin(
+            chatbot.name,
+            chatbot.temp_password,
+            chatbot.email,
+            token
+        )
+        print("subadmin created and response is", subadmin_response)
+
+        if subadmin_response and "id" in subadmin_response:
+            new_user_id = subadmin_response.get("id")
+
+            # Update the created_by field in the database
+            print("Updating chatbot's username", new_user_id)
+            db_chatbot.created_by = new_user_id
+            db.commit()
+            db.refresh(db_chatbot)
+
     return db_chatbot
 
 

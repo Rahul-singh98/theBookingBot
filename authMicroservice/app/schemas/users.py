@@ -1,22 +1,17 @@
-from pydantic import BaseModel, EmailStr
-from enum import Enum
+from pydantic import BaseModel
 from typing import Optional, List
 from app.utils.pagination import PaginationResponse
 from datetime import datetime, timezone
-
-
-class UserStatus(str, Enum):
-    active = "active"
-    inactive = "inactive"
-    suspended = "suspended"
+from app.utils.constants import UserStatus
 
 
 class UserBase(BaseModel):
     username: str
     email: str
+    profile_photo: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
-    status: Optional[UserStatus] = UserStatus.active
+    status: Optional[UserStatus] = UserStatus.ACTIVE
 
 
 class UserCreate(UserBase):

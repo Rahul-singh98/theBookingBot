@@ -25,7 +25,7 @@ const AdminTables = () => {
   return (
     <>
       <Breadcrumb
-        pageName={`${tableName.charAt(0).toUpperCase() + tableName.slice(1)} Table`}
+        pageName={`${tableName.charAt(0).toUpperCase() + tableName.slice(1)}`}
       />
       <PageTitle>{`${tableName.charAt(0).toUpperCase() + tableName.slice(1)} Management`}</PageTitle>
 

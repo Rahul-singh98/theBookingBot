@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
-import LogoDark from '@/images/logo/logo.svg';
-import Logo from '@/images/logo/logo.svg';
+import { Link } from "react-router-dom";
+import LogoDark from "@/images/logo/logo.svg";
+import Logo from "@/images/logo/logo.svg";
 import { useAuth } from "@/hooks/useAuth";
 import { login } from "@/api/auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
 
 const Login = () => {
   const { afterLogin } = useAuth();
@@ -24,7 +23,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      setError(null)
+      setError(null);
       const userData = await login(username, password);
 
       const token = userData.access_token;
@@ -32,9 +31,15 @@ const Login = () => {
 
       userData.scopes = decoded.scopes;
       userData.user_id = decoded.sub;
+      userData.status = decoded.status;
 
       afterLogin(userData);
-      navigate(next);
+
+      if (userData.status === "password_reset_required") {
+        navigate(`/reset_password?next=${next}`);
+      } else {
+        navigate(next);
+      }
     } catch (err) {
       setError(`${err.message}`);
     }
@@ -51,9 +56,7 @@ const Login = () => {
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link>
 
-              <p className="2xl:px-20">
-                Welcom back, login to your account
-              </p>
+              <p className="2xl:px-20">Welcom back, login to your account</p>
 
               <span className="mt-15 inline-block">
                 <svg
@@ -189,7 +192,9 @@ const Login = () => {
               <form onSubmit={handleLogin}>
                 <div className="mb-4">
                   <div className="relative flex items-center">
-                    {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
+                    {error && (
+                      <p className="text-sm text-red-600 mb-2">{error}</p>
+                    )}
                   </div>
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Username
