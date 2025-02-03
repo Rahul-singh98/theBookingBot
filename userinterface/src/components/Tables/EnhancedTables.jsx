@@ -86,6 +86,7 @@ const EnhancedTable = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const location = useLocation();
+  const visibleColumns = columns.filter(({ hide }) => !hide);
 
   // Fetch data with automatic refresh
   useEffect(() => {
@@ -286,7 +287,7 @@ const EnhancedTable = ({
                   checked={selectedRows.size === paginatedData.length}
                 />
               </th>
-              {columns.map(({ key, header }) => (
+              {visibleColumns.map(({ key, header }) => (
                 <th
                   key={key}
                   className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white text-left cursor-pointer"
@@ -320,7 +321,7 @@ const EnhancedTable = ({
                     onClick={(e) => e.stopPropagation()}
                   />
                 </td>
-                {columns.map(({ key, render }) => (
+                {visibleColumns.map(({ key, render }) => (
                   <td
                     key={key}
                     className="border-b border-[#eee] py-5 px-4 dark:border-strokedark"

@@ -55,7 +55,6 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     access_data = {
         "sub": db_user.id,
         # "iss": "https://auth.com",
-        "status": db_user.status,
         "token_use": "access",
         "scopes": scopes,
         "auth_time": auth_time,
@@ -71,7 +70,11 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "exp": exp,
         "username": db_user.username,
         "email": db_user.email,
-        "email_verified": None
+        "email_verified": None,
+        "first_name": db_user.first_name,
+        "last_name": db_user.last_name,
+        "profile_photo": db_user.profile_photo,
+        "status": db_user.status,
     }
     access_token = create_access_token(access_data)
     id_token = create_access_token(id_data)

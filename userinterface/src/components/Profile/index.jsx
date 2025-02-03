@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { Mail, User, Key, Camera } from "lucide-react";
-import UserOne from "@/images/user/user-01.png";
+import UserOne from "@/images/user/user-00.png";
+import { useAuth } from "@/hooks/useAuth";
+import { uploadImage } from "@/api/upload";
 
 const Profile = () => {
-  const handleProfilePhotoChange = (event) => {
-    const file = event.target.files[0];
+  const { user } = useAuth();
+  const [profilePhoto, setProfilePhoto] = useState(
+    user.profile_photo || UserOne
+  );
+
+  const handleProfilePhotoChange = async (e, name) => {
+    const file = e.target.files[0];
     if (file) {
-      console.log("File selected:", file);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        // Upload the image to the backend
+        const data = await uploadImage(formData);
+        const fileUrl = data.file_url;
+
+        user.profile_photo = fileUrl;
+        profilePhoto = fileUrl;
+      } catch (err) {
+        console.error("Error uploading image:", err);
+      }
+    } else {
+      console.log("No file found...");
     }
   };
 
@@ -23,7 +44,7 @@ const Profile = () => {
             <div className="relative group">
               <div className="relative h-40 w-40">
                 <img
-                  src={UserOne}
+                  src={profilePhoto}
                   alt="Profile"
                   className="rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-lg"
                 />
@@ -43,7 +64,9 @@ const Profile = () => {
               </div>
             </div>
             <h2 className="mt-6 text-3xl font-semibold text-gray-800 dark:text-white">
-              Danish Heilium
+              {(user.first_name || "") +
+                " " +
+                (user.last_name || "")}
             </h2>
             <p className="text-lg text-gray-500 dark:text-gray-400">
               Update your profile information
@@ -62,7 +85,7 @@ const Profile = () => {
                   <label className="text-base font-medium">Username</label>
                 </div>
                 <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg text-gray-800 dark:text-gray-200 text-lg">
-                  danish_heilium
+                  {user.username}
                 </div>
               </div>
 
@@ -73,7 +96,7 @@ const Profile = () => {
                   <label className="text-base font-medium">Email</label>
                 </div>
                 <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg text-gray-800 dark:text-gray-200 text-lg">
-                  danish.heilium@example.com
+                  {user.email}
                 </div>
               </div>
 
@@ -84,7 +107,7 @@ const Profile = () => {
                   <label className="text-base font-medium">First Name</label>
                 </div>
                 <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg text-gray-800 dark:text-gray-200 text-lg">
-                  Danish
+                  {user.first_name}
                 </div>
               </div>
 
@@ -95,7 +118,7 @@ const Profile = () => {
                   <label className="text-base font-medium">Last Name</label>
                 </div>
                 <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg text-gray-800 dark:text-gray-200 text-lg">
-                  Heilium
+                  {user.last_name}
                 </div>
               </div>
             </div>

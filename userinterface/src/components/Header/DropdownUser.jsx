@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ClickOutside from "../ClickOutside";
-import UserOne from "@/images/user/user-01.png";
+import UserOne from "@/images/user/user-00.png";
 import { useAuth } from "@/hooks/useAuth";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { afterLogout } = useAuth();
+  const { user, afterLogout } = useAuth();
 
   const handleLogout = () => {
     afterLogout();
@@ -21,13 +21,17 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-xs font-medium text-black dark:text-white">
-            Thomas Anree
+            {(user.first_name || "Thomas") + " " + (user.last_name || "Anree")}
           </span>
           {/* <span className="block text-xs font-thin">UX Designer</span> */}
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+          <img
+            src={user.profile_photo || UserOne}
+            className="h-10 w-10 rounded-full"
+            alt="User"
+          />
         </span>
 
         <svg
@@ -55,7 +59,7 @@ const DropdownUser = () => {
           <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
             <li>
               <Link
-                to="/profile"
+                to="/admin/profile"
                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
                 <svg
@@ -78,7 +82,7 @@ const DropdownUser = () => {
                 My Profile
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="#"
                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
@@ -98,10 +102,10 @@ const DropdownUser = () => {
                 </svg>
                 My Contacts
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link
-                to="/settings"
+                to="/admin/profile"
                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
                 <svg

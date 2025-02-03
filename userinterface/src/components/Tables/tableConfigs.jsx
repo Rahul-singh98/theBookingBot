@@ -29,12 +29,26 @@ export const tableConfigs = {
   },
   chatbots: {
     columns: [
-      { key: "id", header: "ID" },
+      { key: "id", header: "ID", hide: true },
       { key: "name", header: "Chatbot Name" },
-      { key: "hero_img", header: "Image URL" },
+      {
+        key: "hero_img",
+        header: "Image URL",
+        render: (value) => {
+          const fileName = value.split("/").pop();
+          return (
+            <a
+              href={value}
+              className="text-blue-500 hover:underline font-medium"
+            >
+              {fileName}
+            </a>
+          );
+        },
+      },
       { key: "primary_color", header: "Primary Color" },
       { key: "secondary_color", header: "Secondary Color" },
-      { key: "created_by", header: "Author" },
+      { key: "created_by", header: "Author", hide: true },
       { key: "created_at", header: "Created On" },
       { key: "updated_at", header: "Last Update On" },
     ],
@@ -43,7 +57,7 @@ export const tableConfigs = {
   },
   groups: {
     columns: [
-      { key: "id", header: "ID" },
+      { key: "id", header: "ID", hide: true },
       { key: "name", header: "Group Name" },
       { key: "description", header: "Description" },
       { key: "created_at", header: "Create Time" },
@@ -54,7 +68,7 @@ export const tableConfigs = {
   },
   permissions: {
     columns: [
-      { key: "id", header: "ID" },
+      { key: "id", header: "ID", hide: true },
       { key: "name", header: "Permission Name" },
       { key: "scope", header: "Permission" },
       { key: "description", header: "Description" },

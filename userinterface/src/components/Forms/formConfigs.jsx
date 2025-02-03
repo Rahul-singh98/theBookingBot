@@ -303,6 +303,7 @@ export const formConfigs = {
       const response = await get_groups();
       return response.items;
     },
+    additionalTable: "permissions"
   },
   permissions: {
     fields: [
