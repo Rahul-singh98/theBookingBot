@@ -34,7 +34,7 @@ const ChatbotList = () => {
   useEffect(() => {
     const fetchChatbots = async () => {
       try {
-        const response = await get_org_chatbots(user.user_id);
+        const response = await get_org_chatbots(user.sub);
         setChatbots(response.items);
       } catch (error) {
         if (err.message === "Unauthorized") {

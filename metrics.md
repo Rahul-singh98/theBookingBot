@@ -1,3 +1,24 @@
+- ~~Fix UI issue on Chatbot table~~
+- ~~Fix the Profile section using the form UI~~
+- ~~Remove Id section from the UI~~
+- Remove permissions to delete Admin
+- Fix Group and Permissions
+- ~~Change name from `Chatbots Table` to `Chatbot`~~
+- ~~Change `Tables` to Management Section~~
+- ~~Remove Chatbot configs from Table Section~~
+- ~~Remove Questions subsection from Tables Section~~ 
+- ~~Add Table or Graph view in~~
+- ~~Instead of id make the Link for the chatbot connections~~
+- ~~Add Edit Profile in Settings~~
+- ~~One chatbot means One new account.~~
+- Count of chatbots count by time.
+- Regional data
+- SubAdmin
+  - Count of visitors
+  - Payments 
+  - Getquotes bills
+- Only provide access for premium users
+
 ### 1. **Number of Active Chatbots**
 - **Query**:  
   ```
