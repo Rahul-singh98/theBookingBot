@@ -38,6 +38,7 @@ import { ButtonNode } from './nodes/buttonNode'
 import { MessageNode } from './nodes/messageNode'
 import { RadioNode } from './nodes/radioNode'
 import { StripeNode } from './nodes/stripeNode';
+import { SendEmailNode } from './nodes/sendEmailNode';
 
 import { get_questions, create_questions, update_questions, delete_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
@@ -64,6 +65,7 @@ const nodeTypes = {
   button: ButtonNode,
   message: MessageNode,
   payment: StripeNode,
+  sendemail: SendEmailNode,
 };
 
 let id = 0;
@@ -151,6 +153,8 @@ const DnDFlow = () => {
               case "Message":
                 question_type = "message";
                 break;
+              case "SendEmail":
+                question_type = "sendemail";
               default:
                 question_type = "default";
             }
@@ -360,6 +364,8 @@ const DnDFlow = () => {
           case "button":
             question_type = "Button";
             break;
+          case "sendemail":
+            question_type = "SendEmail"
           default:
             question_type = "default";
         }

@@ -126,6 +126,12 @@ export default function NodesPanel() {
                   ClickList
                 </div>
               </div>
+              <div onDragStart={(event) => onDragStart(event, 'sendemail')} draggable className={`${commonNodeClassNames}`} data-state="closed">
+                <div className={`${commonNodeCenterClassNames}`}></div>
+                <div className="text-sm text-gray-900">
+                  Send Email
+                </div>
+              </div>
 
               <div onDragStart={(event) => onDragStart(event, 'email')} draggable className={`${commonNodeClassNames}`} data-state="closed">
                 <div className={`${commonNodeCenterClassNames}`}></div>

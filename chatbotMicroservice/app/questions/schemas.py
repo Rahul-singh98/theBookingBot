@@ -32,6 +32,10 @@ class RadioButtonAction(BaseModel):
     text: str
 
 
+class SendEmail(BaseModel):
+    recipient: str
+
+
 class RadioButtonQuestion(BaseModel):
     open_radio: Optional[RadioButtonAction]
     open_close: Optional[RadioButtonAction]
@@ -205,6 +209,8 @@ class QuestionBase(BaseModel):
             RadioButtonQuestion(**v)
         elif question_type == QuestionTypes.PAYMENT:
             PaymentQuestion(**v)
+        elif question_type == QuestionTypes.SENDEMAIL:
+            SendEmail(**v)
         else:
             EndQuestion(**v)
 
@@ -259,6 +265,8 @@ class QuestionUpdate(BaseModel):
             RadioButtonQuestion(**v)
         elif question_type == QuestionTypes.PAYMENT:
             PaymentQuestion(**v)
+        elif question_type == QuestionTypes.SENDEMAIL:
+            SendEmail(**v)
         else:
             EndQuestion(**v)
 

@@ -4,6 +4,7 @@ from enum import Enum
 class QuestionTypes(str, Enum):
     START = "Start"
     DROPDOWN = "Dropdown"
+    SENDEMAIL = "SendEmail"
     DATE = "Date"
     TIME = "Time"
     DATETIME = "DateTime"
