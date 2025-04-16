@@ -22,7 +22,7 @@ const Profile = () => {
         const fileUrl = data.file_url;
 
         user.profile_photo = fileUrl;
-        profilePhoto = fileUrl;
+        setProfilePhoto(fileUrl);
       } catch (err) {
         console.error("Error uploading image:", err);
       }
