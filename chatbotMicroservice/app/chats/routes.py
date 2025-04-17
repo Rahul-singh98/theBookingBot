@@ -176,7 +176,7 @@ async def get_next_question(
             sdata = next_question.data
             recipients = [sdata.get("recipient", '')]
 
-            send_email(recipients, subject, message)
+            await send_email(recipients, subject, message)
             next_question = question_services.get_question(db, next_question.next_ques)
 
         elif next_question.question_type == QuestionTypes.CONDITIONAL:
@@ -270,3 +270,8 @@ def get_session_history(session_id: str, db: Session = Depends(get_db)):
         history.response = json.loads(history.response)
 
     return history
+
+@chats_router.post("/send-mail-test")
+async def send_email_test():
+    await send_email(['rahulrajput98fun@gmail.com'], 'Test', 'Hello World')
+    return {'details': 'email send successfull'}
