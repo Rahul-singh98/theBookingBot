@@ -13,8 +13,6 @@ import SimpleModal from "../Modal/SimpleModal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
-
-
 // Confirmation Dialog component
 const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
   if (!isOpen) return null;
@@ -68,6 +66,8 @@ const EnhancedTable = ({
   formLayout,
   disablePop,
   initialData,
+  LinkComponent = null,
+  LinkComponentAttributes = {},
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,6 +84,7 @@ const EnhancedTable = ({
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const location = useLocation();
   const visibleColumns = columns.filter(({ hide }) => !hide);
@@ -180,7 +181,7 @@ const EnhancedTable = ({
     }
   };
 
-  const handleSelectAll = () => { };
+  const handleSelectAll = () => {};
 
   // Existing table logic...
   const filteredAndSortedData = useMemo(() => {
@@ -352,6 +353,20 @@ const EnhancedTable = ({
                     >
                       <Trash2 className="w-4 h-4 dark:text-white" />
                     </button>
+                    {tableName === "users" || tableName === "groups" ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentItem(row);
+                          setIsLinkDialogOpen(true);
+                        }}
+                        className="p-1 hover:bg-gray-100 dark:hover:bg-meta-4 rounded-full"
+                      >
+                        <Plus className="w-4 h-4 dark:text-white" />
+                      </button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -388,10 +403,11 @@ const EnhancedTable = ({
                   <span className="px-2 dark:text-white">...</span>
                 )}
                 <button
-                  className={`px-3 py-1 rounded border border-stroke dark:border-strokedark ${currentPage === page
-                    ? "bg-primary text-white"
-                    : "dark:text-white hover:bg-gray-100 dark:hover:bg-meta-4"
-                    }`}
+                  className={`px-3 py-1 rounded border border-stroke dark:border-strokedark ${
+                    currentPage === page
+                      ? "bg-primary text-white"
+                      : "dark:text-white hover:bg-gray-100 dark:hover:bg-meta-4"
+                  }`}
                   onClick={() => setCurrentPage(page)}
                 >
                   {page}
@@ -424,8 +440,10 @@ const EnhancedTable = ({
       </SimpleModal>
 
       {/* Edit Modal */}
-      {
-        disablePop && currentItem ? navigate(`/admin/tables/chatbots/${currentItem.id}/edit`) : <SimpleModal
+      {disablePop && currentItem ? (
+        navigate(`/admin/tables/chatbots/${currentItem.id}/edit`)
+      ) : (
+        <SimpleModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           title="Edit Entry"
@@ -438,8 +456,7 @@ const EnhancedTable = ({
             matrixLayout={formLayout}
           />
         </SimpleModal>
-      }
-
+      )}
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog
@@ -449,6 +466,21 @@ const EnhancedTable = ({
         title="Are you sure?"
         message="This action cannot be undone. This will permanently delete this entry."
       />
+
+      {/* Link Modal for Groups */}
+      {LinkComponent && currentItem && (
+        <LinkComponent
+          isOpen={isLinkDialogOpen}
+          onClose={() => setIsLinkDialogOpen(false)}
+          uniqueId={currentItem.id}
+          searchAssets={LinkComponentAttributes.searchAssets}
+          listAllAssets={LinkComponentAttributes.listAllAssets}
+          listByIdAssets={LinkComponentAttributes.listByIdAssets}
+          addAsset={LinkComponentAttributes.addAsset}
+          removeAsset={LinkComponentAttributes.removeAsset}
+          match_id_name={LinkComponentAttributes.match_id_name}
+        />
+      )}
     </div>
   );
 };

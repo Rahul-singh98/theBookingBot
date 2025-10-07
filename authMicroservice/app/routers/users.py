@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
@@ -6,6 +7,7 @@ from app.schemas.users import UserCreate, UserUpdate, UserInDB, PaginatedUserRes
 from app.utils.pagination import Pagination
 from app.crud import users as user_crud
 from app.dependencies import has_permission
+from app.utils.mailer import send_user_created_email
 
 
 user_router = APIRouter()
@@ -39,7 +41,21 @@ def create_user(
     if db_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
-    return user_crud.create_user(db=db, user=user)
+    created = user_crud.create_user(db=db, user=user)
+
+    try:
+        send_user_created_email(
+            to_email=created.email,
+            username=created.username,
+            temp_pass=user.password,
+            first_name=created.first_name or "",
+            last_name=created.last_name or "",
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_424_FAILED_DEPENDENCY, detail=f"Error scheduling welcome email for user {created.email}")
+
+    return created
 
 
 @user_router.get("/{user_id}", response_model=UserInDB)
@@ -79,6 +95,14 @@ def delete_user(
     if db_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    groups = [ug.group for ug in db_user.user_groups]
+    if any(group.name == "SuperAdmin" for group in groups):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Unable to delete user. User belongs to SuperAdmin group. Contact admin."
+        )
+
     return user_crud.delete_user(db=db, user_id=user_id)
 
 

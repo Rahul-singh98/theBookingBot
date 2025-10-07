@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models import User
+from app.models import User, Group, UserGroup
 from app.utils.hashing import get_password_hash
 from app.schemas.users import UserCreate, UserUpdate
 from datetime import datetime, timezone

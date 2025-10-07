@@ -7,9 +7,11 @@ from app.routers.auth import auth_router
 from app.routers.users import user_router
 from app.routers.groups import groups_router
 from app.routers.permissions import permissions_router
+from app.routers.user_groups import user_groups_router
+from app.routers.group_permissions import group_permissions_router
 from app.database import init_db
 from fastapi.middleware.cors import CORSMiddleware
-from app.utils.super_admin import create_super_admin #, create_organization_admin
+from app.utils.super_admin import create_super_admin
 import os
 
 
@@ -47,3 +49,5 @@ app.include_router(auth_router, prefix="/api/auth")
 app.include_router(user_router, prefix="/api/users")
 app.include_router(groups_router, prefix="/api/groups")
 app.include_router(permissions_router, prefix="/api/permissions")
+app.include_router(user_groups_router, prefix="/api/user-groups")
+app.include_router(group_permissions_router, prefix="/api/group-permissions")

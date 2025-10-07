@@ -12,9 +12,8 @@ import { tableConfigs } from "@/components/Tables/tableConfigs";
 import DynamicForm from "@/components/Forms/DynamicForm";
 import { formConfigs } from "@/components/Forms/formConfigs";
 
-
 const ChatbotList = () => {
-  const tableName = "chatbots"
+  const tableName = "chatbots";
   const [chatbots, setChatbots] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +27,22 @@ const ChatbotList = () => {
   const formConfig = formConfigs[tableName];
 
   const navigate = useNavigate();
-  const { user, afterLogout } = useAuth()
+  const { user, afterLogout } = useAuth();
+
+  // Helper to check scopes safely. `scopes` is a comma-separated string from the auth token.
+  const hasScope = (scope) => {
+    if (!user || !user.scopes) return false;
+    return user.scopes
+      .split(",")
+      .map((s) => s.trim())
+      .includes(scope);
+  };
+
+  // Allow creation only for SuperAdmin or Premium users
+  // const canCreate = Boolean(user && (hasScope('SuperAdmin') || hasScope('Premium') || user.is_premium))
+  const canCreate = Boolean(
+    user && (hasScope("SuperAdmin") || hasScope("Premium"))
+  );
 
   // Fetch chatbots from API
   useEffect(() => {
@@ -54,34 +68,32 @@ const ChatbotList = () => {
   // Handle "Create" button click
   const handleCreateOrUpdate = (id = null) => {
     if (id) {
-      navigate(`/admin/chatbot/${id}/edit`)
+      navigate(`/admin/chatbot/${id}/edit`);
     } else {
-      setIsCreateModalOpen(true)
+      setIsCreateModalOpen(true);
     }
   };
 
   const onCreateSubmit = async (data) => {
     try {
-      const response = await formConfig.createData(data)
-      navigate(`/admin/chatbot/${response.id}/edit`)
+      const response = await formConfig.createData(data);
+      navigate(`/admin/chatbot/${response.id}/edit`);
     } catch (err) {
       if (err.message === "Unauthorized") {
         afterLogout();
         navigate(`/login?next=/admin/chatbots`);
       } else {
         console.error("Error loading questions:", err);
-        navigate("/admin/chatbots")
+        navigate("/admin/chatbots");
       }
     }
-  }
-
+  };
 
   if (!tableConfig) {
     return (
       <div className="p-4">Table configuration not found for: {tableName}</div>
     );
   }
-
 
   if (loading) {
     return <div className="text-center text-lg font-medium">Loading...</div>;
@@ -92,12 +104,14 @@ const ChatbotList = () => {
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-bold">Chatbots</h1>
-          <button
-            onClick={() => handleCreateOrUpdate()}
-            className="px-2 py-1.5 bg-blue-700 text-white rounded-lg hover:bg-blue-500 transition"
-          >
-            Create Chatbot
-          </button>
+          {canCreate && (
+            <button
+              onClick={() => handleCreateOrUpdate()}
+              className="px-2 py-1.5 bg-blue-700 text-white rounded-lg hover:bg-blue-500 transition"
+            >
+              Create Chatbot
+            </button>
+          )}
         </div>
 
         {chatbots.length > 0 ? (
@@ -142,8 +156,6 @@ const ChatbotList = () => {
         ) : (
           <div className="text-center text-gray-500">No chatbots found.</div>
         )}
-
-
       </div>
 
       {/* Create Modal */}
@@ -159,7 +171,6 @@ const ChatbotList = () => {
           matrixLayout={formConfig.formLayout}
         />
       </SimpleModal>
-
     </>
   );
 };

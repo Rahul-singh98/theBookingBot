@@ -1,5 +1,5 @@
 // Configuration
-const GMKEY = "AIzaSyDsUsav1ZHHeaiHdmK71UFIXAy3yoLA0fk";
+const GMKEY = "AIzaSyAZeHhypV8m-ELyqOYIJUzafjalY76aDbI";
 const SPKEY =
   "pk_test_51QhaP4Rq3j0JuwMmggGo4IAKfG0UYBepjPVSA5HrR3r8rfBFPbLNcq9q8r8iZ7WzXeD5LkTGPpTCf8Jl50GQ32WN007amsWm9r";
 const BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT = "/api/chats";

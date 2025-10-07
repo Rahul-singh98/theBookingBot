@@ -7,6 +7,8 @@ export const AuthRoutes = {
   LOGIN: "/api/auth/login",
   CONFIRM_RESET_PASSWORD: "/api/auth/password-reset-confirm",
   USERS: "/api/users",
+  USER_GROUPS: "/api/user-groups",
+  GROUP_PERMISSIONS: "/api/group-permissions",
   GROUPS: "/api/groups",
   PERMISSIONS: "/api/permissions",
 };

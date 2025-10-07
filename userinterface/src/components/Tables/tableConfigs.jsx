@@ -70,7 +70,7 @@ export const tableConfigs = {
     columns: [
       { key: "id", header: "ID", hide: true },
       { key: "name", header: "Permission Name" },
-      { key: "scope", header: "Permission" },
+      // { key: "scope", header: "Permission" },
       { key: "description", header: "Description" },
       { key: "created_at", header: "Create Time" },
     ],

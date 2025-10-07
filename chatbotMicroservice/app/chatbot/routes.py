@@ -11,9 +11,8 @@ from app.chatbot.schemas import (
 )
 from app.chatbot import crud
 from app.utils.pagination import Pagination
-from app.dependencies import check_permission, get_visitor_id, check_username_exists
+from app.dependencies import check_permission, get_visitor_id, check_user_exists
 from app.dependencies import CHATBOTS_GAUGE
-from typing import Annotated
 import os
 import stripe
 
@@ -29,7 +28,7 @@ async def list_chatbots(
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     db: Session = Depends(get_db),
     visitor: str = Depends(get_visitor_id),
-    _: dict = Depends(check_permission("chatbots:list"))
+    # _: dict = Depends(check_permission("chatbots:list"))
 ):
     # Calculate offset
     offset = Pagination.get_offset(page, size)
@@ -38,7 +37,6 @@ async def list_chatbots(
         db, offset, size, user_id) if user_id else crud.list_chatbots(db, offset, size)
 
     pagination_obj = Pagination.paginate(total, size, page)
-
     return PaginatedChatbotConfigurationResponse(items=configurations, pagination=pagination_obj)
 
 
@@ -77,20 +75,22 @@ async def create_chatbot(
     current_user: dict = Depends(check_permission("chatbots:write")),
     authorization: str = Header(None)
 ):
-    print("Checking username")
-    if await check_username_exists(chatbot.name):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail='User/Chatbot with same name already exists')
-
     if authorization and authorization.lower().startswith('bearer'):
         authorization = authorization.split(" ")[1]
 
-    print("username not found, creating new chatbot")
+    if not await check_user_exists(chatbot.assigned_to, authorization):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail='User not exists, please provide valid user id')
+
+    if crud.get_chatbot_by_name(db, chatbot.name):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail='Chatbot with this name already exists, please choose different name')
+
     new_chatbot = await crud.create_chatbot(db=db, chatbot=chatbot,
-                                            user_id=current_user.get("id"), token=authorization)
+                                            user_id=chatbot.assigned_to)
 
     CHATBOTS_GAUGE.labels(bot_id=new_chatbot.id, bot_name=new_chatbot.name,
-                          bot_author=current_user.get("id")).inc()
+                          bot_author=chatbot.assigned_to).inc()
 
     return new_chatbot
 

@@ -99,6 +99,27 @@ async def check_username_exists(
     return response.json().get('exists')
 
 
+async def check_user_exists(
+    userid: str,
+    token: str = None
+) -> bool:
+    ENDPOINT = f"/api/users/{userid}"
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            AUTH_SERVICE_URL + ENDPOINT,
+            headers={"Authorization": f"Bearer {token}"}
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.json().get("detail", "Somethig went wrong")
+        )
+
+    return response.json().get('email')
+
+
 async def create_subadmin(
     username: str,
     password: str,

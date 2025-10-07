@@ -13,8 +13,9 @@ class ChatbotConfigurationBase(BaseModel):
 
 
 class ChatbotConfigurationCreate(ChatbotConfigurationBase):
-    email: str
-    temp_password: str
+    assigned_to: str = None
+    # email: str
+    # temp_password: str
     pass
 
 
@@ -30,7 +31,8 @@ class ChatbotConfigurationResponse(ChatbotConfigurationBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        # orm_mode = True
+        from_attributes = True
 
 
 class PaginatedChatbotConfigurationResponse(BaseModel):

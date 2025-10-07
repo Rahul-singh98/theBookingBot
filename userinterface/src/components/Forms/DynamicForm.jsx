@@ -186,8 +186,9 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
   };
 
   const renderField = (field) => {
+    if (!field) return null;
     const {
-      type = "text",
+      type,
       name,
       label,
       required = false,
@@ -227,6 +228,34 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
                 />
               </div>
             )}
+            {errors[name] && <div className={errorClass}>{errors[name]}</div>}
+          </div>
+        );
+      case "select":
+        return (
+          <DynamicSelectField
+            name={name}
+            label={label}
+            options={field.options}
+            required={required}
+            formData={formData}
+            handleChange={handleChange}
+            errors={errors}
+            labelClass={labelClass}
+            inputClass={inputClass}
+            errorClass={errorClass}
+            {...rest}
+          />
+        );
+      case "json":
+        // For JSON fields the concrete editor depends on another field (e.g., question_type).
+        // We use jsonDependencyKey (updated on change) to pick the renderer. Fall back to empty.
+        return (
+          <div key={name} className="mb-4">
+            <label className={labelClass}>
+              {label} {required && <span className="text-red-500 ml-1">*</span>}
+            </label>
+            {renderJson(jsonDependencyKey || rest.jsonType || "", name, placeholder, required, rest, inputClass, formData[name])}
             {errors[name] && <div className={errorClass}>{errors[name]}</div>}
           </div>
         );

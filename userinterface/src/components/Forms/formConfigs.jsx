@@ -55,6 +55,18 @@ import {
   delete_submit_config,
 } from "@/api/submit_configs";
 
+import {
+  get_groups_for_user,
+  add_user_to_group,
+  remove_user_from_group,
+} from "@/api/user_groups";
+
+import {
+  get_permissions_for_group,
+  add_group_to_permission,
+  remove_group_from_permission,
+} from "@/api/group_permissions";
+
 export const formConfigs = {
   chatbots: {
     fields: [
@@ -85,53 +97,40 @@ export const formConfigs = {
         placeholder: "Enter your secondary color",
       },
       {
-        name: "email",
-        label: "Email",
-        type: "text",
-        placeholder: "Enter subadmin email",
-      },
-      {
-        name: "temp_password",
-        label: "Temporary Password",
-        type: "text",
-        placeholder: "Write temporary password",
+        name: "assigned_to",
+        label: "Assign To",
+        type: "select",
+        required: true,
+        options: async () => {
+          const response = await get_users();
+          return (response.items || []).map((u) => ({
+            value: u.id,
+            label: u.email || u.first_name || u.username,
+          }));
+        },
       },
     ],
     formLayout: {
       columns: 4,
       rows: [
-        [
-          { name: "hero_img", colSpan: 4 },
-        ],
-        [
-          { name: "name", colSpan: 4 },
-        ],
+        [{ name: "hero_img", colSpan: 4 }],
+        [{ name: "name", colSpan: 4 }],
         [
           { name: "primary_color", colSpan: 2 },
           { name: "secondary_color", colSpan: 2 },
         ],
-        [
-          { name: "email", colSpan: 2 },
-          { name: "temp_password", colSpan: 2 },
-        ],
+        [{ name: "assigned_to", colSpan: 4 }],
       ],
     },
     createData: async (formData) => {
-      const {
-        name,
-        hero_img,
-        primary_color,
-        secondary_color,
-        email,
-        temp_password,
-      } = formData;
+      const { name, hero_img, primary_color, secondary_color, assigned_to } =
+        formData;
       return create_chatbot_configs(
         name,
         hero_img,
         primary_color,
         secondary_color,
-        email,
-        temp_password
+        assigned_to
       );
     },
     updateData: async (chatbot_config_id, formData) => {
@@ -160,7 +159,7 @@ export const formConfigs = {
     fields: [
       {
         name: "username",
-        label: "UserName",
+        label: "User Name",
         type: "text",
         required: true,
         placeholder: "Enter your username",
@@ -303,7 +302,7 @@ export const formConfigs = {
       const response = await get_groups();
       return response.items;
     },
-    additionalTable: "permissions"
+    additionalTable: "permissions",
   },
   permissions: {
     fields: [
@@ -315,7 +314,7 @@ export const formConfigs = {
         placeholder: "Enter the permission name",
         validationRules: {
           pattern:
-            "^[a-zA-Z0-9-_]+:(\\*|[a-zA-Z0-9-_]+)(:\\*|:[a-zA-Z0-9-_]+)?$",
+            "^(?:\\*|[a-zA-Z0-9_-]+):(?:\\*|[a-zA-Z0-9_-]+):(?:\\*|[a-fA-F0-9-]{36}|[a-zA-Z0-9_-]+)$",
           message:
             "Permission name must follow the format: group:access:user_id",
           required: true,
@@ -664,5 +663,25 @@ export const formConfigs = {
       const response = await get_submit_configs();
       return response.items;
     },
+  },
+  "user-groups": {
+    searchAssets: async (query) => {
+      return [];
+    },
+    listAllAssets: get_groups,
+    listByIdAssets: get_groups_for_user,
+    addAsset: add_user_to_group,
+    removeAsset: remove_user_from_group,
+    match_id_name: "group_id",
+  },
+  "group-permissions": {
+    searchAssets: async (query) => {
+      return [];
+    },
+    listAllAssets: get_permissions,
+    listByIdAssets: get_permissions_for_group,
+    addAsset: add_group_to_permission,
+    removeAsset: remove_group_from_permission,
+    match_id_name: "permission_id",
   },
 };

@@ -39,8 +39,7 @@ export const create_chatbot_configs = async (
   hero_img,
   primary_color,
   secondary_color,
-  email,
-  temp_password
+  assigned_to
 ) => {
   try {
     const headers = getAuthorizationHeader();
@@ -51,8 +50,7 @@ export const create_chatbot_configs = async (
       hero_img,
       primary_color,
       secondary_color,
-      email,
-      temp_password,
+      assigned_to
     };
 
     const response = await axios.post(endpoint, payload, { headers });

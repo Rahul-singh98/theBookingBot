@@ -25,32 +25,16 @@ def get_chatbot(db: Session, chatbot_id: str):
     return db.query(models.ChatbotConfiguration).filter(models.ChatbotConfiguration.id == chatbot_id).first()
 
 
-async def create_chatbot(db: Session, chatbot: schemas.ChatbotConfigurationCreate, user_id: str, token=None):
+def get_chatbot_by_name(db: Session, chatbot_name: str):
+    return db.query(models.ChatbotConfiguration).filter(models.ChatbotConfiguration.name == chatbot_name).first()
+
+
+async def create_chatbot(db: Session, chatbot: schemas.ChatbotConfigurationCreate, user_id: str):
     db_chatbot = models.ChatbotConfiguration(
-        **chatbot.dict(exclude={'email', 'temp_password'}), created_by=user_id)
+        **chatbot.dict(exclude={'assigned_to'}), created_by=user_id)
     db.add(db_chatbot)
     db.commit()
     db.refresh(db_chatbot)
-    print("Created chatbot")
-
-    if chatbot.temp_password and chatbot.email:
-        print("Creating subadmin")
-        subadmin_response = await create_subadmin(
-            chatbot.name,
-            chatbot.temp_password,
-            chatbot.email,
-            token
-        )
-        print("subadmin created and response is", subadmin_response)
-
-        if subadmin_response and "id" in subadmin_response:
-            new_user_id = subadmin_response.get("id")
-
-            # Update the created_by field in the database
-            print("Updating chatbot's username", new_user_id)
-            db_chatbot.created_by = new_user_id
-            db.commit()
-            db.refresh(db_chatbot)
 
     return db_chatbot
 

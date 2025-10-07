@@ -6,8 +6,8 @@ import DynamicTable from "./DynamicTable";
 import EnhancedTable from "./EnhancedTables";
 import { tableConfigs } from "./tableConfigs";
 import DynamicForm from "@/components/Forms/DynamicForm";
-// import OrgBotChatForm from "../Forms/OrgBotChatForm";
 import { formConfigs } from "@/components/Forms/formConfigs";
+import LinkModal from "@/components/Modal/LinkModal";
 
 const AdminTables = () => {
   const { tableName } = useParams();
@@ -15,6 +15,14 @@ const AdminTables = () => {
   // Get the configuration for the current table
   const tableConfig = tableConfigs[tableName];
   const formConfig = formConfigs[tableName];
+
+  var linkConfigName = null;
+
+  if (tableName === "users") {
+    linkConfigName = "user-groups";
+  } else if (tableName === "groups") {
+    linkConfigName = "group-permissions";
+  }
 
   if (!tableConfig) {
     return (
@@ -45,6 +53,8 @@ const AdminTables = () => {
         updateData={formConfig.updateData}
         deleteData={formConfig.deleteData}
         formLayout={formConfig.formLayout}
+        LinkComponent={linkConfigName ? LinkModal : null}
+        LinkComponentAttributes={linkConfigName ? formConfigs[linkConfigName] : {}}
       />
     </>
   );
