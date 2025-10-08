@@ -97,7 +97,7 @@ export const formConfigs = {
         placeholder: "Enter your secondary color",
       },
       {
-        name: "assigned_to",
+        name: "created_by",
         label: "Assign To",
         type: "select",
         required: true,
@@ -119,18 +119,18 @@ export const formConfigs = {
           { name: "primary_color", colSpan: 2 },
           { name: "secondary_color", colSpan: 2 },
         ],
-        [{ name: "assigned_to", colSpan: 4 }],
+        [{ name: "created_by", colSpan: 4 }],
       ],
     },
     createData: async (formData) => {
-      const { name, hero_img, primary_color, secondary_color, assigned_to } =
+      const { name, hero_img, primary_color, secondary_color, created_by } =
         formData;
       return create_chatbot_configs(
         name,
         hero_img,
         primary_color,
         secondary_color,
-        assigned_to
+        created_by
       );
     },
     updateData: async (chatbot_config_id, formData) => {

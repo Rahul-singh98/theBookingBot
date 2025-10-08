@@ -18,7 +18,6 @@ class UserGroupsInDB(UserGroupsBase):
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 
 class PaginatedUserGroupsResponse(BaseModel):

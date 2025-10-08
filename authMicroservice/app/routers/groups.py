@@ -22,7 +22,7 @@ def read_groups(
     groups, total = group_crud.get_groups(db, offset, limit)
     pagination_obj = Pagination.paginate(total, limit, page)
 
-    items = [GroupInDB.from_orm(group) for group in groups]
+    items = [GroupInDB.model_validate(group) for group in groups]
 
     return PaginatedGroupResponse(items=items, pagination=pagination_obj)
 

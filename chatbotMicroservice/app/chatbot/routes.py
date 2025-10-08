@@ -50,7 +50,7 @@ def read_chatbot(
     if db_chatbot is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
-    # return ChatbotConfigurationResponse.from_orm(db_chatbot)
+    # return ChatbotConfigurationResponse.model_validate(db_chatbot)
     return db_chatbot
 
 
@@ -78,7 +78,7 @@ async def create_chatbot(
     if authorization and authorization.lower().startswith('bearer'):
         authorization = authorization.split(" ")[1]
 
-    if not await check_user_exists(chatbot.assigned_to, authorization):
+    if not await check_user_exists(chatbot.created_by, authorization):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail='User not exists, please provide valid user id')
 
@@ -87,10 +87,10 @@ async def create_chatbot(
                             detail='Chatbot with this name already exists, please choose different name')
 
     new_chatbot = await crud.create_chatbot(db=db, chatbot=chatbot,
-                                            user_id=chatbot.assigned_to)
+                                            user_id=chatbot.created_by)
 
     CHATBOTS_GAUGE.labels(bot_id=new_chatbot.id, bot_name=new_chatbot.name,
-                          bot_author=chatbot.assigned_to).inc()
+                          bot_author=chatbot.created_by).inc()
 
     return new_chatbot
 

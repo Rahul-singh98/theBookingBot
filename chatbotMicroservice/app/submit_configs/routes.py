@@ -20,7 +20,7 @@ async def list_configurations(
     items, total = crud.list_submit_configurations(db, offset, size)
     paginated_obj = Pagination.paginate(total, size, page)
     return schemas.PaginatedChatSessionReponse(
-        items=[schemas.ChatbotSubmitConfigurationResponse.from_orm(
+        items=[schemas.ChatbotSubmitConfigurationResponse.model_validate(
             item) for item in items],
         pagination=paginated_obj
     )

@@ -4,6 +4,26 @@ from app.utils.constants import QuestionTypes, ComparisonOperator, LogicalOperat
 from app.utils.pagination import PaginationResponse
 
 
+def _normalize_question_type(qt):
+    """Normalize a question_type value to QuestionTypes enum when possible.
+
+    Accepts a QuestionTypes member or a string like 'Start' or the enum value.
+    Returns a QuestionTypes member or None if unknown.
+    """
+    if isinstance(qt, QuestionTypes):
+        return qt
+    if isinstance(qt, str):
+        qtl = qt.strip().lower()
+        for member in QuestionTypes:
+            try:
+                # match by enum name or by its value string
+                if member.name.lower() == qtl or str(member.value).lower() == qtl:
+                    return member
+            except Exception:
+                continue
+    return None
+
+
 class DropDownOption(BaseModel):
     htmlText: str
     value: str
@@ -16,16 +36,16 @@ class ClickListAction(BaseModel):
 
 
 class StartQuestion(BaseModel):
-    description: Optional[str]
+    description: Optional[str] = None
 
 
 class MessageQuestion(BaseModel):
-    description: Optional[str]
+    description: Optional[str] = None
 
 
 class ButtonQuestion(BaseModel):
-    button_id: Optional[str]
-    wait_after: Optional[float]
+    button_id: Optional[str] = None
+    wait_after: Optional[float] = None
 
 
 class RadioButtonAction(BaseModel):
@@ -37,17 +57,17 @@ class SendEmail(BaseModel):
 
 
 class RadioButtonQuestion(BaseModel):
-    open_radio: Optional[RadioButtonAction]
-    open_close: Optional[RadioButtonAction]
+    open_radio: Optional[RadioButtonAction] = None
+    open_close: Optional[RadioButtonAction] = None
 
 
 class EndQuestion(BaseModel):
     redirect_to: str
-    queryParams: Optional[List[str]]
+    queryParams: Optional[List[str]] = None
 
 
 class AddressQuestion(BaseModel):
-    validation: Optional[Dict[str, Any]]
+    validation: Optional[Dict[str, Any]] = None
 
 
 class PaymentQuestion(BaseModel):
@@ -55,9 +75,9 @@ class PaymentQuestion(BaseModel):
 
 
 class DropDownQuestion(BaseModel):
-    id: Optional[str]
-    name: Optional[str]
-    default: Optional[str]
+    id: Optional[str] = None
+    name: Optional[str] = None
+    default: Optional[str] = None
     options: List[DropDownOption]
 
 
@@ -67,23 +87,23 @@ class ClickListQuestion(BaseModel):
 
 class DateQuestion(BaseModel):
     format: str
-    validation: Optional[Dict[str, Any]]
+    validation: Optional[Dict[str, Any]] = None
 
 
 class TimeQuestion(BaseModel):
     format: str
-    validation: Optional[Dict[str, Any]]
+    validation: Optional[Dict[str, Any]] = None
 
 
 class DateTimeQuestion(BaseModel):
     format: str
-    validation: Optional[Dict[str, Any]]
+    validation: Optional[Dict[str, Any]] = None
 
 
 class NumberQuestion(BaseModel):
-    default: Optional[float]
-    min: Optional[float]
-    max: Optional[float]
+    default: Optional[float] = None
+    min: Optional[float] = None
+    max: Optional[float] = None
 
 
 class InputQuestion(BaseModel):
@@ -154,8 +174,7 @@ class QuestionOptionResponse(QuestionOptionBase):
     id: str
 
     class Config:
-        orm_mode = True
-        from_attribute = True
+        from_attributes = True
 
 
 class PaginatedQuestionOptionResponse(BaseModel):
@@ -167,13 +186,13 @@ class QuestionBase(BaseModel):
     bot_id: str
     question: str
     question_type: QuestionTypes
-    data: Optional[Dict[str, Any]]
-    variable: Optional[str]
-    next_ques: Optional[str]
+    data: Optional[Dict[str, Any]] = None
+    variable: Optional[str] = None
+    next_ques: Optional[str] = None
 
     @validator('data')
     def validate_question_data(cls, v, values):
-        question_type = values.get('question_type')
+        question_type = _normalize_question_type(values.get('question_type'))
         if not v:
             return v
 
@@ -222,16 +241,20 @@ class QuestionCreate(QuestionBase):
 
 
 class QuestionUpdate(BaseModel):
-    bot_id: Optional[str]
-    question: Optional[str]
-    question_type: Optional[QuestionTypes]
-    data: Optional[Dict[str, Any]]
-    variable: Optional[str]
-    next_ques: Optional[str]
+    bot_id: Optional[str] = None
+    question: Optional[str] = None
+    question_type: Optional[QuestionTypes] = None
+    data: Optional[Dict[str, Any]] = None
+    variable: Optional[str] = None
+    next_ques: Optional[str] = None
 
     @validator('data')
     def validate_question_data(cls, v, values):
-        question_type = values.get('question_type')
+        # If no data provided on update, skip validation
+        if not v:
+            return v
+
+        question_type = _normalize_question_type(values.get('question_type'))
 
         if question_type == QuestionTypes.START:
             StartQuestion(**v)
@@ -277,7 +300,6 @@ class QuestionResponse(QuestionBase):
     id: str
 
     class Config:
-        orm_mode = True
         from_attributes = True
 
 

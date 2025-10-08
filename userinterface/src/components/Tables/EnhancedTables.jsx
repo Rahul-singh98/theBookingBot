@@ -89,14 +89,39 @@ const EnhancedTable = ({
   const location = useLocation();
   const visibleColumns = columns.filter(({ hide }) => !hide);
 
+  // Helper to fetch data and set local state (centralized to ensure UI updates)
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      const result = await fetchData();
+      setData(result);
+      setError(null);
+      return result;
+    } catch (err) {
+      if (err.message === "Unauthorized") {
+        afterLogout();
+        navigate(`/login?next=${location.pathname}`);
+      } else {
+        setError(err.message);
+      }
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch data with automatic refresh
   useEffect(() => {
-    const loadData = async () => {
+    // initial load and optional interval-based refresh
+    let canceled = false;
+    const load = async () => {
       try {
         setLoading(true);
         const result = await fetchData();
-        setData(result);
-        setError(null);
+        if (!canceled) {
+          setData(result);
+          setError(null);
+        }
       } catch (err) {
         if (err.message === "Unauthorized") {
           afterLogout();
@@ -105,16 +130,23 @@ const EnhancedTable = ({
           setError(err.message);
         }
       } finally {
-        setLoading(false);
+        if (!canceled) setLoading(false);
       }
     };
 
-    loadData();
+    load();
 
     if (refreshInterval > 0) {
-      const interval = setInterval(loadData, refreshInterval);
-      return () => clearInterval(interval);
+      const interval = setInterval(load, refreshInterval);
+      return () => {
+        canceled = true;
+        clearInterval(interval);
+      };
     }
+
+    return () => {
+      canceled = true;
+    };
   }, [fetchData, refreshInterval]);
 
   // CRUD Operations
@@ -123,7 +155,8 @@ const EnhancedTable = ({
       console.log("HandleCreate", formData);
       setLoading(true);
       await createData(formData);
-      await fetchData();
+      // refresh and update local state
+      await refreshData();
 
       // const result = await fetchData();
       // setData((prevData) => {
@@ -147,7 +180,7 @@ const EnhancedTable = ({
     try {
       setLoading(true);
       await updateData(currentItem.id, formData);
-      await fetchData();
+      await refreshData();
       setIsEditModalOpen(false);
       setCurrentItem(null);
     } catch (err) {
@@ -166,7 +199,7 @@ const EnhancedTable = ({
     try {
       setLoading(true);
       await deleteData(currentItem.id);
-      await fetchData();
+      await refreshData();
       setIsDeleteDialogOpen(false);
       setCurrentItem(null);
     } catch (err) {
@@ -182,6 +215,41 @@ const EnhancedTable = ({
   };
 
   const handleSelectAll = () => {};
+  const handleSelectRow = (id) => {
+    setSelectedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  // const handleSelectAll = () => {
+  //   setSelectedRows((prev) => {
+  //     const allIds = paginatedData.map((r) => r.id);
+  //     const next = new Set(prev);
+  //     const allSelected = allIds.every((id) => next.has(id));
+  //     if (allSelected) {
+  //       // unselect all on current page
+  //       allIds.forEach((id) => next.delete(id));
+  //     } else {
+  //       allIds.forEach((id) => next.add(id));
+  //     }
+  //     return next;
+  //   });
+  // };
+
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.field === key) {
+        return {
+          field: key,
+          direction: prev.direction === "asc" ? "desc" : "asc",
+        };
+      }
+      return { field: key, direction: "asc" };
+    });
+  };
 
   // Existing table logic...
   const filteredAndSortedData = useMemo(() => {
@@ -268,7 +336,7 @@ const EnhancedTable = ({
         </div>
 
         <button
-          onClick={() => fetchData()}
+          onClick={() => refreshData()}
           className="p-2 hover:bg-gray-100 dark:hover:bg-meta-4 rounded-full"
         >
           <RefreshCw className="w-5 h-5 dark:text-white" />
@@ -440,7 +508,7 @@ const EnhancedTable = ({
       </SimpleModal>
 
       {/* Edit Modal */}
-      {disablePop && currentItem ? (
+      {disablePop && currentItem && isEditModalOpen ? (
         navigate(`/admin/tables/chatbots/${currentItem.id}/edit`)
       ) : (
         <SimpleModal

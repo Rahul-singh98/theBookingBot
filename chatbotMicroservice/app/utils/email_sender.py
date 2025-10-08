@@ -2,15 +2,18 @@ from typing import List
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 import os
 
-MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-MAIL_APP_NAME = os.environ.get('MAIL_APP_NAME')
-MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtpout.secureserver.net')
-MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))
-MAIL_TLS = bool(int(os.environ.get('MAIL_TLS', '0')))
-MAIL_SSL = bool(int(os.environ.get('MAIL_SSL', '0')))
+MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+MAIL_FROM = os.getenv("MAIL_FROM")
+MAIL_PORT = int(os.getenv("MAIL_PORT", '587'))
+MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
+MAIL_STARTTLS = bool(int(os.getenv("MAIL_STARTTLS", "1")))
+MAIL_SSL_TLS = bool(int(os.getenv("MAIL_SSL_TLS", "0")))
+USE_CREDENTIALS = bool(int(os.getenv("USE_CREDENTIALS", "1")))
+VALIDATE_CERTS = bool(int(os.getenv("VALIDATE_CERTS", "1")))
 
 conf = None
+
 
 def get_conf():
     global conf
@@ -19,12 +22,13 @@ def get_conf():
         conf = ConnectionConfig(
             MAIL_USERNAME=MAIL_USERNAME,
             MAIL_PASSWORD=MAIL_PASSWORD,
-            MAIL_FROM=MAIL_USERNAME,
+            MAIL_FROM=MAIL_FROM,
             MAIL_PORT=MAIL_PORT,
             MAIL_SERVER=MAIL_SERVER,
-            MAIL_TLS=MAIL_TLS,
-            MAIL_SSL=MAIL_SSL,
-            MAIL_FROM_NAME=MAIL_APP_NAME
+            MAIL_STARTTLS=MAIL_STARTTLS,
+            MAIL_SSL_TLS=MAIL_SSL_TLS,
+            USE_CREDENTIALS=USE_CREDENTIALS,
+            VALIDATE_CERTS=VALIDATE_CERTS,
         )
 
     return conf

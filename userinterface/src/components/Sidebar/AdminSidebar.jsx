@@ -71,8 +71,12 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-5">
-        <NavLink to="/admin">
-          <img src={Logo} alt="Logo" />
+        <NavLink to="/admin" className="flex items-center gap-2">
+          {/* <img src={Logo} alt="TBB Logo" className="h-8 w-8 object-contain" /> */}
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-white">The Booking Bot</span>
+            <span className="text-xs text-gray-300">Admin</span>
+          </div>
         </NavLink>
 
         <button

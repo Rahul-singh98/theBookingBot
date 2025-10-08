@@ -25,7 +25,6 @@ class GroupInDB(GroupBase):
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 
 class PaginatedGroupResponse(BaseModel):

@@ -30,7 +30,7 @@ def list_chat_session(
     offset = Pagination.get_offset(page, size)
     items, total = crud.list_chat_sessions(db, offset, size)
     paginated_obj = Pagination.paginate(total, size, page)
-    return PaginatedChatSessionReponse(items=[ChatSessionResponse.from_orm(item) for item in items], pagination=paginated_obj)
+    return PaginatedChatSessionReponse(items=[ChatSessionResponse.model_validate(item) for item in items], pagination=paginated_obj)
 
 
 @chats_router.get("/{session_id}", response_model=ChatSessionResponse)

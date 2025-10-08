@@ -8,10 +8,11 @@ from datetime import datetime
 class PermissionBase(BaseModel):
     name: str
     description: Optional[str] = None
+    scope: Optional[str] = None
 
 
 class PermissionCreate(PermissionBase):
-    scope: str
+    pass
 
 
 class PermissionUpdate(PermissionBase):
@@ -24,7 +25,6 @@ class PermissionInDB(PermissionBase):
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 
 class PaginatedPermissionResponse(BaseModel):

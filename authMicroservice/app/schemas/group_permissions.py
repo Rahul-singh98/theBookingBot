@@ -18,7 +18,6 @@ class GroupPermissionsInDB(GroupPermissionsBase):
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 
 class PaginatedGroupPermissionsResponse(BaseModel):

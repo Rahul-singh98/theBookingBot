@@ -10,13 +10,18 @@ import { formConfigs } from "@/components/Forms/formConfigs";
 const OrgBot = () => {
     const tableName = "chatbots"
 
-    // Get the configuration for the current table
     const tableConfig = tableConfigs[tableName];
     const formConfig = formConfigs[tableName];
 
     if (!tableConfig) {
         return (
             <div className="p-4">Table configuration not found for: {tableName}</div>
+        );
+    }
+
+    if (!formConfig) {
+        return (
+            <div className="p-4">Form configuration not found for: {tableName}</div>
         );
     }
 
@@ -43,6 +48,8 @@ const OrgBot = () => {
                 deleteData={formConfig.deleteData}
                 formLayout={formConfig.formLayout}
                 disablePop={{redirect_to: `/admin/chatbots/`}}
+                LinkComponent={null}
+                LinkComponentAttributes={{}}
             />
         </>
     );

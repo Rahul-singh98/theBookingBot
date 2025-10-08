@@ -26,7 +26,7 @@ def read_users(
 
     # Use parse_obj_as to handle lists of models
     # items = parse_obj_as(List[UserInDB], users)
-    items = [UserInDB.from_orm(user) for user in users]
+    items = [UserInDB.model_validate(user) for user in users]
 
     return PaginatedUserResponse(items=items, pagination=pagination_obj)
 

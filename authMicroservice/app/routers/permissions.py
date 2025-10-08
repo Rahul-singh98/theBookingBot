@@ -22,7 +22,7 @@ def read_permissions(
     permissions, total = permission_crud.get_permissions(db, offset, limit)
     pagination_obj = Pagination.paginate(total, limit, page)
 
-    items = [PermissionInDB.from_orm(permission) for permission in permissions]
+    items = [PermissionInDB.model_validate(permission) for permission in permissions]
 
     return PaginatedPermissionResponse(items=items, pagination=pagination_obj)
 

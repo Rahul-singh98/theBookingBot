@@ -24,7 +24,7 @@ def read_group_permissions(
         db, group_id, offset, limit)
     pagination_obj = Pagination.paginate(total, limit, page)
 
-    items = [GroupPermissionsInDB.from_orm(
+    items = [GroupPermissionsInDB.model_validate(
         permission) for permission in permissions]
     return PaginatedGroupPermissionsResponse(items=items, pagination=pagination_obj)
 

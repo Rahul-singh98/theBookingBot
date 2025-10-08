@@ -221,6 +221,7 @@ const DnDFlow = () => {
       const sourceNode = nodes.find((node) => node.id === source);
 
       try {
+        console.log("sourceNode data", sourceNode.data)
         await update_questions(
           source,
           sourceNode.data?.initial_data?.bot_id,
@@ -261,6 +262,7 @@ const DnDFlow = () => {
           console.log("SourceNode", sourceNode)
           if (sourceNode) {
             try {
+              console.log("Updatgin question", sourceNode.data)
               // Call API to update the next_ques of the source node
               await update_questions(sourceNode.id,
                 sourceNode.data?.initial_data?.bot_id,

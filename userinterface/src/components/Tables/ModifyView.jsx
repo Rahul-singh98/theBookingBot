@@ -51,7 +51,9 @@ const AdminModifyView = () => {
   const handleEdit = async (formData) => {
     try {
       await formConfig.updateData(currentItem.id, formData);
-      await formConfig.fetchData();
+      // Re-fetch the updated chatbot data and update local state so previews/author reflect changes
+      const refreshed = await formConfig.getData(currentItem.id);
+      setCurrentItem(refreshed);
     } catch (err) {
       if (err.message === "Unauthorized") {
         afterLogout();
@@ -75,7 +77,8 @@ const AdminModifyView = () => {
           ...field,
           options: async () => {
             // Fetch chatbot configs
-            const response = await formConfigs["questions"].fetchData(chatbotId);
+            const response =
+              await formConfigs["questions"].fetchData(chatbotId);
 
             console.log("Response", response);
 
@@ -108,17 +111,6 @@ const AdminModifyView = () => {
     ),
   };
 
-  const chatbotFields = formConfig.fields.reduce((acc, field) => {
-    if (field.name !== "email" && field.name !== "temp_password") {
-      acc.push(field);
-    }
-    return acc;
-  }, []);
-
-  const chatbotFormLayout = {
-    ...formConfig.formLayout,
-    rows: formConfig.formLayout.rows.slice(0, -1), // Corrected slicing
-  };
 
   return (
     <div className="pt-3">
@@ -128,11 +120,11 @@ const AdminModifyView = () => {
       <PageTitle>{`${tableName.charAt(0).toUpperCase() + tableName.slice(1)} Management`}</PageTitle>
 
       <DynamicForm
-        fields={chatbotFields}
+        fields={formConfig.fields}
         initialData={currentItem}
         onSubmit={handleEdit}
-        onCancel={() => {}}
-        matrixLayout={chatbotFormLayout}
+        onCancel={() => navigate("/admin/org-bot")}
+        matrixLayout={formConfig.formLayout}
       />
 
       {tableName === "chatbots" && (

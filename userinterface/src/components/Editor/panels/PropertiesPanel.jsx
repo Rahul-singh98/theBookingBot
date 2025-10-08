@@ -135,9 +135,11 @@ export default function PropertiesPanel({ selectedNode, onCollapse, nodes, setNo
 
   const handleSave = async () => {
     try {
+      console.log("updating", selectedNode)
+      console.log("updating", questionData)
       const response = await update_questions(
         selectedNode.id,
-        selectedNode.bot_id,
+        questionData.bot_id?.trim() ? questionData.bot_id.trim() : selectedNode.bot_id,
         questionData.question,
         questionData.question_type,
         questionData.data,

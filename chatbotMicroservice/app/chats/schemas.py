@@ -19,7 +19,6 @@ class ChatSessionResponse(ChatSessionBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
         from_attributes = True
 
 
@@ -30,7 +29,7 @@ class PaginatedChatSessionReponse(BaseModel):
 
 class ChatHistoryBase(BaseModel):
     session_id: str
-    response: Optional[Json]
+    response: Optional[Json] = None
 
 
 class ChatHistoryCreate(ChatHistoryBase):
@@ -57,7 +56,6 @@ class ChatHistoryResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 
 class PaginatedChatHistoryReponse(BaseModel):

@@ -206,3 +206,4 @@ nginx.temp.conf
 nginx.prod.conf
 example
 metrics.md
+fastapi-clickhouse*

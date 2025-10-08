@@ -31,7 +31,7 @@ def get_chatbot_by_name(db: Session, chatbot_name: str):
 
 async def create_chatbot(db: Session, chatbot: schemas.ChatbotConfigurationCreate, user_id: str):
     db_chatbot = models.ChatbotConfiguration(
-        **chatbot.dict(exclude={'assigned_to'}), created_by=user_id)
+        **chatbot.dict(exclude={'created_by'}), created_by=user_id)
     db.add(db_chatbot)
     db.commit()
     db.refresh(db_chatbot)

@@ -24,7 +24,7 @@ def read_user_groups(
         db, user_id, offset, limit)
     pagination_obj = Pagination.paginate(total, limit, page)
 
-    items = [UserGroupsInDB.from_orm(user) for user in users]
+    items = [UserGroupsInDB.model_validate(user) for user in users]
     return PaginatedUserGroupsResponse(items=items, pagination=pagination_obj)
 
 

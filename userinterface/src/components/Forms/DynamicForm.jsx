@@ -42,7 +42,12 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
           }
         } else {
           // Handle non-JSON fields 
-          processedData[field.name] = initialValue ?? field.defaultValue ?? getDefaultValueByType(field.type);
+          // For image fields, if initialValue exists keep it as string URL
+          if (field.type === "image" && initialValue) {
+            processedData[field.name] = initialValue;
+          } else {
+            processedData[field.name] = initialValue ?? field.defaultValue ?? getDefaultValueByType(field.type);
+          }
         }
       });
       setFormData(processedData);
@@ -205,10 +210,14 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
 
     switch (type) {
       case "image":
+        // If initialData has an existing image URL, don't force the user to re-upload.
+        // The "required" prop should be honored only when there's no existing image.
+        const initialImage = formData[name];
+        const isRequired = required && !initialImage;
         return (
           <div key={name} className="mb-4">
             <label className={labelClass}>
-              {label} {required && <span className="text-red-500 ml-1">*</span>}
+              {label} {isRequired && <span className="text-red-500 ml-1">*</span>}
             </label>
             <input
               type="file"
@@ -216,13 +225,13 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
               name={name}
               onChange={(e) => handleImageChange(e, name)}
               className={inputClass}
-              required={required}
+              required={isRequired}
               {...rest}
             />
-            {formData[name] && (
+            {initialImage && (
               <div className="mt-2">
                 <img
-                  src={formData[name]}
+                  src={initialImage}
                   alt="Uploaded Preview"
                   style={{ width: "100px", height: "100px", objectFit: "cover" }}
                 />
@@ -284,14 +293,14 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
 
   // Add this helper function to handle image file changes
   const handleImageChange = async (e, name) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file); // Ensure the key matches the backend
+      const payload = new FormData();
+      payload.append("file", file); // Ensure the key matches the backend
 
       try {
         // Upload the image to the backend
-        const data = await uploadImage(formData);
+        const data = await uploadImage(payload);
         const fileUrl = data.file_url;
 
         // Update form data with the file URL
@@ -303,10 +312,8 @@ const DynamicForm = ({ fields, initialData, onSubmit, onCancel, submitLabel = "S
         console.error("Error uploading image:", err);
       }
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      // If no new file selected, don't change existing image URL
+      // (leave formData[name] as-is)
     }
   };
 

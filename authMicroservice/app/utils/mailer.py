@@ -6,12 +6,12 @@ import asyncio
 MAIL_USERNAME = os.getenv("MAIL_USERNAME")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 MAIL_FROM = os.getenv("MAIL_FROM")
-MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
+MAIL_PORT = int(os.getenv("MAIL_PORT", '587'))
 MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
-MAIL_STARTTLS = os.getenv("MAIL_STARTTLS", "true").lower() == "true"
-MAIL_SSL_TLS = os.getenv("MAIL_SSL_TLS", "false").lower() == "true"
-USE_CREDENTIALS = os.getenv("USE_CREDENTIALS", "true").lower() == "true"
-VALIDATE_CERTS = os.getenv("VALIDATE_CERTS", "true").lower() == "true"
+MAIL_STARTTLS = bool(int(os.getenv("MAIL_STARTTLS", "1")))
+MAIL_SSL_TLS = bool(int(os.getenv("MAIL_SSL_TLS", "0")))
+USE_CREDENTIALS = bool(int(os.getenv("USE_CREDENTIALS", "1")))
+VALIDATE_CERTS = bool(int(os.getenv("VALIDATE_CERTS", "1")))
 LOGIN_URL = os.getenv("UI_LOGIN_URL", "http://localhost/login")
 
 

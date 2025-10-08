@@ -13,9 +13,7 @@ class ChatbotConfigurationBase(BaseModel):
 
 
 class ChatbotConfigurationCreate(ChatbotConfigurationBase):
-    assigned_to: str = None
-    # email: str
-    # temp_password: str
+    created_by: str = None
     pass
 
 
@@ -25,13 +23,12 @@ class ChatbotConfigurationUpdate(ChatbotConfigurationBase):
 
 class ChatbotConfigurationResponse(ChatbotConfigurationBase):
     id: str
-    created_by: Optional[str]
+    created_by: Optional[str] = None
 
     created_at: datetime
     updated_at: datetime
 
     class Config:
-        # orm_mode = True
         from_attributes = True
 
 
