@@ -37,7 +37,6 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 
 @auth_router.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
-    print("UserDetails", user.username, user.password)
     db_user = users_crud.get_user_by_username(db, user.username)
 
     if not db_user:

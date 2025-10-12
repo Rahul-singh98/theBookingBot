@@ -207,3 +207,7 @@ nginx.prod.conf
 example
 metrics.md
 fastapi-clickhouse*
+prometheus/data
+prometheus/test_data
+analyticsMicroservice
+HELPER.md

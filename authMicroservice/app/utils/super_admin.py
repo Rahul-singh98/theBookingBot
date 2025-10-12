@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 def create_super_admin():
     # Check if we should create a super admin
     create_admin = os.getenv("CREATE_SUPER_ADMIN", "false").lower() == "true"
-    print("CreateAdminConfigENV", os.getenv("CREATE_SUPER_ADMIN"))
-    print("CreateAdminConfig", create_admin)
+    # print("CreateAdminConfigENV", os.getenv("CREATE_SUPER_ADMIN"))
+    # print("CreateAdminConfig", create_admin)
 
     if not create_admin:
         logger.info("Super admin creation is disabled.")

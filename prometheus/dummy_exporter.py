@@ -5,7 +5,7 @@ from uuid import uuid4
 import string
 import threading
 
-HTTP_PORT = 8002
+HTTP_PORT = 8001
 
 # Metric to track the number of chatbots that are up and running
 CHATBOTS_GAUGE = Gauge(

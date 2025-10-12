@@ -2,9 +2,22 @@ from typing import Optional
 from fastapi import Header, HTTPException, Depends
 import httpx
 import os
-from prometheus_client import Counter, Gauge
+from enum import Enum
+from prometheus_client import Gauge, Counter, Histogram
 
 AUTH_SERVICE_URL = os.environ.get("AUTH_SERVICE_URL", "http://localhost:8000")
+# METRIC_SERVICE_URL = os.environ.get(
+#     "METRIC_SERVICE_URL", "http://localhost:8002")
+
+
+class AuthEndpoints(str, Enum):
+    CHECK_PERMISSIONS = "/api/auth/check-permissions"
+    CHECK_USERNAME = "/api/users/check/username"
+    CHECK_USER = "/api/users"
+
+
+class MetricsEndpoints(str, Enum):
+    CHATBOT_COUNTER = "/api/metrics/chatbot_counter"
 
 
 async def get_token(
@@ -48,11 +61,10 @@ async def check_permission_logic(
     """Check permission logic implementation."""
     headers = {"Authorization": f"Bearer {token}"}
     params = {"required_permission": required_permission}
-    ENDPOINT = "/api/auth/check-permissions"
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            AUTH_SERVICE_URL + ENDPOINT,
+            AUTH_SERVICE_URL + AuthEndpoints.CHECK_PERMISSIONS.value,
             headers=headers,
             params=params
         )
@@ -81,12 +93,11 @@ def check_permission(required_permission: str):
 async def check_username_exists(
     username: str
 ) -> bool:
-    ENDPOINT = "/api/users/check/username"
     params = {"username": username}
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            AUTH_SERVICE_URL + ENDPOINT,
+            AUTH_SERVICE_URL + AuthEndpoints.CHECK_USERNAME.value,
             params=params
         )
 
@@ -103,11 +114,9 @@ async def check_user_exists(
     userid: str,
     token: str = None
 ) -> bool:
-    ENDPOINT = f"/api/users/{userid}"
-
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            AUTH_SERVICE_URL + ENDPOINT,
+            AUTH_SERVICE_URL + AuthEndpoints.CHECK_USER.value + f"/{userid}",
             headers={"Authorization": f"Bearer {token}"}
         )
 
@@ -126,7 +135,6 @@ async def create_subadmin(
     email: str,
     token: str
 ) -> dict:
-    ENDPOINT = "/api/users"
     data = {
         'username': username,
         'email': email,
@@ -137,8 +145,8 @@ async def create_subadmin(
     async with httpx.AsyncClient() as client:
         print("token", token)  # Debugging
         response = await client.post(
-            AUTH_SERVICE_URL + ENDPOINT,
-            json=data,  # Use json instead of data for correct content-type
+            AUTH_SERVICE_URL + AuthEndpoints.CHECK_USER.value,
+            json=data,
             headers={"Authorization": f"Bearer {token}"}
         )
 
@@ -149,6 +157,64 @@ async def create_subadmin(
         )
 
     return response.json()
+
+
+# async def create_chatbot_counter(
+#     bot_id: str,
+#     bot_name: str,
+#     author: str,
+#     token: str
+# ) -> dict:
+#     data = {
+#         'bot_id': bot_id,
+#         'bot_name': bot_name,
+#         'author': author,
+#         'status': 'active'
+#     }
+
+#     async with httpx.AsyncClient() as client:
+#         response = await client.post(
+#             METRIC_SERVICE_URL + MetricsEndpoints.CHATBOT_COUNTER.value,
+#             json=data,
+#             headers={"Authorization": f"Bearer {token}"}
+#         )
+
+#     if response.status_code != 200:
+#         raise HTTPException(
+#             status_code=response.status_code,
+#             detail=response.json().get("detail", "Something went wrong")
+#         )
+
+#     return response.json()
+
+
+# async def delete_chatbot_counter(
+#     bot_id: str,
+#     bot_name: str,
+#     author: str,
+#     token: str
+# ) -> dict:
+#     data = {
+#         'bot_id': bot_id,
+#         'bot_name': bot_name,
+#         'author': author,
+#         'status': 'inactive'
+#     }
+
+#     async with httpx.AsyncClient() as client:
+#         response = await client.put(
+#             METRIC_SERVICE_URL + MetricsEndpoints.CHATBOT_COUNTER.value,
+#             json=data,
+#             headers={"Authorization": f"Bearer {token}"}
+#         )
+
+#     if response.status_code != 200:
+#         raise HTTPException(
+#             status_code=response.status_code,
+#             detail=response.json().get("detail", "Something went wrong")
+#         )
+
+#     return response.json()
 
 # Prometheus metrics
 # Metric to track the number of chatbots that are up and running
@@ -163,6 +229,33 @@ CHATBOTS_TRAFFIC = Counter(
     'chatbots_traffic_total',
     'Total number of sessions processed by chatbots',
     ['bot_id', 'bot_author', "s_id", 'v_id']
+)
+
+# Regional sessions label (region is coarse; see note)
+CHATBOTS_REGIONAL = Counter(
+    'chatbots_regional_sessions_total',
+    'Number of sessions by region for chatbots',
+    ['bot_id', 'v_id', "lat", 'long']
+)
+
+# Payments counters and amount histogram
+PAYMENTS_COUNTER = Counter(
+    'payments_total',
+    'Total number of successful payments processed',
+    ['bot_id', 'v_id']
+)
+
+PAYMENTS_AMOUNT = Histogram(
+    'payments_amount_usd',
+    'Histogram of payment amounts (USD cents)',
+    ['bot_id', 'v_id']
+)
+
+# Quotes / get-quotes bill events
+QUOTES_COUNTER = Counter(
+    'quotes_requests_total',
+    'Number of quote requests / bill generation events',
+    ['bot_id', 'v_id']
 )
 
 # # Metric to track completed payments

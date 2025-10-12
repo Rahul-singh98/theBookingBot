@@ -17,7 +17,65 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  console.log(user)
+  console.log(user);
+  const [regionalSeries, setRegionalSeries] = useState({
+    labels: [],
+    series: [],
+  });
+  const [subadminSeries, setSubadminSeries] = useState({
+    categories: [],
+    series: [],
+  });
+
+  useEffect(() => {
+    let mounted = true;
+    const loadExtras = async () => {
+      try {
+        const [regional, payments, quotes] = await Promise.all([
+          PrometheusAPI.getRegionalSessions(),
+          PrometheusAPI.getPaymentsBySubadmin(),
+          PrometheusAPI.getQuotesBySubadmin(),
+        ]);
+
+        if (!mounted) return;
+
+        // regional pie
+        const rLabels = regional.map((r) => r.region || "unknown");
+        const rSeries = regional.map((r) => r.value || 0);
+        setRegionalSeries({ labels: rLabels, series: rSeries });
+
+        // subadmin stacked: create categories (subadmin ids)
+        const ids = Array.from(
+          new Set([
+            ...visitors.map((v) => v.v_id),
+            ...payments.map((p) => p.v_id),
+            ...quotes.map((q) => q.v_id),
+          ])
+        );
+        const paymentsMap = Object.fromEntries(
+          payments.map((p) => [p.v_id, p.value])
+        );
+        const quotesMap = Object.fromEntries(
+          quotes.map((q) => [q.v_id, q.value])
+        );
+
+        const paymentsSeries = ids.map((id) => paymentsMap[id] || 0);
+        const quotesSeries = ids.map((id) => quotesMap[id] || 0);
+
+        setSubadminSeries({
+          categories: ids,
+          series: [
+            { name: "Payments", data: paymentsSeries },
+            { name: "Quotes", data: quotesSeries },
+          ],
+        });
+      } catch (err) {
+        console.error("Error loading additional metrics", err);
+      }
+    };
+    loadExtras();
+    return () => (mounted = false);
+  }, []);
   // Questions Distribution Donut Options
   const questionsOptions = {
     chart: {
@@ -58,19 +116,40 @@ const Dashboard = () => {
       />
 
       {/* Questions Distribution */}
-      {/* <Card>
+      <Card>
         <CardHeader>
-          <CardTitle>Traffic by users</CardTitle>
+          <CardTitle>Regional Sessions</CardTitle>
         </CardHeader>
         <CardContent>
           <ReactApexChart
-            options={questionsOptions}
-            series={[44, 55, 13, 33]}
+            options={{
+              labels: regionalSeries.labels,
+              noData: { text: "No regional data available" },
+            }}
+            series={regionalSeries.series}
             type="donut"
-            height={350}
+            height={300}
           />
         </CardContent>
-      </Card> */}
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>SubAdmin: Payments / Quotes</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ReactApexChart
+            options={{
+              chart: { type: "bar", stacked: true },
+              xaxis: { categories: subadminSeries.categories },
+              noData: { text: "No subadmin metrics available" },
+            }}
+            series={subadminSeries.series}
+            type="bar"
+            height={300}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };

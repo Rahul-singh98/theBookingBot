@@ -20,6 +20,12 @@ const TrafficDistribution = ({ createdBy = null }) => {
         const categories = [];
         const seriesMap = {};
 
+        if (!response || response.length === 0) {
+          // No data available; leave chartData empty
+          setChartData({ series: [], categories: [] });
+          return;
+        }
+
         response.forEach(({ timestamp, value, bot_author, bot_id }) => {
           const ts = new Date(timestamp * 1000).toLocaleDateString();
 

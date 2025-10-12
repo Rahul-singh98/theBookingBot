@@ -14,7 +14,6 @@ class ChatbotConfigurationBase(BaseModel):
 
 class ChatbotConfigurationCreate(ChatbotConfigurationBase):
     created_by: str = None
-    pass
 
 
 class ChatbotConfigurationUpdate(ChatbotConfigurationBase):
@@ -64,3 +63,5 @@ class PaginatedChatbotSubmitConfigurationResponse(BaseModel):
 class PaymentRequest(BaseModel):
     amount: int  # Amount in cents
     currency: str  # Currency code, e.g., 'usd'
+    bot_id: Optional[str] = None
+    v_id: Optional[str] = None

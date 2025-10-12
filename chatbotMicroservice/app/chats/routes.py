@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy.orm import Session
 from app.database import get_db
 from typing import Dict
@@ -8,7 +8,7 @@ from app.chats.schemas import (
     ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse,
 )
 import json
-from app.dependencies import check_permission, get_visitor_id, CHATBOTS_TRAFFIC
+from app.dependencies import check_permission, get_visitor_id, CHATBOTS_TRAFFIC, CHATBOTS_REGIONAL
 from app.chats import crud
 from app.chatbot import crud as chatbot_services
 from app.questions import crud as question_services
@@ -40,7 +40,9 @@ def read_chat_session(session_id: str, db: Session = Depends(get_db)):
 
 @chats_router.post("/{chatbot_id}", response_model=ChatSessionResponse)
 async def start_chat_session(
-    chatbot_id: str, 
+    chatbot_id: str,
+    lat: float | None = Body(None),
+    lon: float | None = Body(None),
     visitor: str = Depends(get_visitor_id),
     db: Session = Depends(get_db)):
     db_chatbot = chatbot_services.get_chatbot(db, chatbot_id=chatbot_id)
@@ -53,7 +55,13 @@ async def start_chat_session(
     history_create = ChatHistoryCreate(session_id=db_session.id, response=None)
     _ = crud.create_chat_history(db, history_create)
 
+    # increment metrics (best-effort)
     CHATBOTS_TRAFFIC.labels(bot_id=chatbot_id, s_id=db_session.id, v_id=visitor, bot_author=db_chatbot.created_by).inc()
+    # VISITORS_COUNTER.labels(subadmin_id=db_chatbot.created_by).inc()
+    
+    
+    if lat is not None and lon is not None:
+        CHATBOTS_REGIONAL.labels(bot_id=chatbot_id, v_id=visitor, lat=lat, long=lon).inc()
     return db_session
 
 

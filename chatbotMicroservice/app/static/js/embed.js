@@ -1,9 +1,7 @@
-// Configuration
-const GMKEY = "AIzaSyAZeHhypV8m-ELyqOYIJUzafjalY76aDbI";
-const SPKEY =
-  "pk_test_51QhaP4Rq3j0JuwMmggGo4IAKfG0UYBepjPVSA5HrR3r8rfBFPbLNcq9q8r8iZ7WzXeD5LkTGPpTCf8Jl50GQ32WN007amsWm9r";
-const BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT = "/api/chats";
-const BACKEND_CHATBOT_CHATBOT_API_ENDPOINT = "/api/chatbots";
+let GMKEY = null;
+let SPKEY = null;
+const BACKEND_BOT_CHAT_SESSION_API_ENDPOINT = "/api/chats";
+const BACKEND_BOT_CHATBOT_API_ENDPOINT = "/api/chatbots";
 
 // State management
 const clientBotState = {
@@ -22,6 +20,32 @@ const clientBotState = {
   mapsAutoComplete: null,
 };
 
+// Attempt to get user's location once and store into clientBotState.location
+async function tryGetLocation() {
+  try {
+    if (!navigator || !navigator.geolocation) return null;
+
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          clientBotState.location = { lat: latitude, lon: longitude };
+          resolve({ lat: latitude, lon: longitude });
+        },
+        (err) => {
+          // permission denied or unavailable -> resolve null
+          console.warn("Geolocation not available:", err.message);
+          resolve(null);
+        },
+        { enableHighAccuracy: false, timeout: 5000 }
+      );
+    });
+  } catch (e) {
+    console.warn(e);
+    return null;
+  }
+}
+
 async function getOrCreateVisitorId() {
   const localStorageKey = "vIdData";
 
@@ -29,18 +53,73 @@ async function getOrCreateVisitorId() {
   const storedData = localStorage.getItem(localStorageKey);
 
   // Parse the stored data if it exists
-  let visitorId, timestamp;
+  let visitorId = null;
   if (storedData) {
     try {
       const parsedData = JSON.parse(storedData);
       visitorId = parsedData.visitorId;
-      timestamp = parsedData.timestamp;
     } catch (error) {
       console.error("Error parsing stored data:", error);
     }
   }
 
+  // If not present, generate a new UUID (use crypto.randomUUID when available)
+  if (!visitorId) {
+    try {
+      if (
+        typeof crypto !== "undefined" &&
+        typeof crypto.randomUUID === "function"
+      ) {
+        visitorId = crypto.randomUUID();
+      } else {
+        // fallback uuidv4 generator
+        visitorId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+          /[xy]/g,
+          function (c) {
+            const r = (Math.random() * 16) | 0;
+            const v = c === "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          }
+        );
+      }
+
+      const payload = { visitorId, timestamp: new Date().toISOString() };
+      try {
+        localStorage.setItem(localStorageKey, JSON.stringify(payload));
+      } catch (e) {
+        console.warn("Unable to persist visitor id to localStorage", e);
+      }
+    } catch (e) {
+      console.error("Failed to generate visitor id", e);
+    }
+  }
+
+  // Expose globally for other scripts
+  try {
+    window.__VISITOR_ID__ = visitorId;
+  } catch (e) {}
+
   return visitorId;
+}
+
+async function decryptAESGCM(base64Token) {
+  let base64Key = "oenMXjTbRmkj/WQ87niqiQ==";
+  const data = Uint8Array.from(atob(base64Token), (c) => c.charCodeAt(0));
+  const keyBytes = Uint8Array.from(atob(base64Key), (c) => c.charCodeAt(0));
+  const nonce = data.slice(0, 12);
+  const ciphertext = data.slice(12);
+
+  const key = await crypto.subtle.importKey("raw", keyBytes, "AES-GCM", false, [
+    "decrypt",
+  ]);
+
+  const plaintext = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: nonce },
+    key,
+    ciphertext
+  );
+
+  return new TextDecoder().decode(plaintext);
 }
 
 // Initialize the chatbot
@@ -72,8 +151,27 @@ const initChatbot = async (config) => {
   console.log("VisitorID", clientBotState.visitorId);
 
   try {
+    // fetch decrypted keys for this chatbot from backend
+    try {
+      const keysResp = await fetch(
+        `${clientBotState.backendUrl}${BACKEND_BOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}/keys`
+      );
+      if (keysResp.ok) {
+        const keys = await keysResp.json();
+        if (keys.gm_key && keys.sp_key) {
+          GMKEY = await decryptAESGCM(keys.gm_key);
+          SPKEY = await decryptAESGCM(keys.sp_key);
+        }
+      } else {
+        console.warn("Could not fetch chatbot keys", keysResp.status);
+      }
+    } catch (e) {
+      console.warn("Error fetching chatbot keys", e);
+    }
+
     await loadDependencies();
     await configureChatbot();
+    tryGetLocation();
     injectStyles();
     createChatbotHTML();
     initializeElements();
@@ -147,7 +245,7 @@ const renderPaymentButton = () => {
 // Handle Stripe payment
 const handlePayment = async () => {
   const response = await fetch(
-    `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/create-payment-intent`,
+    `${clientBotState.backendUrl}${BACKEND_BOT_CHATBOT_API_ENDPOINT}/create-payment-intent`,
     {
       method: "POST",
       headers: {
@@ -156,6 +254,8 @@ const handlePayment = async () => {
       body: JSON.stringify({
         amount: 5000,
         currency: "usd",
+        bot_id: clientBotState.bot_id,
+        v_id: clientBotState.visitorId,
       }),
     }
   );
@@ -233,7 +333,7 @@ const configureChatbot = async () => {
     };
 
     const config = await $.ajax({
-      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}`,
+      url: `${clientBotState.backendUrl}${BACKEND_BOT_CHATBOT_API_ENDPOINT}/${clientBotState.token}`,
       method: "GET",
       headers: headers,
     });
@@ -364,11 +464,22 @@ const startChatSession = async () => {
   try {
     const visitorId = clientBotState.visitorId;
 
+    const payload = {};
+    if (
+      clientBotState.location &&
+      clientBotState.location.lat &&
+      clientBotState.location.lon
+    ) {
+      payload.lat = clientBotState.location.lat;
+      payload.lon = clientBotState.location.lon;
+    }
+
     const response = await $.ajax({
-      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.token}`,
+      url: `${clientBotState.backendUrl}${BACKEND_BOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.token}`,
       method: "POST",
       contentType: "application/json",
       dataType: "json",
+      data: JSON.stringify(payload),
       headers: { "X-Requested-With": "XMLHttpRequest", Visitor: visitorId },
     });
 
@@ -407,7 +518,7 @@ const fetchNextQuestion = async () => {
     };
 
     const response = await $.ajax({
-      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/next-question`,
+      url: `${clientBotState.backendUrl}${BACKEND_BOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/next-question`,
       method: "GET",
       headers: headers,
     });
@@ -464,7 +575,7 @@ const submitAPIResponse = async () => {
     const visitorId = clientBotState.visitorId;
 
     const response = await $.ajax({
-      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/submit`,
+      url: `${clientBotState.backendUrl}${BACKEND_BOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/submit`,
       method: "POST",
       contentType: "application/json", // Ensures JSON format
       dataType: "json",
@@ -492,7 +603,7 @@ const submitAnswer = async (answer, answerText) => {
     const visitorId = clientBotState.visitorId;
 
     const response = await $.ajax({
-      url: `${clientBotState.backendUrl}${BACKEND_CHATBOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/answer`,
+      url: `${clientBotState.backendUrl}${BACKEND_BOT_CHAT_SESSION_API_ENDPOINT}/sessions/${clientBotState.sessionId}/answer`,
       method: "POST",
       contentType: "application/json", // Ensures JSON format
       dataType: "json",

@@ -1,6 +1,7 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { PrometheusAPI } from '@/api/analytics';
 
 const options = {
     colors: ['#3C50E0', '#80CAEE'],
@@ -63,19 +64,34 @@ const options = {
 };
 
 
-const PieChart = () => {
-    const [state, setState] = useState({
-        series: [
-            {
-                name: 'Sales',
-                data: [44, 55, 41, 67, 22, 43, 65],
-            },
-            {
-                name: 'Revenue',
-                data: [13, 23, 20, 8, 13, 27, 15],
-            },
-        ],
-    });
+const PieChart = ({ userId = null }) => {
+    const [state, setState] = useState({ series: [] });
+
+    useEffect(() => {
+        let mounted = true;
+        const load = async () => {
+            try {
+                const data = await PrometheusAPI.getCompletedPayments();
+                if (!mounted || !data) return;
+
+                // data is an array of { visitor_id, session_id, rate }
+                const total = data.reduce((s, it) => s + (it.rate || 0), 0);
+
+                if (total === 0) {
+                    setState({ series: [] });
+                    return;
+                }
+
+                setState({ series: [total] });
+            } catch (err) {
+                console.warn('Failed to load completed payments:', err);
+                setState({ series: [] });
+            }
+        };
+
+        load();
+        return () => { mounted = false };
+    }, [userId]);
 
     return (
         <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">

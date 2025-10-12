@@ -18,31 +18,22 @@ const TrafficStackChart = () => {
     const loadTrafficData = async () => {
       setLoading(true);
       try {
-        const data = await PrometheusAPI.getChatbotTraffic(
-          resolution,
-          createdBy
-        );
+        const data = await PrometheusAPI.getChatbotTrafficByBots(createdBy);
 
-        // Transform data into series and categories
-        const categories = [];
-        const seriesMap = {};
-
-        data.forEach(({ chatbot_id, data }) => {
-          data.forEach(({ timestamp, traffic }) => {
-            const date = new Date(timestamp * 1000).toLocaleDateString();
-            if (!categories.includes(date)) categories.push(date);
-            if (!seriesMap[chatbot_id]) seriesMap[chatbot_id] = {};
-            seriesMap[chatbot_id][date] = traffic;
-          });
+        // Transform into donut-style distribution for visitors analytics
+        const counts = {};
+        data.forEach(({ bot_id, value }) => {
+          counts[bot_id] = (counts[bot_id] || 0) + (value || 0);
         });
 
-        // Create series array for ApexCharts
-        const series = Object.keys(seriesMap).map((chatbot_id) => ({
-          name: chatbot_id,
-          data: categories.map((date) => seriesMap[chatbot_id][date] || 0),
-        }));
+        const series = Object.keys(counts).map((k) => counts[k]);
+        // show top 4 bots
+        const top = Object.keys(counts)
+          .sort((a, b) => counts[b] - counts[a])
+          .slice(0, 4);
+        const topSeries = top.map((k) => counts[k]);
 
-        setChartData({ series, categories });
+        setChartData({ series: topSeries, categories: top });
       } catch (error) {
         console.error("Error fetching active chatbots:", error);
       } finally {
