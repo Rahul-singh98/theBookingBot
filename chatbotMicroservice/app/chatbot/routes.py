@@ -68,13 +68,6 @@ def get_chatbot_keys(chatbot_id: str, db: Session = Depends(get_db)):
     # decrypt keys if present
     gm_key = os.environ.get("MAPS_CLIENT_KEY", "")
     sp_key = os.environ.get("STRIPE_CLIENT_KEY", "")
-    # try:
-    #     if gm_key:
-    #         gm_key = decrypt_value(gm_key)
-    #     if sp_key:
-    #         sp_key = decrypt_value(sp_key)
-    # except Exception as e:
-    #     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     return {"gm_key": gm_key, "sp_key": sp_key}
 

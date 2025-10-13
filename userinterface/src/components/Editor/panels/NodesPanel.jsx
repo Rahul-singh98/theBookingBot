@@ -75,6 +75,10 @@ export default function NodesPanel() {
                 <div className="flex items-center justify-center border-transparent border-white/2 text-white w-5 h-5 rounded-md shadow-xs bg-util-colors-cyan-cyan-500 mr-2 shrink-0"></div>
                 <div className="text-sm text-gray-900">IF/ELSE</div>
               </div>
+              <div onDragStart={(event) => onDragStart(event, 'emailconditional')} draggable className={`${commonNodeClassNames}`} data-state="closed">
+                <div className="flex items-center justify-center border-transparent border-white/2 text-white w-5 h-5 rounded-md shadow-xs bg-util-colors-cyan-cyan-500 mr-2 shrink-0"></div>
+                <div className="text-sm text-gray-900">Email Conditional</div>
+              </div>
             </div>
             <div className="mb-1 last-of-type:mb-0">
               <div className={`${commonNodeSectionClassNames}`}>Questions</div>

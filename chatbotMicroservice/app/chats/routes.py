@@ -17,7 +17,7 @@ from app.utils.pagination import Pagination
 from app.utils.constants import QuestionTypes
 from app.utils import dt_utils
 from app.utils import cb_utils
-from app.utils.email_sender import send_email
+from app.utils.email_sender import send_email, send_book_now_email, send_quote_thankyou_email
 
 chats_router = APIRouter(prefix="/sessions")
 
@@ -140,6 +140,34 @@ def answer_question(session_id: str, answer: ChatAnswer, db: Session = Depends(g
     return updated_history
 
 
+async def process_email_conditional(db, db_session, session_id, history, current_question):
+    # Print all data
+    cdata = current_question.data
+    session_variables = cb_utils.generate_params(history.response)
+    session_variables["cId"] = db_session.bot_id
+    session_variables["sId"] = session_id
+
+    evaluator = question_schemas.ConditionEvaluator(session_variables)
+    nq_id = None
+
+    for branch in cdata.get("branches"):
+        condition = question_schemas.parse_condition_data(
+            branch.get("condition"))
+
+        if evaluator.evaluate(condition):
+            for k, v in session_variables.items():
+                if k and k == condition.check_variable:
+                    await send_quote_thankyou_email([v])
+        else:
+            await send_book_now_email(json.loads(history.response) if isinstance(history.response, str) else history.response, [condition.send_to])
+
+    nq_id = cdata.get("default_next_question_id")
+
+    next_question = question_services.get_question(db, nq_id)
+
+    return next_question
+
+
 @chats_router.get("/{session_id}/next-question", response_model=Dict)
 async def get_next_question(
     session_id: str, 
@@ -209,6 +237,33 @@ async def get_next_question(
                 nq_id = cdata.get("default_next_question_id")
 
             next_question = question_services.get_question(db, nq_id)
+
+            while next_question.question_type == QuestionTypes.EMAIL_CONDITIONAL:
+                current_response = json.loads(history.response) if isinstance(history.response, str) else history.response
+                current_response.append({
+                    "question_id": next_question.id,
+                    "variable": next_question.variable,
+                    "question": next_question.question,
+                    "answer": next_question.question_type,
+                })
+
+                # Update history with new response
+                updated_history = crud.update_chat_history(
+                    db,
+                    history.id,
+                    ChatHistoryUpdate(
+                        session_id=session_id,
+                        response=json.dumps(current_response)
+                    )
+                )
+
+                # next_question = question_services.get_question(db, next_question.next_ques)
+                # print("Next question in email conditional loop:", next_question.variable, next_question.question_type)
+                # update this into the session and then process
+                next_question = await process_email_conditional(db, db_session, session_id, updated_history, next_question)
+
+        elif next_question.question_type == QuestionTypes.EMAIL_CONDITIONAL:
+            await process_email_conditional(db, db_session, session_id, history, next_question)
 
         elif next_question.question_type == QuestionTypes.BUTTON:
             next_question = question_services.get_question(db, next_question.next_ques)

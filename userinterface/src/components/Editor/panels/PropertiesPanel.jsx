@@ -17,6 +17,7 @@ import { update_questions, get_questions } from '@/api/questions';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import ConditionalNodeMenu from './ConditionalNodeMenu';
+import EmailConditionalNodeMenu from './EmailConditionalNodeMenu';
 
 const PropertiesBase = ({ data, title, onCollapse, onSave, onDelete, children, setQuestionData, bot_id }) => {
   const formattedTitle = title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
@@ -206,6 +207,8 @@ export default function PropertiesPanel({ selectedNode, onCollapse, nodes, setNo
         return <InputNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'conditional':
         return <ConditionalNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
+      case 'emailconditional':
+        return <EmailConditionalNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'message':
         return <MessageNodeMenu data={selectedNode.data} setQuestionData={setQuestionData} />;
       case 'button':

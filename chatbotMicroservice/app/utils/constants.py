@@ -11,6 +11,7 @@ class QuestionTypes(str, Enum):
     NUMBER = "Number"
     INPUT = "Input"
     CONDITIONAL = "Conditional"
+    EMAIL_CONDITIONAL = "EmailConditional"
     EMAIL = "Email"
     PHONE = "Phone"
     CLICKLIST = "ClickList"

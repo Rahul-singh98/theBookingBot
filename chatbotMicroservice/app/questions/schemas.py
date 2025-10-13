@@ -141,13 +141,19 @@ class SimpleCondition(BaseModel):
     value: Any
 
 
+class EmailCondition(BaseModel):
+    type: str
+    send_to: Optional[str] = None
+    check_variable: Optional[str] = None
+
+
 class ComplexCondition(BaseModel):
     logical_operator: LogicalOperator
-    conditions: List[Union['SimpleCondition', 'ComplexCondition']]
+    conditions: List[Union['SimpleCondition', 'ComplexCondition', 'EmailCondition']]
 
 
 class ConditionalBranch(BaseModel):
-    condition: Union[SimpleCondition, ComplexCondition]
+    condition: Union[SimpleCondition, ComplexCondition, EmailCondition]
     next_question_id: str
 
 
@@ -212,6 +218,8 @@ class QuestionBase(BaseModel):
             InputQuestion(**v)
         elif question_type == QuestionTypes.CONDITIONAL:
             ConditionalQuestion(**v)
+        elif question_type == QuestionTypes.EMAIL_CONDITIONAL:
+            ConditionalQuestion(**v)
         elif question_type == QuestionTypes.EMAIL:
             EmailQuestion(**v)
         elif question_type == QuestionTypes.PHONE:
@@ -271,6 +279,8 @@ class QuestionUpdate(BaseModel):
         elif question_type == QuestionTypes.INPUT:
             InputQuestion(**v)
         elif question_type == QuestionTypes.CONDITIONAL:
+            ConditionalQuestion(**v)
+        elif question_type == QuestionTypes.EMAIL_CONDITIONAL:
             ConditionalQuestion(**v)
         elif question_type == QuestionTypes.EMAIL:
             EmailQuestion(**v)
@@ -335,6 +345,12 @@ class ConditionEvaluator:
             return compare_func(variable_value, condition.value)
         except (TypeError, ValueError):
             return False
+        
+    def evaluate_email_condition(self, condition: EmailCondition) -> bool:
+        print(f"Evaluating email condition: {condition}")
+        if condition.type == "GET_QUOTE":
+            return True
+        return False
 
     def evaluate_complex_condition(self, condition: ComplexCondition) -> bool:
         results = [
@@ -347,13 +363,15 @@ class ConditionEvaluator:
             return all(results)
         return any(results)
 
-    def evaluate(self, condition: Union[SimpleCondition, ComplexCondition]) -> bool:
+    def evaluate(self, condition: Union[SimpleCondition, ComplexCondition, EmailCondition]) -> bool:
         if isinstance(condition, SimpleCondition):
             return self.evaluate_simple_condition(condition)
+        if isinstance(condition, EmailCondition):
+            return self.evaluate_email_condition(condition)
         return self.evaluate_complex_condition(condition)
 
 
-def parse_condition_data(condition_dict: Dict) -> Union[SimpleCondition, ComplexCondition]:
+def parse_condition_data(condition_dict: Dict) -> Union[SimpleCondition, ComplexCondition, EmailCondition]:
     """
     Parse a dictionary of condition data into SimpleCondition or ComplexCondition instances.
     """
@@ -366,7 +384,12 @@ def parse_condition_data(condition_dict: Dict) -> Union[SimpleCondition, Complex
             logical_operator=condition_dict["logical_operator"],
             conditions=nested_conditions
         )
-
+    elif "type" in condition_dict:
+        return EmailCondition(
+            type=condition_dict["type"],
+            send_to=condition_dict.get("send_to"),
+            check_variable=condition_dict.get("check_variable")
+        )
     else:
         return SimpleCondition(
             variable=condition_dict["variable"],

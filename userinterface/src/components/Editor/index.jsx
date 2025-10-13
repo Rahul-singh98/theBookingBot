@@ -1,5 +1,5 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useCallback, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -10,42 +10,47 @@ import {
   useReactFlow,
   Background,
   useOnSelectionChange,
-  Panel
-} from '@xyflow/react';
-import useColorMode from '@/hooks/useColorMode';
-import { useParams } from 'react-router-dom';
+  Panel,
+} from "@xyflow/react";
+import useColorMode from "@/hooks/useColorMode";
+import { useParams } from "react-router-dom";
 
-import '@xyflow/react/dist/style.css'
-import '@/assets/css/editor.css';
+import "@xyflow/react/dist/style.css";
+import "@/assets/css/editor.css";
 
-import NodesPanel from '@/components/Editor/panels/NodesPanel';
-import PropertiesPanel from './panels/PropertiesPanel';
-import { DnDProvider, useDnD } from '@/hooks/DnDContext';
-import { StartNode } from './nodes/startNode';
-import { TimeNode } from './nodes/timeNode';
-import { DateNode } from './nodes/dateNode';
-import { DateTimeNode } from './nodes/datetimeNode';
-import { NumberNode } from './nodes/numberNode';
-import { DrowDownNode } from './nodes/dropDownNode';
-import { AddressNode } from './nodes/addressNode';
-import { ClickListNode } from './nodes/clickListNode';
-import { EndNode } from './nodes/endNode';
-import { EmailNode } from './nodes/emailNode';
-import { PhoneNode } from './nodes/phoneNode';
-import { InputNode } from './nodes/inputNode';
-import { ConditionalNode } from './nodes/conditionalNode';
-import { ButtonNode } from './nodes/buttonNode'
-import { MessageNode } from './nodes/messageNode'
-import { RadioNode } from './nodes/radioNode'
-import { StripeNode } from './nodes/stripeNode';
-import { SendEmailNode } from './nodes/sendEmailNode';
+import NodesPanel from "@/components/Editor/panels/NodesPanel";
+import PropertiesPanel from "./panels/PropertiesPanel";
+import { DnDProvider, useDnD } from "@/hooks/DnDContext";
+import { StartNode } from "./nodes/startNode";
+import { TimeNode } from "./nodes/timeNode";
+import { DateNode } from "./nodes/dateNode";
+import { DateTimeNode } from "./nodes/datetimeNode";
+import { NumberNode } from "./nodes/numberNode";
+import { DrowDownNode } from "./nodes/dropDownNode";
+import { AddressNode } from "./nodes/addressNode";
+import { ClickListNode } from "./nodes/clickListNode";
+import { EndNode } from "./nodes/endNode";
+import { EmailNode } from "./nodes/emailNode";
+import { PhoneNode } from "./nodes/phoneNode";
+import { InputNode } from "./nodes/inputNode";
+import { ConditionalNode } from "./nodes/conditionalNode";
+import { ButtonNode } from "./nodes/buttonNode";
+import { MessageNode } from "./nodes/messageNode";
+import { RadioNode } from "./nodes/radioNode";
+import { StripeNode } from "./nodes/stripeNode";
+import { SendEmailNode } from "./nodes/sendEmailNode";
+import { EmailConditionalNode } from "./nodes/emailConditionalNode";
 
-import { get_questions, create_questions, update_questions, delete_questions } from '@/api/questions';
-import { useAuth } from '@/hooks/useAuth';
-import PublishChatbotNode from './panels/PublishChatbotNode';
+import {
+  get_questions,
+  create_questions,
+  update_questions,
+  delete_questions,
+} from "@/api/questions";
+import { useAuth } from "@/hooks/useAuth";
+import PublishChatbotNode from "./panels/PublishChatbotNode";
 
-const initialNodes = [
-];
+const initialNodes = [];
 
 const nodeTypes = {
   start: StartNode,
@@ -66,6 +71,7 @@ const nodeTypes = {
   message: MessageNode,
   payment: StripeNode,
   sendemail: SendEmailNode,
+  emailconditional: EmailConditionalNode,
 };
 
 let id = 0;
@@ -78,13 +84,13 @@ const DnDFlow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
   const [selectedNode, setSelectedNode] = useState();
-  const [errors, setErrors] = useState("")
+  const [errors, setErrors] = useState("");
   const [type] = useDnD();
   const { chatbotId } = useParams();
   const { user, afterLogout } = useAuth();
   const navigate = useNavigate();
 
-  console.log("ChatbotId", chatbotId)
+  console.log("ChatbotId", chatbotId);
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -128,6 +134,9 @@ const DnDFlow = () => {
                 break;
               case "Conditional":
                 question_type = "conditional";
+                break;
+              case "EmailConditional":
+                question_type = "emailconditional";
                 break;
               case "Email":
                 question_type = "email";
@@ -203,7 +212,6 @@ const DnDFlow = () => {
     loadData();
   }, [chatbotId, navigate, afterLogout]);
 
-
   const onChange = useCallback(({ nodes, edges }) => {
     setSelectedNode(nodes.find((node) => node.id));
   }, []);
@@ -221,7 +229,7 @@ const DnDFlow = () => {
       const sourceNode = nodes.find((node) => node.id === source);
 
       try {
-        console.log("sourceNode data", sourceNode.data)
+        console.log("sourceNode data", sourceNode.data);
         await update_questions(
           source,
           sourceNode.data?.initial_data?.bot_id,
@@ -229,7 +237,8 @@ const DnDFlow = () => {
           sourceNode.data?.initial_data?.question_type,
           sourceNode.data?.initial_data?.data,
           sourceNode.data?.initial_data?.variable,
-          target);
+          target
+        );
       } catch (err) {
         console.error("Error updating next_ques:", err);
       }
@@ -237,66 +246,69 @@ const DnDFlow = () => {
     [setEdges, chatbotId, nodes] // Make sure to include nodes in the dependency array
   );
 
-  const handleDeleteNode = useCallback(async (nodeId) => {
-    try {
-      // Delete the target node
-      await delete_questions(nodeId);
+  const handleDeleteNode = useCallback(
+    async (nodeId) => {
+      try {
+        // Delete the target node
+        await delete_questions(nodeId);
 
-      // Update nodes and edges in state
-      setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-      setEdges((eds) => {
-        const filteredEdges = eds.filter((edge) => {
-          console.log(edge);
-          return edge.source !== nodeId && edge.target !== nodeId;
-        });
+        // Update nodes and edges in state
+        setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+        setEdges((eds) => {
+          const filteredEdges = eds.filter((edge) => {
+            console.log(edge);
+            return edge.source !== nodeId && edge.target !== nodeId;
+          });
 
-        // Find edges where target is the nodeId to be deleted
-        const targetEdges = eds.filter((edge) => edge.target === nodeId);
-        console.log("Target Edge", targetEdges)
-        console.log("Nodes", nodes)
+          // Find edges where target is the nodeId to be deleted
+          const targetEdges = eds.filter((edge) => edge.target === nodeId);
+          console.log("Target Edge", targetEdges);
+          console.log("Nodes", nodes);
 
-        // Update next_ques of source nodes
-        targetEdges.forEach(async (edge) => {
-          console.log("EachEdge", edge)
-          const sourceNode = nodes.find((node) => node.id === edge.source);
-          console.log("SourceNode", sourceNode)
-          if (sourceNode) {
-            try {
-              console.log("Updatgin question", sourceNode.data)
-              // Call API to update the next_ques of the source node
-              await update_questions(sourceNode.id,
-                sourceNode.data?.initial_data?.bot_id,
-                sourceNode.data?.initial_data?.question,
-                sourceNode.data?.initial_data?.question_type,
-                sourceNode.data?.initial_data?.data,
-                sourceNode.data?.initial_data?.variable,
-                null);
-            } catch (updateError) {
-              console.error(
-                `Error updating node ${sourceNode.id} next_ques:`,
-                updateError
-              );
+          // Update next_ques of source nodes
+          targetEdges.forEach(async (edge) => {
+            console.log("EachEdge", edge);
+            const sourceNode = nodes.find((node) => node.id === edge.source);
+            console.log("SourceNode", sourceNode);
+            if (sourceNode) {
+              try {
+                console.log("Updatgin question", sourceNode.data);
+                // Call API to update the next_ques of the source node
+                await update_questions(
+                  sourceNode.id,
+                  sourceNode.data?.initial_data?.bot_id,
+                  sourceNode.data?.initial_data?.question,
+                  sourceNode.data?.initial_data?.question_type,
+                  sourceNode.data?.initial_data?.data,
+                  sourceNode.data?.initial_data?.variable,
+                  null
+                );
+              } catch (updateError) {
+                console.error(
+                  `Error updating node ${sourceNode.id} next_ques:`,
+                  updateError
+                );
+              }
             }
-          }
+          });
+
+          return filteredEdges;
         });
-
-        return filteredEdges;
-      });
-    } catch (err) {
-      if (err.message === "Unauthorized") {
-        afterLogout();
-        navigate(`/login?next=${location.pathname}`);
-      } else {
-        console.error("Error loading questions:", err);
+      } catch (err) {
+        if (err.message === "Unauthorized") {
+          afterLogout();
+          navigate(`/login?next=${location.pathname}`);
+        } else {
+          console.error("Error loading questions:", err);
+        }
       }
-    }
-  }, [setNodes, setEdges]);
-
-
+    },
+    [setNodes, setEdges]
+  );
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
   const onDrop = useCallback(
@@ -342,6 +354,9 @@ const DnDFlow = () => {
           case "conditional":
             question_type = "Conditional";
             break;
+          case "emailconditional":
+            question_type = "EmailConditional";
+            break;
           case "email":
             question_type = "Email";
             break;
@@ -367,12 +382,19 @@ const DnDFlow = () => {
             question_type = "Button";
             break;
           case "sendemail":
-            question_type = "SendEmail"
+            question_type = "SendEmail";
           default:
             question_type = "default";
         }
 
-        const question_response = await create_questions(chatbotId, "", question_type, {}, "", null);
+        const question_response = await create_questions(
+          chatbotId,
+          "",
+          question_type,
+          {},
+          "",
+          null
+        );
 
         const newNode = {
           id: question_response.id,
@@ -383,8 +405,8 @@ const DnDFlow = () => {
             bot_id: chatbotId,
             initial_data: {
               bot_id: chatbotId,
-              question_type: question_type
-            }
+              question_type: question_type,
+            },
           },
         };
 
@@ -398,29 +420,29 @@ const DnDFlow = () => {
   );
 
   const checkStartAndEndNode = () => {
-    setErrors("")
+    setErrors("");
 
-    const startNode = nodes.find((node) => node.type === 'start');
-    const endNode = nodes.find((node) => node.type === 'end');
-    console.log(startNode, endNode)
+    const startNode = nodes.find((node) => node.type === "start");
+    const endNode = nodes.find((node) => node.type === "end");
+    console.log(startNode, endNode);
     if (startNode === undefined && endNode === undefined) {
-      setErrors("Start and End Nodes are required.")
-      return false
+      setErrors("Start and End Nodes are required.");
+      return false;
     } else if (startNode === undefined) {
-      setErrors("Start Node is required.")
-      return false
+      setErrors("Start Node is required.");
+      return false;
     } else if (endNode === undefined) {
-      setErrors("End Node is required.")
-      return false
+      setErrors("End Node is required.");
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   return (
     <div className="dndflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-        {errors && <p className='text-red-500'>{errors}</p>}
+        {errors && <p className="text-red-500">{errors}</p>}
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -438,22 +460,29 @@ const DnDFlow = () => {
             <NodesPanel />
           </Panel>
 
-          <Panel position='top-center'>
-            <PublishChatbotNode chatbotId={chatbotId} readyToPublish={checkStartAndEndNode} />
+          <Panel position="top-center">
+            <PublishChatbotNode
+              chatbotId={chatbotId}
+              readyToPublish={checkStartAndEndNode}
+            />
           </Panel>
 
-          <Panel position='top-right'>
+          <Panel position="top-right">
             <PropertiesPanel
               selectedNode={selectedNode}
               onCollapse={() => {
-                setNodes(nodes.map((node) =>
-                  node.id === selectedNode.id
-                    ? { ...node, selected: false }
-                    : node
-                ));
+                setNodes(
+                  nodes.map((node) =>
+                    node.id === selectedNode.id
+                      ? { ...node, selected: false }
+                      : node
+                  )
+                );
                 setSelectedNode(null);
               }}
-              handleDeleteNode={() => { handleDeleteNode(selectedNode.id) }}
+              handleDeleteNode={() => {
+                handleDeleteNode(selectedNode.id);
+              }}
               nodes={nodes}
               setNodes={setNodes}
               setSelectedNode={setSelectedNode}
