@@ -57,11 +57,11 @@ export const AnalyticsAPI = {
   // Total Traffic Processed
   async getUniqueVisitors(createdBy) {
     // Construct the Api query
-    const url = `${AnalyticsRoutes.CHATBOT_TRAFFIC}/total`;
+    const url = `${AnalyticsRoutes.CHATBOT_TRAFFIC}/unique_visitors`;
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
     const json = await response.json();
-    return await this.getCountUtils(json?.total);
+    return await this.getCountUtils(json?.count);
   },
 
   // Active Chatbots

@@ -13,6 +13,7 @@
     "@antv/x6": "^2.18.1",
     "@xyflow/react": "^12.3.6",
     "axios": "^1.7.9",
+    "crypto-js": "^4.2.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.469.0",

@@ -115,3 +115,18 @@ async def regional_chatbot_traffic(
 @chatbot_traffic_router.post("", response_model=schema.ChatbotTrafficRead)
 async def create_chatbot_traffic(chatbot_traffic: schema.ChatbotTrafficCreate, db: Session = Depends(get_db)):
     return crud.create_chatbot_traffic(db, chatbot_traffic)
+
+
+@chatbot_traffic_router.get("/unique_visitors")
+async def get_unique_visitors(
+    db: Session = Depends(get_db),
+):
+    """
+    Returns the total count of unique visitors (distinct v_id)
+    across all chatbot traffic records, optionally filtered by time or bot.
+    """
+    unique_visitors = crud.get_unique_visitors_count(
+        db
+    )
+
+    return {"count": unique_visitors}

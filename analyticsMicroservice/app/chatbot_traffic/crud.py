@@ -93,10 +93,14 @@ def get_chatbot_traffic_by_region(
     Works on SQLite, MySQL, and PostgreSQL.
     """
     # Use json_extract() for cross-database JSON support
-    country = func.json_extract(models.ChatbotTraffic.location, "$.country").label("country")
-    country_code = func.json_extract(models.ChatbotTraffic.location, "$.country_code").label("country_code")
-    postcode = func.json_extract(models.ChatbotTraffic.location, "$.postcode").label("postcode")
-    city = func.json_extract(models.ChatbotTraffic.location, "$.city").label("city")
+    country = func.json_extract(
+        models.ChatbotTraffic.location, "$.country").label("country")
+    country_code = func.json_extract(
+        models.ChatbotTraffic.location, "$.country_code").label("country_code")
+    postcode = func.json_extract(
+        models.ChatbotTraffic.location, "$.postcode").label("postcode")
+    city = func.json_extract(
+        models.ChatbotTraffic.location, "$.city").label("city")
 
     q = db.query(
         country,
@@ -125,13 +129,14 @@ def get_chatbot_traffic_by_region(
 
     results = []
     for row in q.all():
-        results.append({
-            "country": row.country,
-            "country_code": row.country_code,
-            "postcode": row.postcode,
-            "city": row.city,
-            "count": row.count
-        })
+        if row.country or row.country_code or row.postcode or row.city:
+            results.append({
+                "country": row.country,
+                "country_code": row.country_code,
+                "postcode": row.postcode,
+                "city": row.city,
+                "count": row.count
+            })
     return results
 
 
@@ -158,12 +163,6 @@ def list_chatbot_traffic_counters(
         q = q.filter(models.ChatbotTraffic.timestamp >= start)
     elif end:
         q = q.filter(models.ChatbotTraffic.timestamp <= end)
-
-    # if bot_name:
-    #     q = q.filter(models.ChatbotConfiguration.name.ilike(f"%{bot_name}%"))
-
-    # if bot_author:
-    #     q = q.filter(models.ChatbotConfiguration.created_by == bot_author)
 
     all_chatbots = q.all()
     active_count = 0
@@ -196,3 +195,14 @@ def create_chatbot_traffic(db: Session, quote_data: schema.ChatbotTrafficCreate)
     db.commit()
     db.refresh(quote)
     return quote
+
+
+def get_unique_visitors_count(
+    db: Session,
+) -> int:
+    """
+    Returns the total number of unique visitors (distinct v_id)
+    within an optional time range, optionally filtered by bot or author.
+    """
+    q = db.query(func.count(func.distinct(models.ChatbotTraffic.v_id)))
+    return q.scalar() or 0
