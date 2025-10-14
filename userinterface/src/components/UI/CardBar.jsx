@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PrometheusAPI } from "@/api/analytics";
+import { AnalyticsAPI } from "@/api/analytics";
 
 const CardBar = ({createdBy = null}) => {
   const [uniqueVisitors, setUniqueVisitors] = useState({
@@ -23,7 +23,7 @@ const CardBar = ({createdBy = null}) => {
   useEffect(() => {
     const fetchTotalChatbots = async () => {
       try {
-        const response = await PrometheusAPI.getNumberOfActiveChatbots(createdBy);
+        const response = await AnalyticsAPI.getNumberOfActiveChatbots(createdBy);
 
         setTotalChatbots({
           total: response.count,
@@ -37,7 +37,7 @@ const CardBar = ({createdBy = null}) => {
 
     const fetchUniqueVisitors = async () => {
       try {
-        const response = await PrometheusAPI.getUniqueVisitors(createdBy);
+        const response = await AnalyticsAPI.getUniqueVisitors(createdBy);
 
         setUniqueVisitors({
           total: response.count,
@@ -51,7 +51,7 @@ const CardBar = ({createdBy = null}) => {
 
     const fetchTotalTraffic = async () => {
       try {
-        const response = await PrometheusAPI.getTotalTrafficProcessed(createdBy);
+        const response = await AnalyticsAPI.getTotalTrafficProcessed(createdBy);
 
         setTotalTraffic({
           total: response.count,

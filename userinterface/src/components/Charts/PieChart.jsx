@@ -1,7 +1,7 @@
 import { ApexOptions } from 'apexcharts';
 import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { PrometheusAPI } from '@/api/analytics';
+import { AnalyticsAPI } from '@/api/analytics';
 
 const options = {
     colors: ['#3C50E0', '#80CAEE'],
@@ -71,7 +71,7 @@ const PieChart = ({ userId = null }) => {
         let mounted = true;
         const load = async () => {
             try {
-                const data = await PrometheusAPI.getCompletedPayments();
+                const data = await AnalyticsAPI.getCompletedPayments();
                 if (!mounted || !data) return;
 
                 // data is an array of { visitor_id, session_id, rate }

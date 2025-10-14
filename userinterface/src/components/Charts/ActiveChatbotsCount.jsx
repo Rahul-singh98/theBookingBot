@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PrometheusAPI } from "@/api/analytics";
+import { AnalyticsAPI } from "@/api/analytics";
 import { Card, CardHeader, CardContent, CardTitle } from "../UI/card";
 import { TIME_RANGES } from "@/utils/time_ranges";
 import ReactApexChart from "react-apexcharts";
@@ -15,7 +15,7 @@ const ActiveChatbotsCount = ({ createdBy = null }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const results = await PrometheusAPI.getActiveChatbots(resolution, createdBy);
+        const results = await AnalyticsAPI.getActiveChatbots(resolution, createdBy);
 
         // Process and format the data
         const formattedData = results

@@ -13,6 +13,10 @@ class ChatSessionCreate(ChatSessionBase):
     pass
 
 
+class ChatSessionRequest(BaseModel):
+    lat: Optional[float] = None
+    long: Optional[float] = None
+
 class ChatSessionResponse(ChatSessionBase):
     id: str
     created_at: datetime

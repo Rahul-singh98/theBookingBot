@@ -2,17 +2,8 @@ import axios from "axios";
 import { ANALYTICS_API_URL, AnalyticsRoutes } from "./routes";
 import { TIME_RANGES } from "@/utils/time_ranges";
 
-// Query builder functions
-const buildRangeQuery = (metric, range = TIME_RANGES.DAY) => {
-  return `rate(${metric}[${range}])`;
-};
-
-const buildHistogramQuery = (metric, range = TIME_RANGES.DAY) => {
-  return `histogram_quantile(0.95, sum(rate(${metric}_bucket[${range}])) by (le))`;
-};
-
-// Prometheus API service
-export const PrometheusAPI = {
+// Api API service
+export const AnalyticsAPI = {
   // Base fetch function
   async fetchMetrics(query) {
     try {
@@ -29,7 +20,7 @@ export const PrometheusAPI = {
     }
   },
 
-  async getCountUtils(query) {
+  async getCountUtils(total) {
     // Helper function to format numbers
     const formatNumber = (num) => {
       if (num >= 1e9) return (num / 1e9).toFixed(1).replace(/\.0$/, "") + "B"; // Billions
@@ -38,69 +29,51 @@ export const PrometheusAPI = {
       return num.toString(); // Less than 1,000
     };
 
-    // Construct the Prometheus query_range API URL
-    const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
-
-    try {
-      const response = await fetch(url);
-
-      // Check if the response is ok (status 200-299)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const json = await response.json();
-
-      // Extract and validate the result
-      const result = json.data?.result?.[0]?.value?.[1];
-      const count = result ? parseFloat(result) : 0;
-
-      // Format the count into human-readable form
-      const formattedCount = formatNumber(count);
-
-      // Return the mapped structure
-      return { count: formattedCount };
-    } catch (error) {
-      console.error("Error fetching active chatbots count:", error);
-      return { count: "0" };
-    }
+    // Return the mapped structure
+    const formattedCount = formatNumber(total || 0);
+    return { count: formattedCount };
   },
   // Number of Active Chatbots
   async getNumberOfActiveChatbots(createdBy) {
-    // Construct the Prometheus query
-    const query = `sum(chatbots_gauge_total${createdBy ? `{bot_author="${createdBy}"}` : ""})`;
-    return await this.getCountUtils(query);
+    // Construct the Api query
+    const url = `${AnalyticsRoutes.CHATBOT_COUNTER}/total`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
+
+    const json = await response.json();
+    return await this.getCountUtils(json?.total);
   },
 
   // Total Traffic Processed
   async getTotalTrafficProcessed(createdBy) {
-    // Construct the Prometheus query
-    const query = `sum(chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""})`;
-    return await this.getCountUtils(query);
+    // Construct the Api query
+    const url = `${AnalyticsRoutes.CHATBOT_TRAFFIC}/total`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
+    const json = await response.json();
+    return await this.getCountUtils(json?.total);
   },
 
   // Total Traffic Processed
   async getUniqueVisitors(createdBy) {
-    // Construct the Prometheus query
-    const query = `count(count by (v_id) (chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""}))`;
-    return await this.getCountUtils(query);
+    // Construct the Api query
+    const url = `${AnalyticsRoutes.CHATBOT_TRAFFIC}/total`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
+    const json = await response.json();
+    return await this.getCountUtils(json?.total);
   },
 
   // Active Chatbots
   async getActiveChatbots(range = TIME_RANGES.HOUR, createdBy = null) {
     try {
-      let query = "increase(sum(chatbots_gauge_total)[5m:])"; // Aggregate active chatbots
       const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
       let start, step;
-
-      if (createdBy) {
-        query = `increase(sum(chatbots_gauge_total${createdBy ? `{bot_author="${createdBy}"}` : ""})[5m:])`;
-      }
 
       // Define the start and step based on the range
       switch (range) {
         case TIME_RANGES.DAY: // Last 20 days
-          start = now - 20 * 24 * 60 * 60; // 20 days ago
+          start = now - 30 * 24 * 60 * 60; // 20 days ago
           step = 24 * 60 * 60; // 1 day intervals
           break;
         case TIME_RANGES.WEEK: // Last 20 weeks
@@ -115,24 +88,32 @@ export const PrometheusAPI = {
           throw new Error(`Unsupported time range: ${range}`);
       }
 
-      // Construct the Prometheus query_range API URL
-      const url = `/api/v1/query_range?query=${encodeURIComponent(query)}&start=${start}&end=${now}&step=${step}`;
+      let query = `${AnalyticsRoutes.CHATBOT_COUNTER}?`; // Aggregate active chatbots
+      if (createdBy) {
+        query = `${query}bot_author=${createdBy}&`;
+      }
+      // Construct the Api query_range API URL
+      // const url = `${query}start=${start}&end=${now}`;
+      const url = `${query}`;
 
-      // Fetch metrics from the Prometheus server
+      // Fetch metrics from the Api server
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Prometheus query failed: ${response.status}`);
+      if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
       const json = await response.json();
 
-      if (!json?.data?.result || json.data.result.length === 0) {
-        throw new Error("No data from Prometheus");
+      if (!json?.items) {
+        throw new Error("No data from Api");
       }
 
-      return json.data.result[0].values.map((value) => ({
-        timestamp: parseFloat(value[0]),
-        value: parseFloat(value[1]),
+      return json.items.map((value) => ({
+        timestamp: parseFloat(value?.timestamp || 0),
+        value: parseFloat(value?.count || 0),
       }));
     } catch (err) {
-      console.warn("Prometheus unavailable or query failed for getActiveChatbots:", err);
+      console.warn(
+        "Api unavailable or query failed for getActiveChatbots:",
+        err
+      );
       // Return empty array so charts render as empty
       return [];
     }
@@ -141,21 +122,13 @@ export const PrometheusAPI = {
   // Chatbot Traffic Analysis
   async getChatbotTraffic(range = TIME_RANGES.DAY, createdBy = null) {
     try {
-      // Base query for traffic
-      let query = "increase(sum(chatbots_traffic_total)[5m:])";
-
-      // Filter by created_by if provided
-      if (createdBy) {
-        query = `increase(sum(chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""})[5m:])`;
-      }
-
       const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
       let start, step;
 
       // Define the start and step based on the range
       switch (range) {
         case TIME_RANGES.DAY: // Last 20 days
-          start = now - 20 * 24 * 60 * 60; // 20 days ago
+          start = now - 30 * 24 * 60 * 60; // 20 days ago
           step = 24 * 60 * 60; // 1 day intervals
           break;
         case TIME_RANGES.WEEK: // Last 20 weeks
@@ -166,36 +139,36 @@ export const PrometheusAPI = {
           start = now - 20 * 60 * 60; // 20 hours ago
           step = 60 * 60; // 1 hour intervals
           break;
-        case TIME_RANGES.MONTH: // Last 20 months
-          start = now - 20 * 30 * 24 * 60 * 60; // Approx 20 months ago
-          step = 30 * 24 * 60 * 60; // 1 month intervals
-          break;
-        case TIME_RANGES.YEAR: // Last 20 years
-          start = now - 20 * 365 * 24 * 60 * 60; // 20 years ago
-          step = 365 * 24 * 60 * 60; // 1 year intervals
-          break;
         default:
           throw new Error(`Unsupported time range: ${range}`);
       }
 
-      // Construct the Prometheus query_range API URL
-      const url = `/api/v1/query_range?query=${encodeURIComponent(query)}&start=${start}&end=${now}&step=${step}`;
+      let query = `${AnalyticsRoutes.CHATBOT_TRAFFIC}?`; // Aggregate active chatbots
+      if (createdBy) {
+        query = `${query}bot_author=${createdBy}&`;
+      }
+      // Construct the Api query_range API URL
+      // const url = `${query}start=${start}&end=${now}`;
+      const url = `${query}`;
 
-      // Fetch metrics from the Prometheus server
+      // Fetch metrics from the Api server
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Prometheus query failed: ${response.status}`);
+      if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
       const json = await response.json();
 
-      if (!json?.data?.result || json.data.result.length === 0) {
-        throw new Error("No data from Prometheus");
+      if (!json?.items) {
+        throw new Error("No data from Api");
       }
 
-      return json.data.result[0].values.map((value) => ({
-        timestamp: parseFloat(value[0]),
-        value: parseFloat(value[1]),
+      return json.items.map((value) => ({
+        timestamp: parseFloat(value?.timestamp || 0),
+        value: parseFloat(value?.count || 0),
       }));
     } catch (err) {
-      console.warn("Prometheus unavailable or query failed for getChatbotTraffic:", err);
+      console.warn(
+        "Api unavailable or query failed for getChatbotTraffic:",
+        err
+      );
       return [];
     }
 
@@ -225,31 +198,29 @@ export const PrometheusAPI = {
   async getChatbotTrafficByBots(createdBy = null) {
     // Base query for traffic
     try {
-      let query =
-        "topk(10, sum by (bot_id, bot_author) (chatbots_traffic_total))";
+      let query = `${AnalyticsRoutes.CHATBOT_TRAFFIC}/grouped`; // Aggregate active chatbots
+      const url = `${query}`;
 
-      if (createdBy) {
-        query = `topk(10, sum by (bot_id, bot_author) (chatbots_traffic_total${createdBy ? `{bot_author="${createdBy}"}` : ""}))`;
-      }
-
-      // Construct the Prometheus query API URL
-      const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
-
-      // Fetch metrics from the Prometheus server
+      // Fetch metrics from the Api server
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Prometheus query failed: ${response.status}`);
+      if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
       const json = await response.json();
 
-      if (!json?.data?.result) return [];
+      if (!json?.items) {
+        throw new Error("No data from Api");
+      }
 
-      return json.data.result.map((result) => ({
-        timestamp: parseFloat(result.value[0]),
-        value: parseFloat(result.value[1]),
-        bot_author: result.metric.bot_author,
-        bot_id: result.metric.bot_id,
+      return json?.items.map((result) => ({
+        timestamp: parseFloat(result?.timestamp || 0),
+        value: parseFloat(result?.count || 0),
+        bot_author: result?.bot_author,
+        bot_id: result?.bot_id,
       }));
     } catch (err) {
-      console.warn("Prometheus unavailable or query failed for getChatbotTrafficByBots:", err);
+      console.warn(
+        "Api unavailable or query failed for getChatbotTrafficByBots:",
+        err
+      );
       return [];
     }
   },
@@ -346,13 +317,15 @@ export const PrometheusAPI = {
   // Regional sessions (instant): sum by region
   async getRegionalSessions() {
     try {
-      const query = `sum(chatbots_regional_sessions_total) by (lat, long)`;
-      const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
+      const url = `${AnalyticsRoutes.CHATBOT_TRAFFIC}/regional`;
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Prometheus query failed: ${response.status}`);
+      if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
       const json = await response.json();
-      if (!json?.data?.result) return [];
-      return json.data.result.map((r) => ({ region: r.metric.region || "unknown", value: parseFloat(r.value[1]) }));
+      if (!json?.items) return [];
+      return json.items.map((r) => ({
+        region: r.country || "unknown",
+        value: parseFloat(r.count),
+      }));
     } catch (err) {
       console.warn("getRegionalSessions failed:", err);
       return [];
@@ -361,30 +334,35 @@ export const PrometheusAPI = {
 
   // Payments by subadmin (instant)
   async getPaymentsBySubadmin() {
-    try {
-      const query = `sum(payments_total) by (v_id)`;
-      const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Prometheus query failed: ${response.status}`);
-      const json = await response.json();
-      if (!json?.data?.result) return [];
-      return json.data.result.map((r) => ({ v_id: r.metric.v_id || "unknown", value: parseFloat(r.value[1]) }));
-    } catch (err) {
-      console.warn("getPaymentsBySubadmin failed:", err);
-      return [];
-    }
+    return [];
+    // try {
+    //   const query = `sum(payments_total) by (v_id)`;
+    //   const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
+    //   const response = await fetch(url);
+    //   if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
+    //   const json = await response.json();
+    //   if (!json?.data?.result) return [];
+    //   return json.data.result.map((r) => ({ v_id: r.metric.v_id || "unknown", value: parseFloat(r.value[1]) }));
+    // } catch (err) {
+    //   console.warn("getPaymentsBySubadmin failed:", err);
+    //   return [];
+    // }
   },
 
   // Quotes / getquotes bills by subadmin (instant)
   async getQuotesBySubadmin() {
     try {
-      const query = `sum(quotes_requests_total) by (v_id)`;
-      const url = `/api/v1/query?query=${encodeURIComponent(query)}`;
+      const url = `${AnalyticsRoutes.CHATBOT_QUOTES}`;
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Prometheus query failed: ${response.status}`);
+      if (!response.ok) throw new Error(`Api query failed: ${response.status}`);
       const json = await response.json();
-      if (!json?.data?.result) return [];
-      return json.data.result.map((r) => ({ v_id: r.metric.v_id || "unknown", value: parseFloat(r.value[1]) }));
+      if (!json?.items) return [];
+      return json.items.map((r) => ({
+        v_id: r.v_id || "unknown",
+        value: parseFloat(r.count),
+        bot_id: r.bot_id || "unknown",
+        bot_name: r.bot_name || "unknown",
+      }));
     } catch (err) {
       console.warn("getQuotesBySubadmin failed:", err);
       return [];
@@ -416,7 +394,7 @@ export const useDashboardMetrics = (range = TIME_RANGES.DAY) => {
     const fetchMetrics = async () => {
       try {
         setLoading(true);
-        const data = await PrometheusAPI.getDashboardMetrics(range);
+        const data = await AnalyticsAPI.getDashboardMetrics(range);
         setMetrics(data);
       } catch (err) {
         setError(err);

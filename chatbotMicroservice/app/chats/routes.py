@@ -6,9 +6,15 @@ from app.chats.schemas import (
     ChatSessionResponse, PaginatedChatSessionReponse,
     ChatHistoryCreate, ChatHistoryUpdate,
     ChatAnswer, ChatHistoryUpdate, ChatHistoryResponse,
+    ChatSessionRequest
 )
 import json
-from app.dependencies import check_permission, get_visitor_id, CHATBOTS_TRAFFIC, CHATBOTS_REGIONAL
+from app.dependencies import (
+    check_permission, get_visitor_id,
+    create_chatbot_quotes, create_chatbot_traffic,
+    get_location_with_long_lat
+    # CHATBOTS_TRAFFIC, CHATBOTS_REGIONAL
+)
 from app.chats import crud
 from app.chatbot import crud as chatbot_services
 from app.questions import crud as question_services
@@ -40,11 +46,10 @@ def read_chat_session(session_id: str, db: Session = Depends(get_db)):
 
 @chats_router.post("/{chatbot_id}", response_model=ChatSessionResponse)
 async def start_chat_session(
-    chatbot_id: str,
-    lat: float | None = Body(None),
-    lon: float | None = Body(None),
-    visitor: str = Depends(get_visitor_id),
-    db: Session = Depends(get_db)):
+        chatbot_id: str,
+        chat_request: ChatSessionRequest,
+        visitor: str = Depends(get_visitor_id),
+        db: Session = Depends(get_db)):
     db_chatbot = chatbot_services.get_chatbot(db, chatbot_id=chatbot_id)
     if db_chatbot is None:
         raise HTTPException(
@@ -56,12 +61,18 @@ async def start_chat_session(
     _ = crud.create_chat_history(db, history_create)
 
     # increment metrics (best-effort)
-    CHATBOTS_TRAFFIC.labels(bot_id=chatbot_id, s_id=db_session.id, v_id=visitor, bot_author=db_chatbot.created_by).inc()
+    # CHATBOTS_TRAFFIC.labels(bot_id=chatbot_id, s_id=db_session.id, v_id=visitor, bot_author=db_chatbot.created_by).inc()
     # VISITORS_COUNTER.labels(subadmin_id=db_chatbot.created_by).inc()
-    
-    
-    if lat is not None and lon is not None:
-        CHATBOTS_REGIONAL.labels(bot_id=chatbot_id, v_id=visitor, lat=lat, long=lon).inc()
+    location = None
+    if chat_request.lat and chat_request.long:
+        location = await get_location_with_long_lat(chat_request.lat, chat_request.long)
+        location['lat'] = chat_request.lat
+        location['long'] = chat_request.lon
+
+    await create_chatbot_traffic(chatbot_id, visitor, db_session.id, location)
+
+    # if lat is not None and lon is not None:
+    #     CHATBOTS_REGIONAL.labels(bot_id=chatbot_id, v_id=visitor, lat=lat, long=lon).inc()
     return db_session
 
 
@@ -158,8 +169,10 @@ async def process_email_conditional(db, db_session, session_id, history, current
             for k, v in session_variables.items():
                 if k and k == condition.check_variable:
                     await send_quote_thankyou_email([v])
+                    await create_chatbot_quotes(db_session.bot_id, session_id, None, "GET_QUOTE")
         else:
             await send_book_now_email(json.loads(history.response) if isinstance(history.response, str) else history.response, [condition.send_to])
+            await create_chatbot_quotes(db_session.bot_id, session_id, None, "BOOK_NOW")
 
     nq_id = cdata.get("default_next_question_id")
 
@@ -170,9 +183,9 @@ async def process_email_conditional(db, db_session, session_id, history, current
 
 @chats_router.get("/{session_id}/next-question", response_model=Dict)
 async def get_next_question(
-    session_id: str, 
+    session_id: str,
     # visitor: str = Depends(get_visitor_id),
-    db: Session = Depends(get_db)):
+        db: Session = Depends(get_db)):
     db_session = crud.get_chat_session(db, session_id=session_id)
     if db_session is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -213,7 +226,8 @@ async def get_next_question(
             recipients = [sdata.get("recipient", '')]
 
             await send_email(recipients, subject, message)
-            next_question = question_services.get_question(db, next_question.next_ques)
+            next_question = question_services.get_question(
+                db, next_question.next_ques)
 
         elif next_question.question_type == QuestionTypes.CONDITIONAL:
             cdata = next_question.data
@@ -239,7 +253,8 @@ async def get_next_question(
             next_question = question_services.get_question(db, nq_id)
 
             while next_question.question_type == QuestionTypes.EMAIL_CONDITIONAL:
-                current_response = json.loads(history.response) if isinstance(history.response, str) else history.response
+                current_response = json.loads(history.response) if isinstance(
+                    history.response, str) else history.response
                 current_response.append({
                     "question_id": next_question.id,
                     "variable": next_question.variable,
@@ -266,7 +281,8 @@ async def get_next_question(
             await process_email_conditional(db, db_session, session_id, history, next_question)
 
         elif next_question.question_type == QuestionTypes.BUTTON:
-            next_question = question_services.get_question(db, next_question.next_ques)
+            next_question = question_services.get_question(
+                db, next_question.next_ques)
 
     is_completed = next_question is None or next_question.question_type == QuestionTypes.END
 
@@ -333,6 +349,7 @@ def get_session_history(session_id: str, db: Session = Depends(get_db)):
         history.response = json.loads(history.response)
 
     return history
+
 
 @chats_router.post("/send-mail-test")
 async def send_email_test():

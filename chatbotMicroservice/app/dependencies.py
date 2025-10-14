@@ -3,11 +3,11 @@ from fastapi import Header, HTTPException, Depends
 import httpx
 import os
 from enum import Enum
-from prometheus_client import Gauge, Counter, Histogram
+# from prometheus_client import Gauge, Counter, Histogram
 
 AUTH_SERVICE_URL = os.environ.get("AUTH_SERVICE_URL", "http://localhost:8000")
-# METRIC_SERVICE_URL = os.environ.get(
-#     "METRIC_SERVICE_URL", "http://localhost:8002")
+METRIC_SERVICE_URL = os.environ.get(
+    "METRIC_SERVICE_URL", "http://localhost:8002")
 
 
 class AuthEndpoints(str, Enum):
@@ -18,13 +18,15 @@ class AuthEndpoints(str, Enum):
 
 class MetricsEndpoints(str, Enum):
     CHATBOT_COUNTER = "/api/metrics/chatbot_counter"
+    CHATBOT_TRAFFIC = "/api/metrics/chatbot_traffic"
+    CHATBOT_QUOTES = "/api/metrics/chatbot_quotes"
 
 
 async def get_token(
     authorization: Optional[str] = Header(None)
 ) -> str:
     """Extract and validate the Bearer token from the Authorization header."""
-    print("authorization", authorization)
+    # print("authorization", authorization)
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(
             status_code=401,
@@ -70,14 +72,14 @@ async def check_permission_logic(
         )
 
     if response.status_code != 200:
-        print(response.json())
+        # print(response.json())
         raise HTTPException(
             status_code=response.status_code,
             detail=response.json().get("detail", "Permission check failed")
         )
 
-    print("Response", response.json())
-    print("Response", response.content)
+    # print("Response", response.json())
+    # print("Response", response.content)
     return response.json()
 
 
@@ -143,7 +145,7 @@ async def create_subadmin(
     }
 
     async with httpx.AsyncClient() as client:
-        print("token", token)  # Debugging
+        # print("token", token)  # Debugging
         response = await client.post(
             AUTH_SERVICE_URL + AuthEndpoints.CHECK_USER.value,
             json=data,
@@ -159,104 +161,157 @@ async def create_subadmin(
     return response.json()
 
 
-# async def create_chatbot_counter(
-#     bot_id: str,
-#     bot_name: str,
-#     author: str,
-#     token: str
-# ) -> dict:
-#     data = {
-#         'bot_id': bot_id,
-#         'bot_name': bot_name,
-#         'author': author,
-#         'status': 'active'
-#     }
+async def get_location_with_long_lat(lat, long):
+    URL = f"https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={long}"
+    async with httpx.AsyncClient() as client:
+        response = await client.put(
+            URL,
+        )
 
-#     async with httpx.AsyncClient() as client:
-#         response = await client.post(
-#             METRIC_SERVICE_URL + MetricsEndpoints.CHATBOT_COUNTER.value,
-#             json=data,
-#             headers={"Authorization": f"Bearer {token}"}
-#         )
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.json().get("detail", "Something went wrong")
+        )
 
-#     if response.status_code != 200:
-#         raise HTTPException(
-#             status_code=response.status_code,
-#             detail=response.json().get("detail", "Something went wrong")
-#         )
-
-#     return response.json()
+    json = response.json()
+    address = json.get("addresss", {})
+    if address:
+        address = {
+            "city": address.get("city", ""),
+            "postcode": address.get("postcode", ""),
+            "country": address.get("country", ""),
+            "country_code": address.get("country_code", "").upper()
+        }
+    return address
 
 
-# async def delete_chatbot_counter(
-#     bot_id: str,
-#     bot_name: str,
-#     author: str,
-#     token: str
-# ) -> dict:
-#     data = {
-#         'bot_id': bot_id,
-#         'bot_name': bot_name,
-#         'author': author,
-#         'status': 'inactive'
-#     }
+async def create_chatbot_counter(
+    bot_id: str,
+    status: int = 1,
+    # token: str = None,
+) -> dict:
+    data = {
+        'bot_id': bot_id,
+        'status': status
+    }
 
-#     async with httpx.AsyncClient() as client:
-#         response = await client.put(
-#             METRIC_SERVICE_URL + MetricsEndpoints.CHATBOT_COUNTER.value,
-#             json=data,
-#             headers={"Authorization": f"Bearer {token}"}
-#         )
+    async with httpx.AsyncClient() as client:
+        print("Calling create chatbot counter")
+        response = await client.post(
+            METRIC_SERVICE_URL + MetricsEndpoints.CHATBOT_COUNTER.value,
+            json=data,
+            # headers={"Authorization": f"Bearer {token}"}
+        )
 
-#     if response.status_code != 200:
-#         raise HTTPException(
-#             status_code=response.status_code,
-#             detail=response.json().get("detail", "Something went wrong")
-#         )
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.json().get("detail", "Something went wrong")
+        )
 
-#     return response.json()
+    print(response.json())
+    return response.json()
+
+
+async def create_chatbot_traffic(
+    bot_id: str,
+    v_id: str,
+    s_id: str,
+    location: str = None
+) -> dict:
+    data = {
+        'bot_id': bot_id,
+        'v_id': v_id,
+        's_id': s_id,
+        'location': location
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            METRIC_SERVICE_URL + MetricsEndpoints.CHATBOT_TRAFFIC.value,
+            json=data,
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.json().get("detail", "Something went wrong")
+        )
+
+    return response.json()
+
+
+async def create_chatbot_quotes(
+    bot_id: str,
+    s_id: str,
+    amount: str = None,
+    type: str = None,
+    token: str = None
+) -> dict:
+    data = {
+        'bot_id': bot_id,
+        's_id': s_id,
+        'amount': amount,
+        "type": type
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            METRIC_SERVICE_URL + MetricsEndpoints.CHATBOT_QUOTES.value,
+            json=data,
+            headers={"Authorization": f"Bearer {token}"}
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.json().get("detail", "Something went wrong")
+        )
+
+    return response.json()
 
 # Prometheus metrics
 # Metric to track the number of chatbots that are up and running
-CHATBOTS_GAUGE = Gauge(
-    'chatbots_gauge_total',
-    'Number of chatbots up and running',
-    ['bot_id', 'bot_name', 'bot_author']
-)
+# CHATBOTS_GAUGE = Gauge(
+#     'chatbots_gauge_total',
+#     'Number of chatbots up and running',
+#     ['bot_id', 'bot_name', 'bot_author']
+# )
 
-# Metric to track traffic analysis
-CHATBOTS_TRAFFIC = Counter(
-    'chatbots_traffic_total',
-    'Total number of sessions processed by chatbots',
-    ['bot_id', 'bot_author', "s_id", 'v_id']
-)
+# # Metric to track traffic analysis
+# CHATBOTS_TRAFFIC = Counter(
+#     'chatbots_traffic_total',
+#     'Total number of sessions processed by chatbots',
+#     ['bot_id', 'bot_author', "s_id", 'v_id']
+# )
 
-# Regional sessions label (region is coarse; see note)
-CHATBOTS_REGIONAL = Counter(
-    'chatbots_regional_sessions_total',
-    'Number of sessions by region for chatbots',
-    ['bot_id', 'v_id', "lat", 'long']
-)
+# # Regional sessions label (region is coarse; see note)
+# CHATBOTS_REGIONAL = Counter(
+#     'chatbots_regional_sessions_total',
+#     'Number of sessions by region for chatbots',
+#     ['bot_id', 'v_id', "lat", 'long']
+# )
 
-# Payments counters and amount histogram
-PAYMENTS_COUNTER = Counter(
-    'payments_total',
-    'Total number of successful payments processed',
-    ['bot_id', 'v_id']
-)
+# # Payments counters and amount histogram
+# PAYMENTS_COUNTER = Counter(
+#     'payments_total',
+#     'Total number of successful payments processed',
+#     ['bot_id', 'v_id']
+# )
 
-PAYMENTS_AMOUNT = Histogram(
-    'payments_amount_usd',
-    'Histogram of payment amounts (USD cents)',
-    ['bot_id', 'v_id']
-)
+# PAYMENTS_AMOUNT = Histogram(
+#     'payments_amount_usd',
+#     'Histogram of payment amounts (USD cents)',
+#     ['bot_id', 'v_id']
+# )
 
-# Quotes / get-quotes bill events
-QUOTES_COUNTER = Counter(
-    'quotes_requests_total',
-    'Number of quote requests / bill generation events',
-    ['bot_id', 'v_id']
-)
+# # Quotes / get-quotes bill events
+# QUOTES_COUNTER = Counter(
+#     'quotes_requests_total',
+#     'Number of quote requests / bill generation events',
+#     ['bot_id', 'v_id']
+# )
 
 # # Metric to track completed payments
 # PAYMENT_COMPLETED_COUNTER = Counter(

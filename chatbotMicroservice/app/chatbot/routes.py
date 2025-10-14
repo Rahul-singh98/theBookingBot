@@ -7,17 +7,19 @@ from app.chatbot.schemas import (
     ChatbotConfigurationCreate, ChatbotConfigurationUpdate,
     ChatbotSubmitConfigurationResponse, PaginatedChatbotSubmitConfigurationResponse,
     ChatbotSubmitConfigurationUpdate, ChatbotSubmitConfigurationCreate,
-    PaymentRequest
+    PaymentRequest, ChatbotBulkRequest
 )
 from app.chatbot import crud
-from app.utils.crypto_utils import decrypt_value, encrypt_value
+from app.utils.crypto_utils import encrypt_value
 from app.utils.pagination import Pagination
 from app.dependencies import (
     check_permission, get_visitor_id, check_user_exists,
     # create_chatbot_counter, delete_chatbot_counter
 )
-from app.dependencies import CHATBOTS_GAUGE, PAYMENTS_COUNTER, PAYMENTS_AMOUNT
+# from app.dependencies import CHATBOTS_GAUGE, PAYMENTS_COUNTER, PAYMENTS_AMOUNT
+from app.dependencies import create_chatbot_counter
 import os
+from typing import List, Dict
 import stripe
 
 
@@ -56,6 +58,20 @@ def read_chatbot(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
     # return ChatbotConfigurationResponse.model_validate(db_chatbot)
     return db_chatbot
+
+
+@chatbot_router.post("/bulk", response_model=List[Dict])
+def bulk_get_chatbots(
+    filters: ChatbotBulkRequest,
+    db: Session = Depends(get_db)
+):
+    print("filters", filters.ids, filters.fields)
+    bots = crud.get_bulk_chatbots(db, filters)
+    print(bots)
+    if not bots:
+        raise HTTPException(status_code=400, detail="No chatbots found")
+
+    return bots
 
 
 @chatbot_router.get("/{chatbot_id}/keys")
@@ -129,10 +145,9 @@ async def create_chatbot(
     new_chatbot = await crud.create_chatbot(db=db, chatbot=chatbot,
                                             user_id=chatbot.created_by)
 
-    CHATBOTS_GAUGE.labels(bot_id=new_chatbot.id, bot_name=new_chatbot.name,
-                          bot_author=chatbot.created_by).inc()
-    # create_chatbot_counter(bot_id=new_chatbot.id, bot_name=new_chatbot.name,
-    #                        author=chatbot.created_by, token=authorization)
+    # CHATBOTS_GAUGE.labels(bot_id=new_chatbot.id, bot_name=new_chatbot.name,
+    #                       bot_author=chatbot.created_by).inc()
+    await create_chatbot_counter(bot_id=new_chatbot.id)
 
     return new_chatbot
 
@@ -153,16 +168,16 @@ def update_chatbot(
 
 
 @chatbot_router.delete("/{chatbot_id}", response_model=ChatbotConfigurationResponse)
-def delete_chatbot(
+async def delete_chatbot(
     chatbot_id: str, db: Session = Depends(get_db),
     _: dict = Depends(check_permission("chatbots:delete")),
     authorization: str = Header(None)
 ):
     db_bot = crud.delete_chatbot(db=db, chatbot_id=chatbot_id)
-    CHATBOTS_GAUGE.labels(
-        bot_id=chatbot_id, bot_name=db_bot.name, bot_author=db_bot.created_by).dec()
-    # delete_chatbot_counter(
-    #     bot_id=chatbot_id, bot_name=db_bot.name, author=db_bot.created_by, token=authorization)
+    # CHATBOTS_GAUGE.labels(
+    #     bot_id=chatbot_id, bot_name=db_bot.name, bot_author=db_bot.created_by).dec()
+    await create_chatbot_counter(
+        bot_id=chatbot_id, status=0)
     if db_bot is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chatbot not found")
@@ -273,20 +288,20 @@ async def stripe_webhook(request: Request):
             payment_intent = event["data"]["object"]
             print(f"Payment succeeded: {payment_intent}")
             # increment metrics if metadata available
-            try:
-                v_id = payment_intent.get('metadata', {}).get('v_id')
-                bot_id = payment_intent.get('metadata', {}).get('bot_id')
-                amount = payment_intent.get('amount')
-                if v_id and bot_id:
-                    PAYMENTS_COUNTER.labels(bot_id=bot_id, v_id=v_id).inc()
-                    if amount is not None:
-                        try:
-                            PAYMENTS_AMOUNT.labels(
-                                bot_id=bot_id, v_id=v_id).observe(float(amount))
-                        except Exception:
-                            pass
-            except Exception:
-                pass
+            # try:
+            #     v_id = payment_intent.get('metadata', {}).get('v_id')
+            #     bot_id = payment_intent.get('metadata', {}).get('bot_id')
+            #     amount = payment_intent.get('amount')
+            #     if v_id and bot_id:
+            #         PAYMENTS_COUNTER.labels(bot_id=bot_id, v_id=v_id).inc()
+            #         if amount is not None:
+            #             try:
+            #                 PAYMENTS_AMOUNT.labels(
+            #                     bot_id=bot_id, v_id=v_id).observe(float(amount))
+            #             except Exception:
+            #                 pass
+            # except Exception:
+            #     pass
         elif event["type"] == "payment_intent.payment_failed":
             payment_intent = event["data"]["object"]
             print(f"Payment failed: {payment_intent}")

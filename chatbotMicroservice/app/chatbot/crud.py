@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from app import models
 from app.chatbot import schemas
-from app.dependencies import create_subadmin
+from typing import List, Dict, Optional
+# from app.dependencies import create_subadmin
 
 
 def list_chatbots(db: Session, offset: int, size: int):
@@ -27,6 +28,52 @@ def get_chatbot(db: Session, chatbot_id: str):
 
 def get_chatbot_by_name(db: Session, chatbot_name: str):
     return db.query(models.ChatbotConfiguration).filter(models.ChatbotConfiguration.name == chatbot_name).first()
+
+
+def get_bulk_chatbots(
+    db: Session, filters: schemas.ChatbotBulkRequest
+) -> List[Dict]:
+    """
+    Returns chatbot configurations for given IDs.
+    If specific fields are requested, only those are returned.
+    """
+    if not filters.ids:
+        return []
+
+    # Define safe, allowed attributes
+    allowed_fields = {
+        "id",
+        "name",
+        "hero_img",
+        "primary_color",
+        "secondary_color",
+        "created_by",
+        "created_at",
+        "updated_at",
+    }
+
+    selected_fields = (
+        set(filters.fields) & allowed_fields if filters.fields else allowed_fields
+    )
+
+    # Fetch only required columns from DB for performance
+    q = db.query(models.ChatbotConfiguration).filter(
+        models.ChatbotConfiguration.id.in_(filters.ids)
+    )
+    bots = q.all()
+
+    # Convert results to dict by id
+    bot_map = {
+        bot.id: {field: getattr(bot, field) for field in selected_fields}
+        for bot in bots
+    }
+
+    # Preserve input order & return empty dicts for missing ids
+    results = []
+    for bot_id in filters.ids:
+        results.append(bot_map.get(bot_id, {field: None for field in selected_fields}))
+
+    return results
 
 
 async def create_chatbot(db: Session, chatbot: schemas.ChatbotConfigurationCreate, user_id: str):

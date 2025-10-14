@@ -65,3 +65,9 @@ class PaymentRequest(BaseModel):
     currency: str  # Currency code, e.g., 'usd'
     bot_id: Optional[str] = None
     v_id: Optional[str] = None
+
+
+class ChatbotBulkRequest(BaseModel):
+    """Client specifies which chatbot IDs to fetch and what fields to return."""
+    ids: List[str]
+    fields: Optional[List[str]] = None

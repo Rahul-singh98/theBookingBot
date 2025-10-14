@@ -1,7 +1,7 @@
 import { ApexOptions } from "apexcharts";
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "../UI/card";
-import { PrometheusAPI } from "@/api/analytics";
+import { AnalyticsAPI } from "@/api/analytics";
 import ReactApexChart from "react-apexcharts";
 import { TIME_RANGES } from "@/utils/time_ranges";
 
@@ -18,7 +18,7 @@ const TrafficStackChart = () => {
     const loadTrafficData = async () => {
       setLoading(true);
       try {
-        const data = await PrometheusAPI.getChatbotTrafficByBots(createdBy);
+        const data = await AnalyticsAPI.getChatbotTrafficByBots(createdBy);
 
         // Transform into donut-style distribution for visitors analytics
         const counts = {};

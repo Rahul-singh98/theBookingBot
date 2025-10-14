@@ -25,7 +25,13 @@ export const ChatRoutes = {
   CHATBOT_STATIC_CSS_PATH: "/static/css/embed.css",
 };
 
+// export const AnalyticsRoutes = {
+//   BASE: "/api/v1",
+//   QUERY: "/query"
+// }
+
 export const AnalyticsRoutes = {
-  BASE: "/api/v1",
-  QUERY: "/query"
-}
+  CHATBOT_COUNTER: "/api/metrics/chatbot_counter",
+  CHATBOT_TRAFFIC: "/api/metrics/chatbot_traffic",
+  CHATBOT_QUOTES: "/api/metrics/chatbot_quotes",
+};

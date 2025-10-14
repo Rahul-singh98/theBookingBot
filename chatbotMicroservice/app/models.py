@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Enum, JSON
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Enum, JSON, Float
 from sqlalchemy.orm import relationship
 from app.database import Base
 from app.utils.constants import QuestionTypes, AuthMethodChoices

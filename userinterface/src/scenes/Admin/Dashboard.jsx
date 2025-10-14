@@ -3,7 +3,7 @@ import LineChart from "@/components/Charts/LineChart";
 import PieChart from "@/components/Charts/PieChart";
 import StackChart from "@/components/Charts/StackChart";
 import { useEffect, useState } from "react";
-import { PrometheusAPI } from "@/api/analytics";
+import { AnalyticsAPI } from "@/api/analytics";
 import { get_pct } from "@/utils/analytics";
 import { TIME_RANGES } from "@/utils/time_ranges";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/UI/card";
@@ -17,7 +17,6 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  console.log(user);
   const [regionalSeries, setRegionalSeries] = useState({
     labels: [],
     series: [],
@@ -32,9 +31,9 @@ const Dashboard = () => {
     const loadExtras = async () => {
       try {
         const [regional, payments, quotes] = await Promise.all([
-          PrometheusAPI.getRegionalSessions(),
-          PrometheusAPI.getPaymentsBySubadmin(),
-          PrometheusAPI.getQuotesBySubadmin(),
+          AnalyticsAPI.getRegionalSessions(),
+          AnalyticsAPI.getPaymentsBySubadmin(),
+          AnalyticsAPI.getQuotesBySubadmin(),
         ]);
 
         if (!mounted) return;
@@ -47,7 +46,6 @@ const Dashboard = () => {
         // subadmin stacked: create categories (subadmin ids)
         const ids = Array.from(
           new Set([
-            ...visitors.map((v) => v.v_id),
             ...payments.map((p) => p.v_id),
             ...quotes.map((q) => q.v_id),
           ])
@@ -109,8 +107,8 @@ const Dashboard = () => {
       <ChatbotsTraffic
         createdBy={user.scopes === "Organization" ? user.user_id : null}
       />
-      {/* <TrafficStackChart /> */}
 
+      {/* <TrafficStackChart /> */}
       <TrafficDistribution
         createdBy={user.scopes === "Organization" ? user.user_id : null}
       />
