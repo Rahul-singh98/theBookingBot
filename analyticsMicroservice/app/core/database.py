@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os
+from app.core.config import settings
 
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///../common.db")
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
 # If using MySQL, we need to add the MySQL driver to the connection string
 if SQLALCHEMY_DATABASE_URL.startswith("mysql"):

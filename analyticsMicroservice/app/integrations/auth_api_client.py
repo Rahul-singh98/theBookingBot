@@ -1,22 +1,10 @@
 from typing import Optional
 from fastapi import Header, HTTPException, Depends
 import httpx
-import os
-from enum import Enum
+from app.core.config import settings
+from app.core.constants import AuthEndpoints
 
-AUTH_SERVICE_URL = os.environ.get("AUTH_SERVICE_URL", "http://localhost:8000")
-CHATBOT_SERVICE_URL = os.environ.get(
-    "CHATBOT_SERVICE_URL", "http://localhost:8001")
-
-
-class AuthEndpoints(str, Enum):
-    CHECK_PERMISSIONS = "/api/auth/check-permissions"
-    CHECK_USERNAME = "/api/users/check/username"
-    CHECK_USER = "/api/users"
-
-
-class ChatbotEndpoints(str, Enum):
-    CHATBOT_CONFIGURATIONS = "/api/chatbots"
+AUTH_SERVICE_URL = settings.AUTH_SERVICE_URL
 
 
 async def get_token(
@@ -126,23 +114,3 @@ async def check_user_exists(
         )
 
     return response.json().get('email')
-
-
-async def get_chatbots_info(
-    ids: list,
-    token: str = None
-) -> dict:
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            CHATBOT_SERVICE_URL + ChatbotEndpoints.CHATBOT_CONFIGURATIONS.value + "/bulk",
-            json={"ids": ids, "fields": ["id", "name", "created_by"]},
-            # headers={"Authorization": f"Bearer {token}"}
-        )
-
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail=response.json().get("detail", "No Chatbots found")
-        )
-
-    return response.json()

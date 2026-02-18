@@ -7,9 +7,9 @@ from sqlalchemy import (
     Boolean,
     JSON
 )
-from app.database import Base
+from oldApp.database import Base
 from enum import Enum as PyEnum
-from app.utils.generate_uuid import generate_uuid
+from app.core.common import generate_uuid
 
 
 class BotStatus(PyEnum):
